@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const contractAddress = "0x6f19096082Dc30f51189336c66927fb182eAD715";
     const contractABI = [
+        // ABI content as provided before
         {
             "inputs": [],
             "stateMutability": "nonpayable",

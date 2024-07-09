@@ -9,13 +9,22 @@ document.addEventListener('DOMContentLoaded', () => {
     let web3;
     let contract;
 
-    async function initializeContract() {
+    async function initializeWeb3() {
         if (typeof window.ethereum !== 'undefined') {
             web3 = new Web3(window.ethereum);
+            console.log("Web3 initialized");
+        } else {
+            console.error("MetaMask is not installed.");
+            statusDiv.innerHTML = `<p style="color: red;">MetaMask is not installed. Please install it to continue.</p>`;
+        }
+    }
+
+    async function initializeContract() {
+        if (web3) {
             contract = new web3.eth.Contract(contractABI, contractAddress);
             console.log("Contract initialized");
         } else {
-            console.error("MetaMask is not installed.");
+            console.error("Web3 is not initialized.");
         }
     }
 
@@ -25,12 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof window.ethereum !== 'undefined') {
                 try {
                     await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    web3 = new Web3(window.ethereum);  // Ensure web3 is initialized after connecting
                     const accounts = await web3.eth.getAccounts();
                     console.log("Accounts retrieved:", accounts);
                     statusDiv.innerHTML = `<p style="color: green;">Connected to MetaMask</p>`;
                     welcomeContent.style.display = 'none';
                     mainContent.style.display = 'block';
-                    initializeContract();
+                    await initializeContract();
                 } catch (error) {
                     statusDiv.innerHTML = `<p style="color: red;">Error connecting to MetaMask: ${error.message}</p>`;
                     console.error("Error connecting to MetaMask:", error);

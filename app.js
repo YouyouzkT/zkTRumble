@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("Document loaded");
+
     const connectButton = document.getElementById('connectButton');
     const statusDiv = document.getElementById('status');
     const mainContent = document.getElementById('mainContent');
@@ -6,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (connectButton) {
         connectButton.addEventListener('click', async () => {
+            console.log("Connect button clicked");
             if (typeof window.ethereum !== 'undefined') {
                 try {
                     web3 = new Web3(window.ethereum);
@@ -13,11 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     statusDiv.innerHTML = `<p style="color: green;">Connected to MetaMask</p>`;
                     welcomeContent.style.display = 'none';
                     mainContent.style.display = 'block';
+                    console.log("Connected to MetaMask");
                 } catch (error) {
                     statusDiv.innerHTML = `<p style="color: red;">Error connecting to MetaMask: ${error.message}</p>`;
+                    console.error("Error connecting to MetaMask:", error);
                 }
             } else {
                 statusDiv.innerHTML = `<p style="color: red;">MetaMask is not installed. Please install it to continue.</p>`;
+                console.error("MetaMask is not installed");
             }
         });
     }
@@ -25,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const createManageButton = document.getElementById('createManageButton');
     if (createManageButton) {
         createManageButton.addEventListener('click', () => {
+            console.log("Create and Manage button clicked");
             window.location.href = 'create-manage.html';
         });
     }
@@ -32,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const registerButton = document.getElementById('registerButton');
     if (registerButton) {
         registerButton.addEventListener('click', () => {
+            console.log("Register button clicked");
             window.location.href = 'register.html';
         });
     }
@@ -406,6 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'create-manage.html': () => {
             initializeContract();
             document.getElementById('createGame').addEventListener('click', async () => {
+                console.log("Create Game button clicked");
                 try {
                     const accounts = await web3.eth.getAccounts();
                     await contract.methods.createGame().send({ from: accounts[0] });
@@ -417,6 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             document.getElementById('startRound').addEventListener('click', async () => {
+                console.log("Start Round button clicked");
                 try {
                     const accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
@@ -429,6 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             document.getElementById('closeRegistration').addEventListener('click', async () => {
+                console.log("Close Registration button clicked");
                 try {
                     const accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
@@ -441,6 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             document.getElementById('registerBots').addEventListener('click', async () => {
+                console.log("Register Bots button clicked");
                 try {
                     const accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
@@ -454,6 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             document.getElementById('registerMultiplePlayers').addEventListener('click', async () => {
+                console.log("Register Multiple Players button clicked");
                 try {
                     const accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
@@ -467,6 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             document.getElementById('setEliminationRange').addEventListener('click', async () => {
+                console.log("Set Elimination Range button clicked");
                 try {
                     const accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
@@ -483,6 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'register.html': () => {
             initializeContract();
             document.getElementById('registerPlayer').addEventListener('click', async () => {
+                console.log("Register Player button clicked");
                 try {
                     const accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
@@ -498,7 +513,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const currentPage = window.location.pathname.split('/').pop();
+    console.log("Current page:", currentPage);
     if (pageFunctions[currentPage]) {
         pageFunctions[currentPage]();
+    } else {
+        console.log("No specific functions for this page");
     }
 });

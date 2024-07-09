@@ -6,19 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainContent = document.getElementById('mainContent');
     const welcomeContent = document.getElementById('welcomeContent');
 
-    let web3;
-    let contract;
-
-    async function initializeContract() {
-        if (typeof window.ethereum !== 'undefined') {
-            web3 = new Web3(window.ethereum);
-            contract = new web3.eth.Contract(contractABI, contractAddress);
-            console.log("Contract initialized");
-        } else {
-            console.error("MetaMask is not installed.");
-        }
-    }
-
     if (connectButton) {
         connectButton.addEventListener('click', async () => {
             console.log("Connect button clicked");
@@ -410,9 +397,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
+    let web3;
+    let contract;
+
+    function initializeContract() {
+        if (typeof window.ethereum !== 'undefined') {
+            web3 = new Web3(window.ethereum);
+            contract = new web3.eth.Contract(contractABI, contractAddress);
+            console.log("Contract initialized");
+        } else {
+            console.error("MetaMask is not installed.");
+        }
+    }
+
     const pageFunctions = {
-        'create-manage.html': async () => {
-            await initializeContract();
+        'create-manage.html': () => {
+            initializeContract();
             document.getElementById('createGame').addEventListener('click', async () => {
                 console.log("Create Game button clicked");
                 try {
@@ -494,8 +494,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         },
-        'register.html': async () => {
-            await initializeContract();
+        'register.html': () => {
+            initializeContract();
             document.getElementById('registerPlayer').addEventListener('click', async () => {
                 console.log("Register Player button clicked");
                 try {

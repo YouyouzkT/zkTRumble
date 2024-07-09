@@ -1,8 +1,12 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const connectButton = document.getElementById('connectButton');
     const statusDiv = document.getElementById('status');
     const mainContent = document.getElementById('mainContent');
     const welcomeContent = document.getElementById('welcomeContent');
+
+    let web3;
+    let contract;
+    let accounts;
 
     if (connectButton) {
         connectButton.addEventListener('click', async () => {
@@ -10,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     web3 = new Web3(window.ethereum);
                     await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    accounts = await web3.eth.getAccounts();
                     statusDiv.innerHTML = `<p style="color: green;">Connected to MetaMask</p>`;
                     welcomeContent.style.display = 'none';
                     mainContent.style.display = 'block';
@@ -38,331 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const contractAddress = "0x6f19096082Dc30f51189336c66927fb182eAD715";
     const contractABI = [
-        {
-            "inputs": [],
-            "stateMutability": "nonpayable",
-            "type": "constructor"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "string",
-                    "name": "pseudo",
-                    "type": "string"
-                }
-            ],
-            "name": "BotRegistered",
-            "type": "event"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "closeRegistration",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "name": "createGame",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "minEliminationCount",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "maxEliminationCount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "EliminationRangeSet",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "address",
-                    "name": "owner",
-                    "type": "address"
-                }
-            ],
-            "name": "GameCreated",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "string",
-                    "name": "pseudo",
-                    "type": "string"
-                }
-            ],
-            "name": "PlayerEliminated",
-            "type": "event"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "string",
-                    "name": "pseudo",
-                    "type": "string"
-                }
-            ],
-            "name": "PlayerRegistered",
-            "type": "event"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "string",
-                    "name": "pseudos",
-                    "type": "string"
-                }
-            ],
-            "name": "registerMultiplePlayers",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "string",
-                    "name": "_pseudo",
-                    "type": "string"
-                }
-            ],
-            "name": "registerPlayer",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_numBots",
-                    "type": "uint256"
-                }
-            ],
-            "name": "registerBots",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_minEliminationCount",
-                    "type": "uint256"
-                },
-                {
-                    "internalType": "uint256",
-                    "name": "_maxEliminationCount",
-                    "type": "uint256"
-                }
-            ],
-            "name": "setEliminationRange",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "startRound",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "closeRegistration",
-            "outputs": [],
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "anonymous": false,
-            "inputs": [
-                {
-                    "indexed": false,
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                },
-                {
-                    "indexed": false,
-                    "internalType": "string",
-                    "name": "pseudo",
-                    "type": "string"
-                }
-            ],
-            "name": "WinnerDeclared",
-            "type": "event"
-        },
-        {
-            "inputs": [],
-            "name": "gameCount",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "getEliminatedPlayers",
-            "outputs": [
-                {
-                    "internalType": "string[]",
-                    "name": "",
-                    "type": "string[]"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "getRegisteredPlayers",
-            "outputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "inputs": [
-                {
-                    "internalType": "uint256",
-                    "name": "gameId",
-                    "type": "uint256"
-                }
-            ],
-            "name": "getWinner",
-            "outputs": [
-                {
-                    "internalType": "string",
-                    "name": "",
-                    "type": "string"
-                }
-            ],
-            "stateMutability": "view",
-            "type": "function"
-        }
+        // ... (votre ABI ici)
     ];
 
-    let web3;
-    let contract;
-
     function initializeContract() {
-        web3 = new Web3(window.ethereum);
+        if (!web3) {
+            web3 = new Web3(window.ethereum);
+        }
         contract = new web3.eth.Contract(contractABI, contractAddress);
         console.log("Contract initialized");
     }
@@ -372,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             initializeContract();
             document.getElementById('createGame').addEventListener('click', async () => {
                 try {
-                    const accounts = await web3.eth.getAccounts();
+                    if (!accounts) accounts = await web3.eth.getAccounts();
                     await contract.methods.createGame().send({ from: accounts[0] });
                     alert('Game created');
                 } catch (error) {
@@ -383,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.getElementById('startRound').addEventListener('click', async () => {
                 try {
-                    const accounts = await web3.eth.getAccounts();
+                    if (!accounts) accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
                     await contract.methods.startRound(gameId).send({ from: accounts[0] });
                     alert('Round started');
@@ -395,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.getElementById('closeRegistration').addEventListener('click', async () => {
                 try {
-                    const accounts = await web3.eth.getAccounts();
+                    if (!accounts) accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
                     await contract.methods.closeRegistration(gameId).send({ from: accounts[0] });
                     alert('Registration closed');
@@ -407,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.getElementById('registerBots').addEventListener('click', async () => {
                 try {
-                    const accounts = await web3.eth.getAccounts();
+                    if (!accounts) accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
                     const numBots = prompt("Enter number of bots:");
                     await contract.methods.registerBots(gameId, numBots).send({ from: accounts[0] });
@@ -420,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.getElementById('registerMultiplePlayers').addEventListener('click', async () => {
                 try {
-                    const accounts = await web3.eth.getAccounts();
+                    if (!accounts) accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
                     const pseudos = prompt("Enter player pseudos (comma separated):");
                     await contract.methods.registerMultiplePlayers(gameId, pseudos).send({ from: accounts[0] });
@@ -433,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             document.getElementById('setEliminationRange').addEventListener('click', async () => {
                 try {
-                    const accounts = await web3.eth.getAccounts();
+                    if (!accounts) accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
                     const minEliminationCount = prompt("Enter minimum elimination count:");
                     const maxEliminationCount = prompt("Enter maximum elimination count:");
@@ -449,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             initializeContract();
             document.getElementById('registerPlayer').addEventListener('click', async () => {
                 try {
-                    const accounts = await web3.eth.getAccounts();
+                    if (!accounts) accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
                     const pseudo = prompt("Enter player pseudo:");
                     await contract.methods.registerPlayer(gameId, pseudo).send({ from: accounts[0] });

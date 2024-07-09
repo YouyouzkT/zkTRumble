@@ -1,0 +1,685 @@
+<html><head><base href="https://zkrumbleaphat2.surge.sh/">
+<title>GameDApp: Decentralized Gaming Portal</title>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(to right, #e0eafc, #cfdef3);
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        background: #2c3e50;
+        color: white;
+        padding: 1.5em 1em;
+        text-align: center;
+    }
+
+    .content {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        background: white;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #2980b9;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        margin: 5px;
+    }
+
+    .btn:hover {
+        background: #1abc9c;
+    }
+
+    .btn:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+    }
+
+    #status {
+        margin-top: 20px;
+        padding: 10px;
+        background: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+
+    .function-buttons {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .output {
+        margin-top: 30px;
+        padding: 10px;
+        background: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    footer {
+        text-align: center;
+        padding: 2em 1em;
+        background: #2c3e50;
+        color: white;
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+    }
+
+    footer a {
+        color: #1abc9c;
+        text-decoration: none;
+    }
+
+    .input-label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .input-field {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+<script src="https://unpkg.com/@walletconnect/web3-provider@1.6.6/dist/umd/index.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>GameDApp</h1>
+        <p>Connect and interact with your decentralized smart contracts with ease</p>
+    </header>
+    <div class="content">
+        <h2>Connect to MetaMask or WalletConnect</h2>
+        <p>To get started, connect your MetaMask or WalletConnect wallet to interact with smart contracts.</p>
+        
+        <button id="connectMetaMask" class="btn">Connect MetaMask</button>
+        <button id="connectWalletConnect" class="btn">Connect WalletConnect</button>
+        
+        <div id="status"></div>
+
+        <form id="gameForm">
+            <label class="input-label" for="gameIdInput">Game ID:</label>
+            <input type="number" id="gameIdInput" class="input-field" placeholder="Enter Game ID" required>
+        </form>
+
+        <div class="function-buttons">
+            <h2>Smart Contract Functions</h2>
+            <button id="createGame" class="btn">Create Game</button>
+            <button id="registerPlayer" class="btn">Register Player</button>
+            <button id="startRound" class="btn">Start Round</button>
+            <button id="closeRegistration" class="btn">Close Registration</button>
+            <button id="registerBots" class="btn">Register Bots</button>
+            <button id="registerMultiplePlayers" class="btn">Register Multiple Players</button>
+            <button id="setEliminationRange" class="btn">Set Elimination Range</button>
+        </div>
+
+        <div class="output">
+            <h2>Smart Contract Outputs</h2>
+            <button id="gameCount" class="btn">Game Count</button>
+            <button id="getWinner" class="btn">Get Winner</button>
+            <button id="getRegisteredPlayers" class="btn">Get Registered Players</button>
+            <button id="getEliminatedPlayers" class="btn">Get Eliminated Players</button>
+            <div id="outputContent"></div>
+        </div>
+
+        <h2>Explore More</h2>
+        <ul>
+            <li><a href="https://quantumledgerportal.com/smart-contract-explorer">Smart Contract Explorer</a></li>
+            <li><a href="https://quantumledgerportal.com/developer-tools">Developer Tools</a></li>
+            <li><a href="https://quantumledgerportal.com/marketplace">Marketplace</a></li>
+            <li><a href="https://quantumledgerportal.com/community-forum">Community Forum</a></li>
+        </ul>
+    </div>  
+    
+    <script>
+        const connectMetaMaskButton = document.getElementById('connectMetaMask');
+        const connectWalletConnectButton = document.getElementById('connectWalletConnect');
+        const statusDiv = document.getElementById('status');
+        const outputContent = document.getElementById('outputContent');
+        const gameIdInput = document.getElementById('gameIdInput');
+
+        const contractAddress = "0x6f19096082Dc30f51189336c66927fb182eAD715";
+        const contractABI = [ 
+            {
+                "inputs": [],
+                "stateMutability": "nonpayable",
+                "type": "constructor"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "string",
+                        "name": "pseudo",
+                        "type": "string"
+                    }
+                ],
+                "name": "BotRegistered",
+                "type": "event"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "closeRegistration",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [],
+                "name": "createGame",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "minEliminationCount",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "maxEliminationCount",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "EliminationRangeSet",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    }
+                ],
+                "name": "GameCreated",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "string",
+                        "name": "pseudo",
+                        "type": "string"
+                    }
+                ],
+                "name": "PlayerEliminated",
+                "type": "event"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "string",
+                        "name": "pseudo",
+                        "type": "string"
+                    }
+                ],
+                "name": "PlayerRegistered",
+                "type": "event"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_numBots",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "registerBots",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "pseudos",
+                        "type": "string"
+                    }
+                ],
+                "name": "registerMultiplePlayers",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "_pseudo",
+                        "type": "string"
+                    }
+                ],
+                "name": "registerPlayer",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_minEliminationCount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "_maxEliminationCount",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "setEliminationRange",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "startRound",
+                "outputs": [],
+                "stateMutability": "nonpayable",
+                "type": "function"
+            },
+            {
+                "anonymous": false,
+                "inputs": [
+                    {
+                        "indexed": false,
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    },
+                    {
+                        "indexed": false,
+                        "internalType": "string",
+                        "name": "pseudo",
+                        "type": "string"
+                    }
+                ],
+                "name": "WinnerDeclared",
+                "type": "event"
+            },
+            {
+                "inputs": [],
+                "name": "gameCount",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "games",
+                "outputs": [
+                    {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "isRegistrationOpen",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "bool",
+                        "name": "isGameActive",
+                        "type": "bool"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "winner",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "minEliminationCount",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "maxEliminationCount",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "getEliminatedPlayers",
+                "outputs": [
+                    {
+                        "internalType": "string[]",
+                        "name": "",
+                        "type": "string[]"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "getRegisteredPlayers",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            },
+            {
+                "inputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "gameId",
+                        "type": "uint256"
+                    }
+                ],
+                "name": "getWinner",
+                "outputs": [
+                    {
+                        "internalType": "string",
+                        "name": "",
+                        "type": "string"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }
+        ];
+
+        let web3;
+        let contract;
+
+        // Function to connect using MetaMask
+        connectMetaMaskButton.addEventListener('click', async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    web3 = new Web3(window.ethereum);
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    statusDiv.innerHTML = `<p style="color: green;">Connected to MetaMask</p>`;
+                    initializeContract();
+                } catch (error) {
+                    statusDiv.innerHTML = `<p style="color: red;">Error connecting to MetaMask: ${error.message}</p>`;
+                }
+            } else {
+                statusDiv.innerHTML = `<p style="color: red;">MetaMask is not installed. Please install it to continue.</p>`;
+            }
+        });
+
+        // Function to connect using WalletConnect
+        connectWalletConnectButton.addEventListener('click', async () => {
+            const provider = new WalletConnectProvider.default({
+                infuraId: "INFURA_PROJECT_ID" // Replace with your Infura project ID
+            });
+
+            try {
+                await provider.enable();
+                web3 = new Web3(provider);
+                statusDiv.innerHTML = `<p style="color: green;">Connected to WalletConnect</p>`;
+                initializeContract();
+            } catch (error) {
+                statusDiv.innerHTML = `<p style="color: red;">Error connecting to WalletConnect: ${error.message}</p>`;
+            }
+        });
+
+        function initializeContract() {
+            contract = new web3.eth.Contract(contractABI, contractAddress);
+        }
+
+        function getGameId() {
+            const gameId = gameIdInput.value;
+            if (!gameId) {
+                alert('Please enter a Game ID');
+                throw new Error('Game ID is required');
+            }
+            return gameId;
+        }
+
+        document.getElementById('createGame').addEventListener('click', async () => {
+            try {
+                const accounts = await web3.eth.getAccounts();
+                await contract.methods.createGame().send({ from: accounts[0] });
+                alert('Game created');
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        document.getElementById('registerPlayer').addEventListener('click', async () => {
+            try {
+                const accounts = await web3.eth.getAccounts();
+                const gameId = getGameId();
+                const pseudo = prompt("Enter player pseudo:");
+                await contract.methods.registerPlayer(gameId, pseudo).send({ from: accounts[0] });
+                alert('Player registered');
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        document.getElementById('registerMultiplePlayers').addEventListener('click', async () => {
+            try {
+                const accounts = await web3.eth.getAccounts();
+                const gameId = getGameId();
+                const pseudos = prompt("Enter player pseudos (comma separated):");
+                await contract.methods.registerMultiplePlayers(gameId, pseudos).send({ from: accounts[0] });
+                alert('Multiple players registered');
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        document.getElementById('registerBots').addEventListener('click', async () => {
+            try {
+                const accounts = await web3.eth.getAccounts();
+                const gameId = getGameId();
+                const numBots = prompt("Enter number of bots:");
+                await contract.methods.registerBots(gameId, numBots).send({ from: accounts[0] });
+                alert('Bots registered');
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        document.getElementById('setEliminationRange').addEventListener('click', async () => {
+            try {
+                const accounts = await web3.eth.getAccounts();
+                const gameId = getGameId();
+                const minEliminationCount = prompt("Enter minimum elimination count:");
+                const maxEliminationCount = prompt("Enter maximum elimination count:");
+                await contract.methods.setEliminationRange(gameId, minEliminationCount, maxEliminationCount).send({ from: accounts[0] });
+                alert('Elimination range set');} catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        document.getElementById('startRound').addEventListener('click', async () => {
+            try {
+                const accounts = await web3.eth.getAccounts();
+                const gameId = getGameId();
+                await contract.methods.startRound(gameId).send({ from: accounts[0] });
+                alert('Round started');
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        document.getElementById('closeRegistration').addEventListener('click', async () => {
+            try {
+                const accounts = await web3.eth.getAccounts();
+                const gameId = getGameId();
+                await contract.methods.closeRegistration(gameId).send({ from: accounts[0] });
+                alert('Registration closed');
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        document.getElementById('gameCount').addEventListener('click', async () => {
+            try {
+                const count = await contract.methods.gameCount().call();
+                outputContent.innerHTML = `<p>Game Count: ${count}</p>`;
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        document.getElementById('getWinner').addEventListener('click', async () => {
+            try {
+                const gameId = getGameId();
+                const winner = await contract.methods.getWinner(gameId).call();
+                outputContent.innerHTML = `<p>Winner: ${winner}</p>`;
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        document.getElementById('getRegisteredPlayers').addEventListener('click', async () => {
+            try {
+                const gameId = getGameId();
+                const players = await contract.methods.getRegisteredPlayers(gameId).call();
+                outputContent.innerHTML = `<p>Registered Players: ${players}</p>`;
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+
+        document.getElementById('getEliminatedPlayers').addEventListener('click', async () => {
+            try {
+                const gameId = getGameId();
+                const players = await contract.methods.getEliminatedPlayers(gameId).call();
+                outputContent.innerHTML = `<p>Eliminated Players: ${players}</p>`;
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    </script>
+
+    <footer>
+        <p>&copy; 2023 GameDApp. All rights reserved.</p>
+        <p><a href="https://quantumledgerportal.com/privacy-policy">Privacy Policy</a> | <a href="https://quantumledgerportal.com/terms">Terms of Service</a></p>
+    </footer>
+</body>
+</html>

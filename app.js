@@ -25,10 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof window.ethereum !== 'undefined') {
                 try {
                     await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const accounts = await web3.eth.getAccounts();
+                    console.log("Accounts retrieved:", accounts);
                     statusDiv.innerHTML = `<p style="color: green;">Connected to MetaMask</p>`;
                     welcomeContent.style.display = 'none';
                     mainContent.style.display = 'block';
-                    console.log("Connected to MetaMask");
                     initializeContract();
                 } catch (error) {
                     statusDiv.innerHTML = `<p style="color: red;">Error connecting to MetaMask: ${error.message}</p>`;
@@ -419,6 +420,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const accounts = await web3.eth.getAccounts();
                     console.log("Accounts:", accounts); // Ajout pour debug
+                    if (accounts.length === 0) {
+                        throw new Error("No accounts found");
+                    }
                     await contract.methods.createGame().send({ from: accounts[0] });
                     alert('Game created');
                 } catch (error) {
@@ -432,6 +436,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const accounts = await web3.eth.getAccounts();
                     console.log("Accounts:", accounts); // Ajout pour debug
+                    if (accounts.length === 0) {
+                        throw new Error("No accounts found");
+                    }
                     const gameId = prompt("Enter Game ID:");
                     await contract.methods.startRound(gameId).send({ from: accounts[0] });
                     alert('Round started');
@@ -446,6 +453,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const accounts = await web3.eth.getAccounts();
                     console.log("Accounts:", accounts); // Ajout pour debug
+                    if (accounts.length === 0) {
+                        throw new Error("No accounts found");
+                    }
                     const gameId = prompt("Enter Game ID:");
                     await contract.methods.closeRegistration(gameId).send({ from: accounts[0] });
                     alert('Registration closed');
@@ -460,6 +470,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const accounts = await web3.eth.getAccounts();
                     console.log("Accounts:", accounts); // Ajout pour debug
+                    if (accounts.length === 0) {
+                        throw new Error("No accounts found");
+                    }
                     const gameId = prompt("Enter Game ID:");
                     const numBots = prompt("Enter number of bots:");
                     await contract.methods.registerBots(gameId, numBots).send({ from: accounts[0] });
@@ -475,6 +488,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const accounts = await web3.eth.getAccounts();
                     console.log("Accounts:", accounts); // Ajout pour debug
+                    if (accounts.length === 0) {
+                        throw new Error("No accounts found");
+                    }
                     const gameId = prompt("Enter Game ID:");
                     const pseudos = prompt("Enter player pseudos (comma separated):");
                     await contract.methods.registerMultiplePlayers(gameId, pseudos).send({ from: accounts[0] });
@@ -490,6 +506,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const accounts = await web3.eth.getAccounts();
                     console.log("Accounts:", accounts); // Ajout pour debug
+                    if (accounts.length === 0) {
+                        throw new Error("No accounts found");
+                    }
                     const gameId = prompt("Enter Game ID:");
                     const minEliminationCount = prompt("Enter minimum elimination count:");
                     const maxEliminationCount = prompt("Enter maximum elimination count:");
@@ -508,6 +527,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const accounts = await web3.eth.getAccounts();
                     console.log("Accounts:", accounts); // Ajout pour debug
+                    if (accounts.length === 0) {
+                        throw new Error("No accounts found");
+                    }
                     const gameId = prompt("Enter Game ID:");
                     const pseudo = prompt("Enter player pseudo:");
                     await contract.methods.registerPlayer(gameId, pseudo).send({ from: accounts[0] });

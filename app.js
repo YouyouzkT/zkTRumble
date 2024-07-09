@@ -1,56 +1,39 @@
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     const connectButton = document.getElementById('connectButton');
     const statusDiv = document.getElementById('status');
     const mainContent = document.getElementById('mainContent');
     const welcomeContent = document.getElementById('welcomeContent');
 
-    let web3;
-    let contract;
-    let accounts;
-
-    async function initializeWeb3(provider) {
-        if (provider) {
-            web3 = new Web3(provider);
-            accounts = await web3.eth.getAccounts();
-            localStorage.setItem('connected', 'true');
-            localStorage.setItem('accounts', JSON.stringify(accounts));
-            statusDiv.innerHTML = `<p style="color: green;">Connected to wallet</p>`;
-            welcomeContent.style.display = 'none';
-            mainContent.style.display = 'block';
-            initializeContract();
-        } else {
-            statusDiv.innerHTML = `<p style="color: red;">No provider found. Please install MetaMask or use WalletConnect.</p>`;
-        }
-    }
-
-    async function connectWallet() {
-        if (localStorage.getItem('connected') === 'true') {
-            const savedAccounts = JSON.parse(localStorage.getItem('accounts'));
-            await initializeWeb3(window.ethereum || window.WalletConnectProvider);
-            accounts = savedAccounts;
-        } else if (typeof window.ethereum !== 'undefined') {
-            try {
-                await window.ethereum.request({ method: 'eth_requestAccounts' });
-                await initializeWeb3(window.ethereum);
-            } catch (error) {
-                statusDiv.innerHTML = `<p style="color: red;">Error connecting to MetaMask: ${error.message}</p>`;
-            }
-        } else {
-            const WalletConnectProvider = window.WalletConnectProvider.default;
-            const provider = new WalletConnectProvider({
-                infuraId: "YOUR_INFURA_PROJECT_ID" // Remplacez par votre Infura Project ID
-            });
-            try {
-                await provider.enable();
-                await initializeWeb3(provider);
-            } catch (error) {
-                statusDiv.innerHTML = `<p style="color: red;">Error connecting to WalletConnect: ${error.message}</p>`;
-            }
-        }
-    }
-
     if (connectButton) {
-        connectButton.addEventListener('click', connectWallet);
+        connectButton.addEventListener('click', async () => {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    web3 = new Web3(window.ethereum);
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    statusDiv.innerHTML = `<p style="color: green;">Connected to MetaMask</p>`;
+                    welcomeContent.style.display = 'none';
+                    mainContent.style.display = 'block';
+                } catch (error) {
+                    statusDiv.innerHTML = `<p style="color: red;">Error connecting to MetaMask: ${error.message}</p>`;
+                }
+            } else {
+                statusDiv.innerHTML = `<p style="color: red;">MetaMask is not installed. Please install it to continue.</p>`;
+            }
+        });
+    }
+
+    const createManageButton = document.getElementById('createManageButton');
+    if (createManageButton) {
+        createManageButton.addEventListener('click', () => {
+            window.location.href = 'create-manage.html';
+        });
+    }
+
+    const registerButton = document.getElementById('registerButton');
+    if (registerButton) {
+        registerButton.addEventListener('click', () => {
+            window.location.href = 'register.html';
+        });
     }
 
     const contractAddress = "0x6f19096082Dc30f51189336c66927fb182eAD715";
@@ -406,24 +389,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     ];
 
+    let web3;
+    let contract;
+
     function initializeContract() {
-        if (web3) {
+        if (typeof window.ethereum !== 'undefined') {
+            web3 = new Web3(window.ethereum);
             contract = new web3.eth.Contract(contractABI, contractAddress);
             console.log("Contract initialized");
         } else {
-            console.error("Web3 is not initialized.");
+            console.error("MetaMask is not installed.");
         }
     }
 
     const pageFunctions = {
         'create-manage.html': () => {
-            if (localStorage.getItem('connected') === 'true') {
-                accounts = JSON.parse(localStorage.getItem('accounts'));
-                initializeContract();
-            }
+            initializeContract();
             document.getElementById('createGame').addEventListener('click', async () => {
                 try {
-                    if (!accounts) accounts = await web3.eth.getAccounts();
+                    const accounts = await web3.eth.getAccounts();
                     await contract.methods.createGame().send({ from: accounts[0] });
                     alert('Game created');
                 } catch (error) {
@@ -434,7 +418,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             document.getElementById('startRound').addEventListener('click', async () => {
                 try {
-                    if (!accounts) accounts = await web3.eth.getAccounts();
+                    const accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
                     await contract.methods.startRound(gameId).send({ from: accounts[0] });
                     alert('Round started');
@@ -446,7 +430,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             document.getElementById('closeRegistration').addEventListener('click', async () => {
                 try {
-                    if (!accounts) accounts = await web3.eth.getAccounts();
+                    const accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
                     await contract.methods.closeRegistration(gameId).send({ from: accounts[0] });
                     alert('Registration closed');
@@ -458,7 +442,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             document.getElementById('registerBots').addEventListener('click', async () => {
                 try {
-                    if (!accounts) accounts = await web3.eth.getAccounts();
+                    const accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
                     const numBots = prompt("Enter number of bots:");
                     await contract.methods.registerBots(gameId, numBots).send({ from: accounts[0] });
@@ -471,7 +455,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             document.getElementById('registerMultiplePlayers').addEventListener('click', async () => {
                 try {
-                    if (!accounts) accounts = await web3.eth.getAccounts();
+                    const accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
                     const pseudos = prompt("Enter player pseudos (comma separated):");
                     await contract.methods.registerMultiplePlayers(gameId, pseudos).send({ from: accounts[0] });
@@ -484,7 +468,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             document.getElementById('setEliminationRange').addEventListener('click', async () => {
                 try {
-                    if (!accounts) accounts = await web3.eth.getAccounts();
+                    const accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
                     const minEliminationCount = prompt("Enter minimum elimination count:");
                     const maxEliminationCount = prompt("Enter maximum elimination count:");
@@ -497,13 +481,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         },
         'register.html': () => {
-            if (localStorage.getItem('connected') === 'true') {
-                accounts = JSON.parse(localStorage.getItem('accounts'));
-                initializeContract();
-            }
+            initializeContract();
             document.getElementById('registerPlayer').addEventListener('click', async () => {
                 try {
-                    if (!accounts) accounts = await web3.eth.getAccounts();
+                    const accounts = await web3.eth.getAccounts();
                     const gameId = prompt("Enter Game ID:");
                     const pseudo = prompt("Enter player pseudo:");
                     await contract.methods.registerPlayer(gameId, pseudo).send({ from: accounts[0] });
@@ -520,14 +501,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (pageFunctions[currentPage]) {
         pageFunctions[currentPage]();
     }
-
-    // Ajout de WalletConnect script de CDN pour charger la bibliothèque
-    const walletConnectScript = document.createElement('script');
-    walletConnectScript.src = "https://unpkg.com/@walletconnect/web3-provider@1.6.6/dist/umd/index.min.js";
-    document.head.appendChild(walletConnectScript);
-
-    // Initialisez Web3 dès que le document est prêt
-    walletConnectScript.onload = () => {
-        connectWallet();
-    };
 });

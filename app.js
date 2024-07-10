@@ -380,14 +380,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function checkConnection() {
         const account = localStorage.getItem('account');
         if (account) {
-            if (typeof window.ethereum !== 'undefined') {
-                web3 = new Web3(window.ethereum);
+            if (typeof Web3 !== 'undefined') {
+                if (typeof window.ethereum !== 'undefined') {
+                    web3 = new Web3(window.ethereum);
+                } else {
+                    const provider = new WalletConnectProvider.default({ infuraId: "INFURA_PROJECT_ID" });
+                    web3 = new Web3(provider);
+                }
+                statusDiv.innerHTML = `<p style="color: green;">Connected as ${account}</p>`;
+                initializeContract();
             } else {
-                const provider = new WalletConnectProvider.default({ infuraId: "INFURA_PROJECT_ID" });
-                web3 = new Web3(provider);
+                console.error('Web3 is not defined');
             }
-            statusDiv.innerHTML = `<p style="color: green;">Connected as ${account}</p>`;
-            initializeContract();
         }
     }
 

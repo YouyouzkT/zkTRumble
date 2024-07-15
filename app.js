@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameIdInput = document.getElementById('gameIdInput');
 
     const contractAddress = "0x6f19096082Dc30f51189336c66927fb182eAD715";
-    const contractABI = [ 
+    const contractABI = [
         {
             "inputs": [],
             "stateMutability": "nonpayable",

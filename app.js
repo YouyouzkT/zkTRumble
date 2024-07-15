@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Vérifiez que Web3 est défini
+    if (typeof Web3 === 'undefined') {
+        alert('Web3 is not defined. Please make sure you have included the Web3 library.');
+        return;
+    }
+
     const connectMetaMaskButton = document.getElementById('connectMetaMask');
     const connectWalletConnectButton = document.getElementById('connectWalletConnect');
     const statusDiv = document.getElementById('status');

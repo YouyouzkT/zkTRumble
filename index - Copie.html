@@ -15,58 +15,50 @@
         <h1>zkTRumble 3.0 OnChain</h1>
         <p>Rumble Fight 3.0 OnChain For Full Transparency</p>
     </header>
-    <div class="content">
-        <h2>Connect your EVM wallet to RUMBLE!!!</h2>
-        <p>Connect using your MetaMask or WalletConnect </p>
-        
-        <button id="connectMetaMask" class="btn">Connect MetaMask</button>
-        <button id="connectWalletConnect" class="btn">Connect WalletConnect</button>
-        
-        <div id="status"></div>
+    <div class="content-wrapper">
+        <div class="content">
+            <h2>Connect your EVM wallet to RUMBLE!!!</h2>
+            <p>Connect using your MetaMask or WalletConnect </p>
+            
+            <button id="connectMetaMask" class="btn">Connect MetaMask</button>
+            <button id="connectWalletConnect" class="btn">Connect WalletConnect</button>
+            
+            <div id="status"></div>
 
-<div class="function-buttons">
-            <h2>Register for a Rumble</h2>
-<button id="registerPlayer" class="btn">Register Yourself</button>
-</div>
+            <div class="function-buttons">
+                <h2>Register for a Rumble</h2>
+                <button id="registerPlayer" class="btn">Register Yourself</button>
+            </div>
 
-<form id="gameForm">
-            <label class="input-label" for="gameIdInput">Game ID:</label>
-            <input type="number" id="gameIdInput" class="input-field" placeholder="Enter Game ID" required>
-        </form>
+            <form id="gameForm">
+                <label class="input-label" for="gameIdInput">Game ID:</label>
+                <input type="number" id="gameIdInput" class="input-field" placeholder="Enter Game ID" required>
+            </form>
 
-<div class="function-buttons">
-            <h2>Create your RUMBLE</h2>
-            <button id="createGame" class="btn">Create Game ID</button>
-</div>
+            <div class="function-buttons">
+                <h2>Create your RUMBLE</h2>
+                <button id="createGame" class="btn">Create Game ID</button>
+                <button id="gameCount" class="btn">Last GameID</button>
+            </div>
 
+            <div class="function-buttons">
+                <h2>Manage your RUMBLE</h2>
+                <button id="startRound" class="btn">Start Round</button>
+                <button id="closeRegistration" class="btn">Close Registration</button>
+                <button id="registerBots" class="btn">Add Bots</button>
+                <button id="registerMultiplePlayers" class="btn">Add Players List</button>
+                <button id="setEliminationRange" class="btn">Set Elimination Per Round</button>
+            </div>
 
-        <div class="function-buttons">
-            <h2>Manage your RUMBLE</h2>
-            <button id="startRound" class="btn">Start Round</button>
-            <button id="closeRegistration" class="btn">Close Registration</button>
-            <button id="registerBots" class="btn">Add Bots</button>
-            <button id="registerMultiplePlayers" class="btn">Add Players List</button>
-            <button id="setEliminationRange" class="btn">Set Elimination Per Round</button>
-        </div>
-
-        <div class="output">
-            <h2>Consult Stat</h2>
-            <button id="gameCount" class="btn">Last GameID</button>
-            <button id="getWinner" class="btn">Winner</button>
-            <button id="getRegisteredPlayers" class="btn">ALIVE Fighters</button>
-            <button id="getEliminatedPlayers" class="btn">DEAD Fighters</button>
-            <div id="outputContent"></div>
-        </div>
-
-        <h2>Explore More</h2>
-        <ul>
-            <li><a href="https://quantumledgerportal.com/smart-contract-explorer">Smart Contract Explorer</a></li>
-            <li><a href="https://quantumledgerportal.com/developer-tools">Developer Tools</a></li>
-            <li><a href="https://quantumledgerportal.com/marketplace">Marketplace</a></li>
-            <li><a href="https://quantumledgerportal.com/community-forum">Community Forum</a></li>
-        </ul>
-    </div>  
-    
+            <div class="output">
+                <h2>Consult Stat</h2>
+                <button id="getWinner" class="btn">Winner</button>
+                <button id="getRegisteredPlayers" class="btn">ALIVE Fighters</button>
+                <button id="getEliminatedPlayers" class="btn">DEAD Fighters</button>
+                <div id="outputContent"></div>
+            </div>
+        </div>  
+    </div>
     <footer>
         <p>&copy; 2023 GameDApp. All rights reserved.</p>
         <p><a href="https://quantumledgerportal.com/privacy-policy">Privacy Policy</a> | <a href="https://quantumledgerportal.com/terms">Terms of Service</a></p>

@@ -360,16 +360,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let web3;
     let contract;
-    let connectedAccount;
 
     // Function to connect using MetaMask
-    async function connectMetaMask() {
+    connectMetaMaskButton.addEventListener('click', async () => {
         if (typeof window.ethereum !== 'undefined') {
             try {
                 web3 = new Web3(window.ethereum);
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                connectedAccount = accounts[0];
-                statusDiv.innerHTML = `<p style="color: green;">Connected to MetaMask: ${connectedAccount}</p>`;
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                statusDiv.innerHTML = `<p style="color: green;">Connected to MetaMask</p>`;
                 initializeContract();
             } catch (error) {
                 statusDiv.innerHTML = `<p style="color: red;">Error connecting to MetaMask: ${error.message}</p>`;
@@ -377,32 +375,30 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             statusDiv.innerHTML = `<p style="color: red;">MetaMask is not installed. Please install it to continue.</p>`;
         }
-    }
+    });
 
     // Function to connect using WalletConnect
-    async function connectWalletConnect() {
+    connectWalletConnectButton.addEventListener('click', async () => {
         const provider = new WalletConnectProvider.default({
-            infuraId: "YOUR_INFURA_ID" // Replace with your Infura project ID
+            infuraId: "INFURA_PROJECT_ID" // Replace with your Infura project ID
         });
 
         try {
             await provider.enable();
             web3 = new Web3(provider);
-            const accounts = await web3.eth.getAccounts();
-            connectedAccount = accounts[0];
-            statusDiv.innerHTML = `<p style="color: green;">Connected to WalletConnect: ${connectedAccount}</p>`;
+            statusDiv.innerHTML = `<p style="color: green;">Connected to WalletConnect</p>`;
             initializeContract();
         } catch (error) {
             statusDiv.innerHTML = `<p style="color: red;">Error connecting to WalletConnect: ${error.message}</p>`;
         }
-    }
+    });
 
     function initializeContract() {
         contract = new web3.eth.Contract(contractABI, contractAddress);
     }
 
     function getGameId() {
-        const gameId = gameIdInput?.value;
+        const gameId = gameIdInput.value;
         if (!gameId) {
             alert('Please enter a Game ID');
             throw new Error('Game ID is required');
@@ -410,31 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return gameId;
     }
 
-    function navigate(page) {
-        localStorage.setItem('connectedAccount', connectedAccount);
-        window.location.href = page;
-    }
-
-    // Reconnect to wallet if already connected
-    window.addEventListener('load', () => {
-        connectedAccount = localStorage.getItem('connectedAccount');
-        if (connectedAccount) {
-            web3 = new Web3(window.ethereum || provider);
-            statusDiv.innerHTML = `<p style="color: green;">Connected: ${connectedAccount}</p>`;
-            initializeContract();
-        }
-    });
-
-    // Event listeners for navigation buttons
-    document.getElementById('connectMetaMask')?.addEventListener('click', connectMetaMask);
-    document.getElementById('connectWalletConnect')?.addEventListener('click', connectWalletConnect);
-    document.getElementById('navigateRegister')?.addEventListener('click', () => navigate('register.html'));
-    document.getElementById('navigateCreate')?.addEventListener('click', () => navigate('create.html'));
-    document.getElementById('navigateManage')?.addEventListener('click', () => navigate('manage.html'));
-    document.getElementById('navigateHome')?.addEventListener('click', () => navigate('index.html'));
-
-    // Other existing event listeners for contract interactions...
-    document.getElementById('createGame')?.addEventListener('click', async () => {
+    document.getElementById('createGame').addEventListener('click', async () => {
         try {
             const accounts = await web3.eth.getAccounts();
             await contract.methods.createGame().send({ from: accounts[0] });
@@ -444,7 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('registerPlayer')?.addEventListener('click', async () => {
+    document.getElementById('registerPlayer').addEventListener('click', async () => {
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
@@ -456,7 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('registerMultiplePlayers')?.addEventListener('click', async () => {
+    document.getElementById('registerMultiplePlayers').addEventListener('click', async () => {
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
@@ -468,7 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('registerBots')?.addEventListener('click', async () => {
+    document.getElementById('registerBots').addEventListener('click', async () => {
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
@@ -480,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('setEliminationRange')?.addEventListener('click', async () => {
+    document.getElementById('setEliminationRange').addEventListener('click', async () => {
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
@@ -493,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('startRound')?.addEventListener('click', async () => {
+    document.getElementById('startRound').addEventListener('click', async () => {
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
@@ -504,7 +476,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('closeRegistration')?.addEventListener('click', async () => {
+    document.getElementById('closeRegistration').addEventListener('click', async () => {
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
@@ -515,7 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('gameCount')?.addEventListener('click', async () => {
+    document.getElementById('gameCount').addEventListener('click', async () => {
         try {
             const count = await contract.methods.gameCount().call();
             outputContent.innerHTML = `<p>Game Count: ${count}</p>`;
@@ -524,7 +496,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('getWinner')?.addEventListener('click', async () => {
+    document.getElementById('getWinner').addEventListener('click', async () => {
         try {
             const gameId = getGameId();
             const winner = await contract.methods.getWinner(gameId).call();
@@ -534,7 +506,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('getRegisteredPlayers')?.addEventListener('click', async () => {
+    document.getElementById('getRegisteredPlayers').addEventListener('click', async () => {
         try {
             const gameId = getGameId();
             const players = await contract.methods.getRegisteredPlayers(gameId).call();
@@ -544,7 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('getEliminatedPlayers')?.addEventListener('click', async () => {
+    document.getElementById('getEliminatedPlayers').addEventListener('click', async () => {
         try {
             const gameId = getGameId();
             const players = await contract.methods.getEliminatedPlayers(gameId).call();

@@ -7,7 +7,8 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
 }
 
 header {
@@ -21,8 +22,9 @@ header {
     margin: 0 auto;
     padding: 20px;
     box-sizing: border-box;
-    background-color: #fff; /* Couleur de fond pour voir les bords */
+    background-color: #ffffff; /* Couleur de fond pour voir les bords */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
     text-align: center; /* Centre le texte dans le conteneur */
 }
 
@@ -38,12 +40,13 @@ h1, h2, p {
     cursor: pointer;
     border: none;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease-in-out;
 }
 
 .btn:hover {
     background-color: #007bff;
     color: #fff;
+    transform: scale(1.05);
 }
 
 .btn-metamask {
@@ -71,14 +74,21 @@ h1, h2, p {
     margin-right: 10px;
 }
 
+.btn-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 20px;
+}
+
 .rectangular-btn {
-    width: 100%; /* Remplit la largeur du conteneur */
+    width: 30%; /* Prend 1/3 de la largeur du conteneur */
+    height: 120px; /* Hauteur supérieure */
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 15px;
     font-size: 18px;
-    margin: 10px 0; /* Espacement vertical entre les boutons */
     cursor: pointer;
     border: 2px solid #000;
     border-radius: 0; /* Rectangulaire */
@@ -93,7 +103,7 @@ h1, h2, p {
 }
 
 .rectangular-btn img {
-    width: 32px;
-    height: 32px;
+    width: 48px; /* Taille plus grande pour l'image */
+    height: 48px;
     margin-right: 10px;
 }

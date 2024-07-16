@@ -38,31 +38,3 @@
     height: 24px;
     margin-right: 10px;
 }
-
-.rectangular-btn-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%; /* S'assure que le conteneur prend toute la hauteur disponible */
-}
-
-.rectangular-btn {
-    flex: 1; /* S'assure que chaque bouton prend une part égale de la hauteur */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 15px;
-    font-size: 18px;
-    cursor: pointer;
-    border: 2px solid #000;
-    border-radius: 0; /* Rectangulaire */
-    background-color: #e0e0e0;
-    color: #000;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    margin: 5px 0; /* Espace entre les boutons */
-}
-
-.rectangular-btn img {
-    width: 32px;
-    height: 32px;
-    margin-right: 10px;
-}

@@ -95,6 +95,7 @@ h1, h2, p {
     background-color: #e0e0e0;
     color: #000;
     transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 0 5px; /* Espacement horizontal entre les boutons */
 }
 
 .rectangular-btn:hover {

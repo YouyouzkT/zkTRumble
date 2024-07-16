@@ -81,9 +81,9 @@ h1, h2, p {
     margin-top: 20px;
 }
 
-.rectangular-btn {
-    width: 30%; /* Prend 1/3 de la largeur du conteneur */
-    height: 120px; /* Hauteur supérieure */
+.square-btn {
+    width: 228px; /* Taille fixe pour les boutons carrés */
+    height: 228px; /* Taille fixe pour les boutons carrés */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -91,20 +91,40 @@ h1, h2, p {
     font-size: 18px;
     cursor: pointer;
     border: 2px solid #000;
-    border-radius: 0; /* Rectangulaire */
+    border-radius: 0; /* Carré */
     background-color: #e0e0e0;
     color: #000;
     transition: background-color 0.3s ease, color 0.3s ease;
     margin: 0 5px; /* Espacement horizontal entre les boutons */
 }
 
-.rectangular-btn:hover {
+.square-btn:hover {
     background-color: #007bff;
     color: #fff;
 }
 
-.rectangular-btn img {
-    width: 48px; /* Taille plus grande pour l'image */
-    height: 48px;
-    margin-right: 10px;
+.square-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Assure que l'image est entièrement visible à l'intérieur du conteneur */
+}
+
+/* Media query pour la responsivité */
+@media (max-width: 600px) {
+    .btn-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .square-btn {
+        width: 100%;
+        max-width: 228px;
+        height: auto;
+        margin: 10px 0;
+    }
+
+    .square-btn img {
+        width: 100%;
+        height: auto;
+    }
 }

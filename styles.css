@@ -23,10 +23,12 @@ header {
     box-sizing: border-box;
     background-color: #fff; /* Couleur de fond pour voir les bords */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Centre le texte dans le conteneur */
 }
 
 h1, h2, p {
     margin: 0 0 10px 0;
+    text-align: center; /* Centre le texte dans les titres et paragraphes */
 }
 
 .btn {

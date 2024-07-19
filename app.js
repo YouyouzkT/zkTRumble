@@ -563,7 +563,16 @@ document.getElementById('games').addEventListener('click', async () => {
         try {
             const gameId = getGameId();
             const gameInfo = await contract.methods.games(gameId).call();
-            outputContent.innerHTML = `<pre>${JSON.stringify(gameInfo, null, 2)}</pre>`;
+
+            // Filtrer les clés numériques
+            const filteredGameInfo = Object.keys(gameInfo)
+                .filter(key => isNaN(key))
+                .reduce((obj, key) => {
+                    obj[key] = gameInfo[key];
+                    return obj;
+                }, {});
+
+            outputContent.innerHTML = `<pre>${JSON.stringify(filteredGameInfo, null, 2)}</pre>`;
         } catch (error) {
             alert('Error: ' + error.message);
         }

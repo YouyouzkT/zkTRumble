@@ -559,18 +559,19 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Error: ' + error.message);
         }
     });
-document.getElementById('games').addEventListener('click', async () => {
+   // Ajoutez l'écouteur d'événement pour le bouton "GameID info"
+    document.getElementById('games').addEventListener('click', async () => {
         try {
             const gameId = getGameId();
             const gameInfo = await contract.methods.games(gameId).call();
 
-            // Filtrer les clés numériques
-            const filteredGameInfo = Object.keys(gameInfo)
-                .filter(key => isNaN(key))
-                .reduce((obj, key) => {
-                    obj[key] = gameInfo[key];
-                    return obj;
-                }, {});
+            // Création d'un nouvel objet sans les clés numériques
+            const filteredGameInfo = {};
+            for (let key in gameInfo) {
+                if (isNaN(key)) {
+                    filteredGameInfo[key] = gameInfo[key];
+                }
+            }
 
             outputContent.innerHTML = `<pre>${JSON.stringify(filteredGameInfo, null, 2)}</pre>`;
         } catch (error) {

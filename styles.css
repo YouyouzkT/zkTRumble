@@ -119,6 +119,13 @@ h1, h2, p {
     object-fit: cover; /* Ajuste l'image pour couvrir tout le bouton */
 }
 
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Assurez-vous que le conteneur a une hauteur définie */
+}
+
 .btn-home {
     display: flex;
     align-items: center;

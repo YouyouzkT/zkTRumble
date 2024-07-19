@@ -119,6 +119,24 @@ h1, h2, p {
     object-fit: cover; /* Ajuste l'image pour couvrir tout le bouton */
 }
 
+.btn-home {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    color: #000;
+}
+
+.btn-home .icon-home {
+    width: 50px; /* Adjust the size as needed */
+    height: 50px;
+    margin-right: 10px;
+}
+
 /* Media query pour la responsivité */
 @media (max-width: 600px) {
     .btn-container {

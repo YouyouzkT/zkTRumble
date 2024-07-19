@@ -559,4 +559,23 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Error: ' + error.message);
         }
     });
+   // Ajoutez l'écouteur d'événement pour le bouton "GameID info"
+    document.getElementById('games').addEventListener('click', async () => {
+        try {
+            const gameId = getGameId();
+            const gameInfo = await contract.methods.games(gameId).call();
+
+            // Création d'un nouvel objet sans les clés numériques
+            const filteredGameInfo = {};
+            for (let key in gameInfo) {
+                if (isNaN(key)) {
+                    filteredGameInfo[key] = gameInfo[key];
+                }
+            }
+
+            outputContent.innerHTML = `<pre>${JSON.stringify(filteredGameInfo, null, 2)}</pre>`;
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
 });

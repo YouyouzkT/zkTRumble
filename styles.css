@@ -1,4 +1,5 @@
 /* styles.css */
+
 body {
     display: flex;
     flex-direction: column;
@@ -10,7 +11,7 @@ body {
     font-family: 'Roboto', sans-serif;
     background-image: url('images/Background.webp'); /* Image de fond */
     background-size: cover;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
     background-attachment: fixed;
 }
 

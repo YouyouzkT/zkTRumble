@@ -8,7 +8,10 @@ body {
     padding: 0;
     min-height: 100vh;
     font-family: 'Roboto', sans-serif;
-    background-color: #f8f9fa;
+    background-image: url('images/Background.webp'); /* Image de fond */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 header {
@@ -22,7 +25,7 @@ header {
     margin: 0 auto;
     padding: 20px;
     box-sizing: border-box;
-    background-color: #ffffff; /* Couleur de fond pour voir les bords */
+    background-color: rgba(255, 255, 255, 0.8); /* Couleur de fond semi-transparente */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     text-align: center; /* Centre le texte dans le conteneur */
@@ -144,6 +147,7 @@ h1, h2, p {
     margin-right: 10px;
 }
 
+
 /* Media query pour la responsivité */
 @media (max-width: 600px) {
     .btn-container {
@@ -162,4 +166,6 @@ h1, h2, p {
         width: 100%;
         height: auto;
     }
+
+
 }

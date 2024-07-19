@@ -8,7 +8,10 @@ body {
     padding: 0;
     min-height: 100vh;
     font-family: 'Roboto', sans-serif;
-    background-color: #f8f9fa;
+    background-image: url('images/background.png'); /* Image de fond */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 header {
@@ -119,6 +122,32 @@ h1, h2, p {
     object-fit: cover; /* Ajuste l'image pour couvrir tout le bouton */
 }
 
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* Assurez-vous que le conteneur a une hauteur définie */
+}
+
+.btn-home {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    color: #000;
+}
+
+.btn-home .icon-home {
+    width: 50px; /* Adjust the size as needed */
+    height: 50px;
+    margin-right: 10px;
+}
+
+
 /* Media query pour la responsivité */
 @media (max-width: 600px) {
     .btn-container {
@@ -137,4 +166,6 @@ h1, h2, p {
         width: 100%;
         height: auto;
     }
+
+
 }

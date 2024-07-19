@@ -559,4 +559,13 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Error: ' + error.message);
         }
     });
+document.getElementById('games').addEventListener('click', async () => {
+        try {
+            const gameId = getGameId();
+            const gameInfo = await contract.methods.games(gameId).call();
+            outputContent.innerHTML = `<pre>${JSON.stringify(gameInfo, null, 2)}</pre>`;
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
 });

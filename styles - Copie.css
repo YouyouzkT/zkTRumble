@@ -1,4 +1,5 @@
 /* styles.css */
+
 body {
     display: flex;
     flex-direction: column;
@@ -8,9 +9,9 @@ body {
     padding: 0;
     min-height: 100vh;
     font-family: 'Roboto', sans-serif;
-    background-image: url('images/background.png'); /* Image de fond */
+    background-image: url('images/Background.webp'); /* Image de fond */
     background-size: cover;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
     background-attachment: fixed;
 }
 
@@ -25,7 +26,7 @@ header {
     margin: 0 auto;
     padding: 20px;
     box-sizing: border-box;
-    background-color: #ffffff; /* Couleur de fond pour voir les bords */
+    background-color: rgba(255, 255, 255, 0.8); /* Couleur de fond semi-transparente */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     text-align: center; /* Centre le texte dans le conteneur */

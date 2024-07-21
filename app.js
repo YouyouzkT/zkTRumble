@@ -10,9 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusDiv = document.getElementById('status');
     const outputContent = document.getElementById('outputContent');
     const gameIdInput = document.getElementById('gameIdInput');
- const registerPlayerButton = document.getElementById('registerPlayer');
+
+ /*
+const registerPlayerButton = document.getElementById('registerPlayer');
     const transactionModal = document.getElementById('transactionModal');
     const modalCloseButton = document.querySelector('.modal .close');
+*/
 
 
     const contractAddress = "0x6f19096082Dc30f51189336c66927fb182eAD715";

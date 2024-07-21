@@ -370,27 +370,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize contract function
     function initializeContract() {
         contract = new web3.eth.Contract(contractABI, contractAddress);
+        console.log('Contract initialized:', contract);
 
-         // Listen for PlayerEliminated events
+        // Écouter les événements de round
         contract.events.PlayerEliminated({
             filter: {},
             fromBlock: 'latest'
         }, function(error, event) {
             if (error) {
-                console.error('Error fetching events:', error);
+                console.error('Error fetching PlayerEliminated events:', error);
             } else {
                 console.log('PlayerEliminated event:', event); // Debug log
                 handleRoundEvents([event.returnValues]);
             }
         });
 
-         // Listen for WinnerDeclared events
         contract.events.WinnerDeclared({
             filter: {},
             fromBlock: 'latest'
         }, function(error, event) {
             if (error) {
-                console.error('Error fetching events:', error);
+                console.error('Error fetching WinnerDeclared events:', error);
             } else {
                 console.log('WinnerDeclared event:', event); // Debug log
                 handleRoundEvents([event.returnValues]);
@@ -401,10 +401,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to handle round events
     function handleRoundEvents(events) {
         const liveEventsDiv = document.getElementById('liveEvents');
+        if (!liveEventsDiv) {
+            console.error('liveEventsDiv not found');
+            return;
+        }
+        console.log('Handling round events:', events);
         if (liveEventsDiv) {
-            // Clear previous events (if needed)
-            liveEventsDiv.innerHTML = '';
-
             events.forEach(event => {
                 const eventText = document.createElement('p');
                 if (event.pseudo) {
@@ -413,9 +415,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     eventText.textContent = `Le gagnant est ${event.winner}`;
                 }
                 liveEventsDiv.appendChild(eventText);
+                console.log('Event appended to liveEvents:', eventText.textContent);
             });
         }
     }
+
 
     // Function to connect using MetaMask
     async function connectMetaMask() {

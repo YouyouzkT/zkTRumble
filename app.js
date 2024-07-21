@@ -10,6 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusDiv = document.getElementById('status');
     const outputContent = document.getElementById('outputContent');
     const gameIdInput = document.getElementById('gameIdInput');
+ const registerPlayerButton = document.getElementById('registerPlayer');
+    const transactionModal = document.getElementById('transactionModal');
+    const modalCloseButton = document.querySelector('.modal .close');
+
 
     const contractAddress = "0x6f19096082Dc30f51189336c66927fb182eAD715";
     const contractABI = [
@@ -421,6 +425,28 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = page;
     }
 
+// Fonction pour afficher le modal
+    function showModal() {
+        transactionModal.style.display = "block";
+    }
+
+    // Fonction pour masquer le modal
+    function hideModal() {
+        transactionModal.style.display = "none";
+    }
+
+ // Event listener pour fermer le modal
+    modalCloseButton.onclick = function() {
+        hideModal();
+    }
+
+    // Event listener pour fermer le modal en cliquant en dehors du modal
+    window.onclick = function(event) {
+        if (event.target == transactionModal) {
+            hideModal();
+        }
+    }
+
     // Reconnect to wallet if already connected
     window.addEventListener('load', () => {
         connectedAccount = localStorage.getItem('connectedAccount');
@@ -450,8 +476,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('registerPlayer')?.addEventListener('click', async () => {
+   // Modifier l'écouteur d'événement pour le bouton registerPlayer
+    registerPlayerButton.addEventListener('click', async () => {
         try {
+            showModal();
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
             const pseudo = prompt("Enter player pseudo:");
@@ -459,8 +487,11 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Player registered');
         } catch (error) {
             alert('Error: ' + error.message);
+        } finally {
+            hideModal();
         }
     });
+
 
     document.getElementById('registerMultiplePlayers')?.addEventListener('click', async () => {
         try {

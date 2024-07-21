@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Vérifiez que Web3 est défini
     if (typeof Web3 === 'undefined') {
         alert('Web3 is not defined. Please make sure you have included the Web3 library.');
         return;
@@ -368,46 +367,52 @@ document.addEventListener('DOMContentLoaded', () => {
     let contract;
     let connectedAccount;
 
-// Function to handle round events
+    // Initialize contract function
+    function initializeContract() {
+        contract = new web3.eth.Contract(contractABI, contractAddress);
+
+        // Écouter les événements de round
+        contract.events.PlayerEliminated({
+            filter: {},
+            fromBlock: 'latest'
+        }, function(error, event) {
+            if (error) {
+                console.error('Error fetching events:', error);
+            } else {
+                handleRoundEvents([event.returnValues]);
+            }
+        });
+
+        contract.events.WinnerDeclared({
+            filter: {},
+            fromBlock: 'latest'
+        }, function(error, event) {
+            if (error) {
+                console.error('Error fetching events:', error);
+            } else {
+                handleRoundEvents([event.returnValues]);
+            }
+        });
+    }
+
+    // Function to handle round events
     function handleRoundEvents(events) {
         const liveEventsDiv = document.getElementById('liveEvents');
         if (liveEventsDiv) {
-            liveEventsDiv.innerHTML = ''; // Clear previous events
+            // Clear previous events (if needed)
+            liveEventsDiv.innerHTML = '';
 
             events.forEach(event => {
                 const eventText = document.createElement('p');
-                eventText.textContent = event;
+                if (event.pseudo) {
+                    eventText.textContent = `${event.pseudo} a été éliminé`;
+                } else if (event.winner) {
+                    eventText.textContent = `Le gagnant est ${event.winner}`;
+                }
                 liveEventsDiv.appendChild(eventText);
             });
         }
     }
-
-// Simulate fetching round events
-    function fetchRoundEvents() {
-        // Replace this with actual logic to fetch round events
-        return [
-            "bot 8 decoupe en rondelle bot1",
-            "Bot 3 à pousser louis du sommet de la tour eiffel",
-            "ninon avait faim, elle a manger bot2"
-        ];
-    }
-
-// Event listener for start round
-    document.getElementById('startRound')?.addEventListener('click', async () => {
-        try {
-            const accounts = await web3.eth.getAccounts();
-            const gameId = getGameId();
-            await contract.methods.startRound(gameId).send({ from: accounts[0] });
-
-            // Simulate fetching events after round starts
-            const roundEvents = fetchRoundEvents();
-            handleRoundEvents(roundEvents);
-
-            alert('Round started');
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
-    });
 
     // Function to connect using MetaMask
     async function connectMetaMask() {
@@ -429,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to connect using WalletConnect
     async function connectWalletConnect() {
         const provider = new WalletConnectProvider.default({
-            infuraId: "YOUR_INFURA_ID" // Replace with your Infura project ID
+            infuraId: "YOUR_INFURA_ID" // Remplacez par votre ID de projet Infura
         });
 
         try {
@@ -442,10 +447,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             statusDiv.innerHTML = `<p style="color: red;">Error connecting to WalletConnect: ${error.message}</p>`;
         }
-    }
-
-    function initializeContract() {
-        contract = new web3.eth.Contract(contractABI, contractAddress);
     }
 
     function getGameId() {
@@ -600,13 +601,12 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Error: ' + error.message);
         }
     });
-   // Ajoutez l'écouteur d'événement pour le bouton "GameID info"
-    document.getElementById('games').addEventListener('click', async () => {
+
+    document.getElementById('games')?.addEventListener('click', async () => {
         try {
             const gameId = getGameId();
             const gameInfo = await contract.methods.games(gameId).call();
 
-            // Création d'un nouvel objet sans les clés numériques
             const filteredGameInfo = {};
             for (let key in gameInfo) {
                 if (isNaN(key)) {

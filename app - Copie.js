@@ -368,47 +368,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let contract;
     let connectedAccount;
 
-// Function to handle round events
-    function handleRoundEvents(events) {
-        const liveEventsDiv = document.getElementById('liveEvents');
-        if (liveEventsDiv) {
-            liveEventsDiv.innerHTML = ''; // Clear previous events
-
-            events.forEach(event => {
-                const eventText = document.createElement('p');
-                eventText.textContent = event;
-                liveEventsDiv.appendChild(eventText);
-            });
-        }
-    }
-
-// Simulate fetching round events
-    function fetchRoundEvents() {
-        // Replace this with actual logic to fetch round events
-        return [
-            "bot 8 decoupe en rondelle bot1",
-            "Bot 3 à pousser louis du sommet de la tour eiffel",
-            "ninon avait faim, elle a manger bot2"
-        ];
-    }
-
-// Event listener for start round
-    document.getElementById('startRound')?.addEventListener('click', async () => {
-        try {
-            const accounts = await web3.eth.getAccounts();
-            const gameId = getGameId();
-            await contract.methods.startRound(gameId).send({ from: accounts[0] });
-
-            // Simulate fetching events after round starts
-            const roundEvents = fetchRoundEvents();
-            handleRoundEvents(roundEvents);
-
-            alert('Round started');
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
-    });
-
     // Function to connect using MetaMask
     async function connectMetaMask() {
         if (typeof window.ethereum !== 'undefined') {

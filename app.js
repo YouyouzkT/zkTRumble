@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function initializeContract() {
         contract = new web3.eth.Contract(contractABI, contractAddress);
 
-        // Écouter les événements de round
+         // Listen for PlayerEliminated events
         contract.events.PlayerEliminated({
             filter: {},
             fromBlock: 'latest'
@@ -379,10 +379,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (error) {
                 console.error('Error fetching events:', error);
             } else {
+                console.log('PlayerEliminated event:', event); // Debug log
                 handleRoundEvents([event.returnValues]);
             }
         });
 
+         // Listen for WinnerDeclared events
         contract.events.WinnerDeclared({
             filter: {},
             fromBlock: 'latest'
@@ -390,6 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (error) {
                 console.error('Error fetching events:', error);
             } else {
+                console.log('WinnerDeclared event:', event); // Debug log
                 handleRoundEvents([event.returnValues]);
             }
         });

@@ -367,9 +367,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let contract;
     let connectedAccount;
 
-    // Liste pour suivre les événements déjà ajoutés
-    const eventCache = new Set();
-
     // Initialize contract function
     function initializeContract() {
         contract = new web3.eth.Contract(contractABI, contractAddress);

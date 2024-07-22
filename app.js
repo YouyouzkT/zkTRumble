@@ -367,6 +367,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let contract;
     let connectedAccount;
 
+const statusDiv = document.getElementById('status');
+
+    if (!statusDiv) {
+        console.error('statusDiv not found');
+        return;
+    }
+
     // Liste pour suivre les événements déjà ajoutés
     const eventCache = new Set();
 

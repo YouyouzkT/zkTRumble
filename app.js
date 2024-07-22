@@ -524,4 +524,123 @@ document.addEventListener('DOMContentLoaded', () => {
             await contract.methods.registerPlayer(gameId, pseudo).send({ from: accounts[0] });
             alert('Player registered');
         } catch (error) {
-            alert('Error
+            alert('Error: ' + error.message);
+        }
+    });
+
+    document.getElementById('registerMultiplePlayers')?.addEventListener('click', async () => {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const gameId = getGameId();
+            const pseudos = prompt("Enter player pseudos (comma separated):");
+            await contract.methods.registerMultiplePlayers(gameId, pseudos).send({ from: accounts[0] });
+            alert('Multiple players registered');
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+
+    document.getElementById('registerBots')?.addEventListener('click', async () => {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const gameId = getGameId();
+            const numBots = prompt("Enter number of bots:");
+            await contract.methods.registerBots(gameId, numBots).send({ from: accounts[0] });
+            alert('Bots registered');
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+
+    document.getElementById('setEliminationRange')?.addEventListener('click', async () => {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const gameId = getGameId();
+            const minEliminationCount = prompt("Enter minimum elimination count:");
+            const maxEliminationCount = prompt("Enter maximum elimination count:");
+            await contract.methods.setEliminationRange(gameId, minEliminationCount, maxEliminationCount).send({ from: accounts[0] });
+            alert('Elimination range set');
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+
+    document.getElementById('startRound')?.addEventListener('click', async () => {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const gameId = getGameId();
+            await contract.methods.startRound(gameId).send({ from: accounts[0] });
+            alert('Round started');
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+
+    document.getElementById('closeRegistration')?.addEventListener('click', async () => {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const gameId = getGameId();
+            await contract.methods.closeRegistration(gameId).send({ from: accounts[0] });
+            alert('Registration closed');
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+
+    document.getElementById('gameCount')?.addEventListener('click', async () => {
+        try {
+            const count = await contract.methods.gameCount().call();
+            outputContent.innerHTML = `<p>Game Count: ${count}</p>`;
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+
+    document.getElementById('getWinner')?.addEventListener('click', async () => {
+        try {
+            const gameId = getGameId();
+            const winner = await contract.methods.getWinner(gameId).call();
+            outputContent.innerHTML = `<p>Winner: ${winner}</p>`;
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+
+    document.getElementById('getRegisteredPlayers')?.addEventListener('click', async () => {
+        try {
+            const gameId = getGameId();
+            const players = await contract.methods.getRegisteredPlayers(gameId).call();
+            outputContent.innerHTML = `<p>Registered Players: ${players}</p>`;
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+
+    document.getElementById('getEliminatedPlayers')?.addEventListener('click', async () => {
+        try {
+            const gameId = getGameId();
+            const players = await contract.methods.getEliminatedPlayers(gameId).call();
+            outputContent.innerHTML = `<p>Eliminated Players: ${players}</p>`;
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+
+    document.getElementById('games')?.addEventListener('click', async () => {
+        try {
+            const gameId = getGameId();
+            const gameInfo = await contract.methods.games(gameId).call();
+
+            const filteredGameInfo = {};
+            for (let key in gameInfo) {
+                if (isNaN(key)) {
+                    filteredGameInfo[key] = gameInfo[key];
+                }
+            }
+
+            outputContent.innerHTML = `<pre>${JSON.stringify(filteredGameInfo, null, 2)}</pre>`;
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+});

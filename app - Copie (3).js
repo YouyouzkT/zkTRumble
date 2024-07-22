@@ -366,54 +366,40 @@ document.addEventListener('DOMContentLoaded', () => {
     let web3;
     let contract;
     let connectedAccount;
-    let listenersInitialized = false; // Ajout du drapeau pour éviter l'initialisation multiple
+
 
     // Liste pour suivre les événements déjà ajoutés
     const eventCache = new Set();
 
     // Initialize contract function
     function initializeContract() {
-        if (contract && listenersInitialized) {
-            console.log('Contract and listeners already initialized.');
-            return;
-        }
         contract = new web3.eth.Contract(contractABI, contractAddress);
         console.log('Contract initialized:', contract);
 
-        if (!listenersInitialized) {
-            // Écouter les événements de round
-            contract.events.PlayerEliminated({
-                filter: {},
-                fromBlock: 'latest'
-            }, function(error, event) {
-                if (error) {
-                    console.error('Error fetching PlayerEliminated events:', error);
-                } else {
-                    console.log('PlayerEliminated event:', event); // Debug log
-                    if (!eventCache.has(event.id)) {
-                        eventCache.add(event.id);
-                        handleRoundEvents([event.returnValues]);
-                    }
-                }
-            });
+        // Écouter les événements de round
+        contract.events.PlayerEliminated({
+            filter: {},
+            fromBlock: 'latest'
+        }, function(error, event) {
+            if (error) {
+                console.error('Error fetching PlayerEliminated events:', error);
+            } else {
+                console.log('PlayerEliminated event:', event); // Debug log
+                handleRoundEvents([event.returnValues]);
+            }
+        });
 
-            contract.events.WinnerDeclared({
-                filter: {},
-                fromBlock: 'latest'
-            }, function(error, event) {
-                if (error) {
-                    console.error('Error fetching WinnerDeclared events:', error);
-                } else {
-                    console.log('WinnerDeclared event:', event); // Debug log
-                    if (!eventCache.has(event.id)) {
-                        eventCache.add(event.id);
-                        handleRoundEvents([event.returnValues]);
-                    }
-                }
-            });
-
-            listenersInitialized = true;
-        }
+        contract.events.WinnerDeclared({
+            filter: {},
+            fromBlock: 'latest'
+        }, function(error, event) {
+            if (error) {
+                console.error('Error fetching WinnerDeclared events:', error);
+            } else {
+                console.log('WinnerDeclared event:', event); // Debug log
+                handleRoundEvents([event.returnValues]);
+            }
+        });
     }
 
     // Function to handle round events
@@ -424,17 +410,20 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         console.log('Handling round events:', events);
-        events.forEach(event => {
-            const eventText = document.createElement('p');
-            if (event.pseudo) {
-                eventText.textContent = `${event.pseudo} a été éliminé`;
-            } else if (event.winner) {
-                eventText.textContent = `Le gagnant est ${event.winner}`;
-            }
-            liveEventsDiv.appendChild(eventText);
-            console.log('Event appended to liveEvents:', eventText.textContent);
-        });
+        if (liveEventsDiv) {
+            events.forEach(event => {
+                const eventText = document.createElement('p');
+                if (event.pseudo) {
+                    eventText.textContent = `${event.pseudo} a été éliminé`;
+                } else if (event.winner) {
+                    eventText.textContent = `Le gagnant est ${event.winner}`;
+                }
+                liveEventsDiv.appendChild(eventText);
+                console.log('Event appended to liveEvents:', eventText.textContent);
+            });
+        }
     }
+
 
     // Function to connect using MetaMask
     async function connectMetaMask() {

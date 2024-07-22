@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (event.eventType === 'PlayerEliminated') {
                 eventText.textContent = `${event.pseudo} a été éliminé`;
             } else if (event.eventType === 'WinnerDeclared') {
-                eventText.textContent = `Le gagnant est ${event.winner}`;
+                eventText.textContent = `Le gagnant est ${event.pseudo}`;
             }
             liveEventsDiv.appendChild(eventText);
             console.log('Event appended to liveEvents:', eventText.textContent);

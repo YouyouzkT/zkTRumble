@@ -448,8 +448,6 @@ document.addEventListener('DOMContentLoaded', () => {
             liveEventsDiv.appendChild(eventText);
             console.log('Event appended to liveEvents:', eventText.textContent);
         });
-
-        roundEvents = []; // Clear events after displaying
     }
 
     // Function to connect using MetaMask

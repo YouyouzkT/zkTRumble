@@ -370,7 +370,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Liste pour suivre les événements déjà ajoutés
     const eventCache = new Set();
-    let roundEvents = []; // Liste temporaire pour stocker les événements d'un round
 
     // Initialize contract function
     function initializeContract() {
@@ -394,8 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!eventCache.has(event.id)) {
                         eventCache.add(event.id);
                         event.returnValues.eventType = 'PlayerEliminated';
-                        roundEvents.push(event.returnValues);
-                        displayRoundEvents();
+                        handleRoundEvents([event.returnValues]);
                     }
                 }
             });
@@ -411,8 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!eventCache.has(event.id)) {
                         eventCache.add(event.id);
                         event.returnValues.eventType = 'WinnerDeclared';
-                        roundEvents.push(event.returnValues);
-                        displayRoundEvents();
+                        handleRoundEvents([event.returnValues]);
                     }
                 }
             });
@@ -421,24 +418,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Function to display round events in the correct order
-    function displayRoundEvents() {
+    // Function to handle round events
+    function handleRoundEvents(events) {
         const liveEventsDiv = document.getElementById('liveEvents');
         if (!liveEventsDiv) {
             console.error('liveEventsDiv not found');
             return;
         }
-        liveEventsDiv.innerHTML = ''; // Clear previous events
-
-        // Sort events to have eliminations first and winner last
-        const sortedEvents = roundEvents.sort((a, b) => {
-            if (a.eventType === 'WinnerDeclared') return 1;
-            if (b.eventType === 'WinnerDeclared') return -1;
-            return 0;
-        });
-
-        // Display sorted events
-        sortedEvents.forEach(event => {
+        console.log('Handling round events:', events);
+        events.forEach(event => {
             const eventText = document.createElement('p');
             if (event.eventType === 'PlayerEliminated') {
                 eventText.textContent = `${event.pseudo} a été éliminé`;
@@ -448,8 +436,6 @@ document.addEventListener('DOMContentLoaded', () => {
             liveEventsDiv.appendChild(eventText);
             console.log('Event appended to liveEvents:', eventText.textContent);
         });
-
-        roundEvents = []; // Clear events after displaying
     }
 
     // Function to connect using MetaMask

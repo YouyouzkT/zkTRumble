@@ -392,6 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log('PlayerEliminated event:', event); // Debug log
                     if (!eventCache.has(event.id)) {
                         eventCache.add(event.id);
+                        event.returnValues.eventType = 'PlayerEliminated';
                         handleRoundEvents([event.returnValues]);
                     }
                 }
@@ -407,6 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log('WinnerDeclared event:', event); // Debug log
                     if (!eventCache.has(event.id)) {
                         eventCache.add(event.id);
+                        event.returnValues.eventType = 'WinnerDeclared';
                         handleRoundEvents([event.returnValues]);
                     }
                 }
@@ -426,10 +428,10 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Handling round events:', events);
         events.forEach(event => {
             const eventText = document.createElement('p');
-            if (event.pseudo) {
+            if (event.eventType === 'PlayerEliminated') {
                 eventText.textContent = `${event.pseudo} a été éliminé`;
-            } else if (event.winner) {
-                eventText.textContent = `Le gagnant est ${event.winner}`;
+            } else if (event.eventType === 'WinnerDeclared') {
+                eventText.textContent = `Le gagnant est ${event.pseudo}`;
             }
             liveEventsDiv.appendChild(eventText);
             console.log('Event appended to liveEvents:', eventText.textContent);

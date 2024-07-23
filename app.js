@@ -430,24 +430,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         liveEventsDiv.innerHTML = ''; // Clear previous events
 
-        // Sort events to have eliminations first and winner last
-        const sortedEvents = roundEvents.sort((a, b) => {
-            if (a.eventType === 'WinnerDeclared') return 1;
-            if (b.eventType === 'WinnerDeclared') return -1;
-            return 0;
-        });
-
-        // Display sorted events
-        sortedEvents.forEach(event => {
-            const eventText = document.createElement('p');
-            if (event.eventType === 'PlayerEliminated') {
+        // Filter and display eliminated players first
+        roundEvents
+            .filter(event => event.eventType === 'PlayerEliminated')
+            .forEach(event => {
+                const eventText = document.createElement('p');
                 eventText.textContent = `${event.pseudo} a été éliminé`;
-            } else if (event.eventType === 'WinnerDeclared') {
+                liveEventsDiv.appendChild(eventText);
+                console.log('Event appended to liveEvents:', eventText.textContent);
+            });
+
+        // Then display the winner
+        roundEvents
+            .filter(event => event.eventType === 'WinnerDeclared')
+            .forEach(event => {
+                const eventText = document.createElement('p');
                 eventText.textContent = `Le gagnant est ${event.pseudo}`;
-            }
-            liveEventsDiv.appendChild(eventText);
-            console.log('Event appended to liveEvents:', eventText.textContent);
-        });
+                liveEventsDiv.appendChild(eventText);
+                console.log('Event appended to liveEvents:', eventText.textContent);
+            });
 
         roundEvents = []; // Clear events after displaying
     }

@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusDiv = document.getElementById('status');
     const outputContent = document.getElementById('outputContent');
     const gameIdInput = document.getElementById('gameIdInput');
-    const filterButton = document.getElementById('filterButton');
 
     const contractAddress = "0x6f19096082Dc30f51189336c66927fb182eAD715";
     const contractABI = [
@@ -372,7 +371,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Liste pour suivre les événements déjà ajoutés
     const eventCache = new Set();
     let roundEvents = []; // Liste temporaire pour stocker les événements d'un round
-    let currentGameId = null;
 
     // Initialize contract function
     function initializeContract() {
@@ -396,10 +394,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!eventCache.has(event.id)) {
                         eventCache.add(event.id);
                         event.returnValues.eventType = 'PlayerEliminated';
-                        if (currentGameId && event.returnValues.gameId === currentGameId) {
-                            roundEvents.push(event.returnValues);
-                            displayRoundEvents();
-                        }
+                        roundEvents.push(event.returnValues);
+                        displayRoundEvents();
                     }
                 }
             });
@@ -415,10 +411,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!eventCache.has(event.id)) {
                         eventCache.add(event.id);
                         event.returnValues.eventType = 'WinnerDeclared';
-                        if (currentGameId && event.returnValues.gameId === currentGameId) {
-                            roundEvents.push(event.returnValues);
-                            displayRoundEvents();
-                        }
+                        roundEvents.push(event.returnValues);
+                        displayRoundEvents();
                     }
                 }
             });
@@ -455,17 +449,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Event appended to liveEvents:', eventText.textContent);
         });
     }
-
-    // Event listener for filter button
-    filterButton.addEventListener('click', () => {
-        currentGameId = gameIdInput.value;
-        if (!currentGameId) {
-            alert('Please enter a Game ID');
-            return;
-        }
-        roundEvents = []; // Clear previous events
-        displayRoundEvents(); // Clear display
-    });
 
     // Function to connect using MetaMask
     async function connectMetaMask() {

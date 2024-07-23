@@ -1,28 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Live Round Events</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
-    <script src="https://unpkg.com/@walletconnect/web3-provider@1.6.6/dist/umd/index.min.js"></script>
-    <script defer src="app.js"></script>
+    <title>Live Events</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        #liveEvents {
+            margin-top: 20px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1><img src="images/banner.png" alt="zkTRumble 3.0 OnChain" class="banner">
-        <p>Rumble Fight 3.0 OnChain For Full Transparency</p>
-        </h1>
-    </header>
-    <header>
-        <h1>Live Round Events</h1>
-    </header>
-    <div class="content-wrapper">
-        <div id="status" class="status"></div> <!-- Ajoutez cet élément si manquant -->
-        <div id="liveEvents" class="live-events">
-            <!-- Les événements du round seront affichés ici -->
-        </div>
+    <h1>Live Events</h1>
+    <label for="gameIdInput">Enter Game ID: </label>
+    <input type="text" id="gameIdInput" placeholder="Game ID">
+    <button id="filterButton">Apply Filter</button>
+    <div id="liveEvents">
+        <!-- Les événements du round seront affichés ici -->
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>

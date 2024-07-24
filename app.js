@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "type": "function"
         }
     ];
-let web3;
+ let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -405,6 +405,7 @@ let web3;
         try {
             if (currentGameId) {
                 alivePlayers = await contract.methods.getRegisteredPlayers(currentGameId).call();
+                console.log('Alive players:', alivePlayers); // Debug log
             }
         } catch (error) {
             console.error('Error fetching alive players:', error);
@@ -427,6 +428,7 @@ let web3;
         });
 
         sortedEvents.forEach(event => {
+            console.log('Processing event:', event);
             if (!eventCache.has(event.id)) {
                 eventCache.add(event.id);
                 const eventText = document.createElement('p');
@@ -458,8 +460,10 @@ let web3;
                 if (error) {
                     console.error('Error fetching PlayerEliminated events:', error);
                 } else {
+                    console.log('PlayerEliminated event received:', event);
                     if (!eventCache.has(event.id)) {
                         roundEvents.push(event.returnValues);
+                        console.log('Event added to roundEvents:', event.returnValues);
                         displayRoundEvents();
                     }
                 }
@@ -472,8 +476,10 @@ let web3;
                 if (error) {
                     console.error('Error fetching WinnerDeclared events:', error);
                 } else {
+                    console.log('WinnerDeclared event received:', event);
                     if (!eventCache.has(event.id)) {
                         roundEvents.push(event.returnValues);
+                        console.log('Event added to roundEvents:', event.returnValues);
                         displayRoundEvents();
                     }
                 }
@@ -484,9 +490,10 @@ let web3;
     }
 
     // Event listener for filter button
+    const filterButton = document.getElementById('filterButton');
     if (filterButton) {
         filterButton.addEventListener('click', () => {
-            currentGameId = gameIdInput.value;
+            currentGameId = document.getElementById('gameIdInput').value;
             if (!currentGameId) {
                 alert('Please enter a Game ID');
                 return;
@@ -498,6 +505,7 @@ let web3;
     } else {
         console.error('filterButton not found in the DOM.');
     }
+
 
     // Function to connect using MetaMask
     async function connectMetaMask() {

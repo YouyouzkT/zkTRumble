@@ -392,10 +392,11 @@ document.addEventListener('DOMContentLoaded', () => {
         "Bravo à {pseudo} pour cette victoire éclatante !"
     ];
 
-    function getRandomPhrase(phrases, pseudo) {
-        const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-        return phrase.replace("{pseudo}", pseudo);
-    }
+   function getRandomPhrase(phrases, pseudo) {
+    const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+    console.log(`Selected phrase: ${phrase} for pseudo: ${pseudo}`); // Log de débogage
+    return phrase.replace("{pseudo}", pseudo);
+}
 
 
     // Initialize contract function
@@ -452,33 +453,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Function to display round events in the correct order
-    function displayRoundEvents() {
-        const liveEventsDiv = document.getElementById('liveEvents');
-        if (!liveEventsDiv) {
-            console.error('liveEventsDiv not found');
-            return;
-        }
-        liveEventsDiv.innerHTML = ''; // Clear previous events
-
-        // Sort events to have eliminations first and winner last
-        const sortedEvents = roundEvents.sort((a, b) => {
-            if (a.eventType === 'WinnerDeclared') return 1;
-            if (b.eventType === 'WinnerDeclared') return -1;
-            return 0;
-        });
-
-         // Display sorted events
-        sortedEvents.forEach(event => {
-            const eventText = document.createElement('p');
-            if (event.eventType === 'PlayerEliminated') {
-                eventText.textContent = getRandomPhrase(eliminationPhrases, event.pseudo);
-            } else if (event.eventType === 'WinnerDeclared') {
-                eventText.textContent = getRandomPhrase(winnerPhrases, event.pseudo);
-            }
-            liveEventsDiv.appendChild(eventText);
-            console.log('Event appended to liveEvents:', eventText.textContent);
-        });
+ function displayRoundEvents() {
+    const liveEventsDiv = document.getElementById('liveEvents');
+    if (!liveEventsDiv) {
+        console.error('liveEventsDiv not found');
+        return;
     }
+    liveEventsDiv.innerHTML = ''; // Clear previous events
+
+    // Sort events to have eliminations first and winner last
+    const sortedEvents = roundEvents.sort((a, b) => {
+        if (a.eventType === 'WinnerDeclared') return 1;
+        if (b.eventType === 'WinnerDeclared') return -1;
+        return 0;
+    });
+
+    // Display sorted events
+    sortedEvents.forEach(event => {
+        const eventText = document.createElement('p');
+        if (event.eventType === 'PlayerEliminated') {
+            eventText.textContent = getRandomPhrase(eliminationPhrases, event.pseudo);
+        } else if (event.eventType === 'WinnerDeclared') {
+            eventText.textContent = getRandomPhrase(winnerPhrases, event.pseudo);
+        }
+        liveEventsDiv.appendChild(eventText);
+        console.log('Event appended to liveEvents:', eventText.textContent);
+    });
+}
+
 
     // Event listener for filter button
     if (filterButton) {

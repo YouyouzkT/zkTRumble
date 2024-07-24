@@ -374,30 +374,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let roundEvents = []; // Liste temporaire pour stocker les événements d'un round
     let currentGameId = null;
 
-
-    // Phrases d'élimination et de victoire variées
-    const eliminationPhrases = [
-        "{pseudo} a été éliminé !",
-        "Oh non, {pseudo} n'a pas survécu !",
-        "Fin du jeu pour {pseudo}.",
-        "{pseudo} a mordu la poussière.",
-        "C'est terminé pour {pseudo}."
-    ];
-
-    const winnerPhrases = [
-        "Le gagnant est {pseudo} !",
-        "Félicitations à {pseudo}, le vainqueur !",
-        "{pseudo} a triomphé de tous les autres.",
-        "{pseudo} est le dernier en vie et remporte la victoire !",
-        "Bravo à {pseudo} pour cette victoire éclatante !"
-    ];
-
-    function getRandomPhrase(phrases, pseudo) {
-        const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-        return phrase.replace("{pseudo}", pseudo);
-    }
-
-
     // Initialize contract function
     function initializeContract() {
         if (contract && listenersInitialized) {

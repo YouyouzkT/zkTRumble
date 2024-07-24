@@ -19,7 +19,12 @@
         <h1>Live Round Events</h1>
     </header>
     <div class="content-wrapper">
-        <div id="status" class="status"></div> <!-- Ajoutez cet élément si manquant -->
+        <div id="status" class="status"></div>
+        <div class="game-id-filter">
+            <label for="gameIdInput">Enter Game ID: </label>
+            <input type="text" id="gameIdInput" placeholder="Game ID">
+            <button id="filterButton">Apply Filter</button>
+        </div>
         <div id="liveEvents" class="live-events">
             <!-- Les événements du round seront affichés ici -->
         </div>

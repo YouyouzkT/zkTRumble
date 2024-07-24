@@ -414,26 +414,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
- async function displayRoundEvents() {
-    const liveEventsDiv = document.getElementById('liveEvents');
-    if (!liveEventsDiv) {
-        console.error('liveEventsDiv not found');
-        return;
-    }
+    async function displayRoundEvents() {
+        const liveEventsDiv = document.getElementById('liveEvents');
+        if (!liveEventsDiv) {
+            console.error('liveEventsDiv not found');
+            return;
+        }
+        liveEventsDiv.innerHTML = ''; // Clear previous events
 
-    await updateAlivePlayers(); // Update the list of alive players
+        await updateAlivePlayers(); // Update the list of alive players
 
-    // Sort events to have eliminations first and winner last
-    const sortedEvents = roundEvents.sort((a, b) => {
-        if (a.eventType === 'WinnerDeclared') return 1;
-        if (b.eventType === 'WinnerDeclared') return -1;
-        return 0;
-    });
+        // Sort events to have eliminations first and winner last
+        const sortedEvents = roundEvents.sort((a, b) => {
+            if (a.eventType === 'WinnerDeclared') return 1;
+            if (b.eventType === 'WinnerDeclared') return -1;
+            return 0;
+        });
 
-    // Display only new events
-    sortedEvents.forEach(event => {
-        if (!eventCache.has(event.id)) {
-            eventCache.add(event.id);
+        // Display sorted events
+        sortedEvents.forEach(event => {
             const eventText = document.createElement('p');
             if (event.eventType === 'PlayerEliminated') {
                 const randomAlivePlayer = getRandomAlivePlayer();
@@ -443,9 +442,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             liveEventsDiv.appendChild(eventText);
             console.log('Event appended to liveEvents:', eventText.textContent);
-        }
-    });
-}
+        });
+    }
 
     // Initialize contract function
     function initializeContract() {

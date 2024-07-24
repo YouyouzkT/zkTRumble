@@ -363,7 +363,6 @@ document.addEventListener('DOMContentLoaded', () => {
             "type": "function"
         }
     ];
-
 let web3;
     let contract;
     let connectedAccount;
@@ -429,7 +428,7 @@ let web3;
 
         sortedEvents.forEach(event => {
             if (!eventCache.has(event.id)) {
-                eventCache.add(event.id); 
+                eventCache.add(event.id);
                 const eventText = document.createElement('p');
                 if (event.eventType === 'PlayerEliminated') {
                     const randomAlivePlayer = getRandomAlivePlayer();
@@ -493,6 +492,7 @@ let web3;
                 return;
             }
             roundEvents = []; // Clear previous events
+            eventCache.clear(); // Clear cache to allow reprocessing of events
             displayRoundEvents(); // Clear display
         });
     } else {

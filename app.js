@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    let web3;
+      let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -443,6 +443,59 @@ document.addEventListener('DOMContentLoaded', () => {
             liveEventsDiv.appendChild(eventText);
             console.log('Event appended to liveEvents:', eventText.textContent);
         });
+    }
+
+    // Initialize contract function
+    function initializeContract() {
+        if (contract && listenersInitialized) {
+            console.log('Contract and listeners already initialized.');
+            return;
+        }
+        contract = new web3.eth.Contract(contractABI, contractAddress);
+        console.log('Contract initialized:', contract);
+
+        if (!listenersInitialized) {
+            // Écouter les événements de round
+            contract.events.PlayerEliminated({
+                filter: {},
+                fromBlock: 'latest'
+            }, function(error, event) {
+                if (error) {
+                    console.error('Error fetching PlayerEliminated events:', error);
+                } else {
+                    console.log('PlayerEliminated event:', event); // Debug log
+                    if (!eventCache.has(event.id)) {
+                        eventCache.add(event.id);
+                        event.returnValues.eventType = 'PlayerEliminated';
+                        if (currentGameId && event.returnValues.gameId === currentGameId) {
+                            roundEvents.push(event.returnValues);
+                            displayRoundEvents();
+                        }
+                    }
+                }
+            });
+
+            contract.events.WinnerDeclared({
+                filter: {},
+                fromBlock: 'latest'
+            }, function(error, event) {
+                if (error) {
+                    console.error('Error fetching WinnerDeclared events:', error);
+                } else {
+                    console.log('WinnerDeclared event:', event); // Debug log
+                    if (!eventCache.has(event.id)) {
+                        eventCache.add(event.id);
+                        event.returnValues.eventType = 'WinnerDeclared';
+                        if (currentGameId && event.returnValues.gameId === currentGameId) {
+                            roundEvents.push(event.returnValues);
+                            displayRoundEvents();
+                        }
+                    }
+                }
+            });
+
+            listenersInitialized = true;
+        }
     }
 
     // Event listener for filter button

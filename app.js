@@ -364,16 +364,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-      let web3;
+let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
 
-    // Liste pour suivre les événements déjà ajoutés
     const eventCache = new Set();
     let roundEvents = [];
     let currentGameId = null;
-    let alivePlayers = []; // Liste des joueurs vivants
+    let alivePlayers = [];
 
     // Phrases d'élimination et de victoire variées
     const eliminationPhrases = [
@@ -414,40 +413,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
- async function displayRoundEvents() {
-    const liveEventsDiv = document.getElementById('liveEvents');
-    if (!liveEventsDiv) {
-        console.error('liveEventsDiv not found');
-        return;
+    async function displayRoundEvents() {
+        const liveEventsDiv = document.getElementById('liveEvents');
+        if (!liveEventsDiv) {
+            console.error('liveEventsDiv not found');
+            return;
+        }
+
+        await updateAlivePlayers(); // Met à jour la liste des joueurs vivants
+
+        // Trier les événements pour afficher les éliminations d'abord, puis le gagnant
+        const sortedEvents = roundEvents.sort((a, b) => {
+            if (a.eventType === 'WinnerDeclared') return 1;
+            if (b.eventType === 'WinnerDeclared') return -1;
+            return 0;
+        });
+
+        // Afficher uniquement les nouveaux événements
+        sortedEvents.forEach(event => {
+            if (!eventCache.has(event.id)) {
+                eventCache.add(event.id); // Marque cet événement comme traité
+                const eventText = document.createElement('p');
+                if (event.eventType === 'PlayerEliminated') {
+                    const randomAlivePlayer = getRandomAlivePlayer();
+                    eventText.textContent = getRandomPhrase(eliminationPhrases, event.pseudo, randomAlivePlayer);
+                } else if (event.eventType === 'WinnerDeclared') {
+                    eventText.textContent = getRandomPhrase(winnerPhrases, event.pseudo);
+                }
+                liveEventsDiv.appendChild(eventText);
+                console.log('Event appended to liveEvents:', eventText.textContent);
+            }
+        });
     }
 
-    await updateAlivePlayers(); // Update the list of alive players
-
-    // Sort events to have eliminations first and winner last
-    const sortedEvents = roundEvents.sort((a, b) => {
-        if (a.eventType === 'WinnerDeclared') return 1;
-        if (b.eventType === 'WinnerDeclared') return -1;
-        return 0;
-    });
-
-    // Display only new events
-    sortedEvents.forEach(event => {
-        if (!eventCache.has(event.id)) {
-            eventCache.add(event.id);
-            const eventText = document.createElement('p');
-            if (event.eventType === 'PlayerEliminated') {
-                const randomAlivePlayer = getRandomAlivePlayer();
-                eventText.textContent = getRandomPhrase(eliminationPhrases, event.pseudo, randomAlivePlayer);
-            } else if (event.eventType === 'WinnerDeclared') {
-                eventText.textContent = getRandomPhrase(winnerPhrases, event.pseudo);
-            }
-            liveEventsDiv.appendChild(eventText);
-            console.log('Event appended to liveEvents:', eventText.textContent);
-        }
-    });
-}
-
-    // Initialize contract function
+    // Fonction pour initialiser le contrat et écouter les événements
     function initializeContract() {
         if (contract && listenersInitialized) {
             console.log('Contract and listeners already initialized.');
@@ -467,12 +466,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     console.log('PlayerEliminated event:', event); // Debug log
                     if (!eventCache.has(event.id)) {
-                        eventCache.add(event.id);
-                        event.returnValues.eventType = 'PlayerEliminated';
-                        if (currentGameId && event.returnValues.gameId === currentGameId) {
-                            roundEvents.push(event.returnValues);
-                            displayRoundEvents();
-                        }
+                        roundEvents.push(event.returnValues);
+                        displayRoundEvents();
                     }
                 }
             });
@@ -486,12 +481,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     console.log('WinnerDeclared event:', event); // Debug log
                     if (!eventCache.has(event.id)) {
-                        eventCache.add(event.id);
-                        event.returnValues.eventType = 'WinnerDeclared';
-                        if (currentGameId && event.returnValues.gameId === currentGameId) {
-                            roundEvents.push(event.returnValues);
-                            displayRoundEvents();
-                        }
+                        roundEvents.push(event.returnValues);
+                        displayRoundEvents();
                     }
                 }
             });

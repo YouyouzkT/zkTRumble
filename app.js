@@ -457,15 +457,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Event listener for filter button
-    filterButton.addEventListener('click', () => {
-        currentGameId = gameIdInput.value;
-        if (!currentGameId) {
-            alert('Please enter a Game ID');
-            return;
-        }
-        roundEvents = []; // Clear previous events
-        displayRoundEvents(); // Clear display
-    });
+    if (filterButton) {
+        filterButton.addEventListener('click', () => {
+            currentGameId = gameIdInput.value;
+            if (!currentGameId) {
+                alert('Please enter a Game ID');
+                return;
+            }
+            roundEvents = []; // Clear previous events
+            displayRoundEvents(); // Clear display
+        });
+    } else {
+        console.error('filterButton not found in the DOM.');
+    }
 
     // Function to connect using MetaMask
     async function connectMetaMask() {

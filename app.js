@@ -374,7 +374,6 @@ let web3;
     let currentGameId = null;
     let alivePlayers = [];
 
-    // Phrases d'élimination et de victoire variées
     const eliminationPhrases = [
         "{pseudo} a été éliminé par {pseudoalivefighter} !",
         "Oh non, {pseudo} n'a pas survécu à l'attaque de {pseudoalivefighter} !",
@@ -420,19 +419,17 @@ let web3;
             return;
         }
 
-        await updateAlivePlayers(); // Met à jour la liste des joueurs vivants
+        await updateAlivePlayers();
 
-        // Trier les événements pour afficher les éliminations d'abord, puis le gagnant
         const sortedEvents = roundEvents.sort((a, b) => {
             if (a.eventType === 'WinnerDeclared') return 1;
             if (b.eventType === 'WinnerDeclared') return -1;
             return 0;
         });
 
-        // Afficher uniquement les nouveaux événements
         sortedEvents.forEach(event => {
             if (!eventCache.has(event.id)) {
-                eventCache.add(event.id); // Marque cet événement comme traité
+                eventCache.add(event.id); 
                 const eventText = document.createElement('p');
                 if (event.eventType === 'PlayerEliminated') {
                     const randomAlivePlayer = getRandomAlivePlayer();
@@ -446,7 +443,6 @@ let web3;
         });
     }
 
-    // Fonction pour initialiser le contrat et écouter les événements
     function initializeContract() {
         if (contract && listenersInitialized) {
             console.log('Contract and listeners already initialized.');
@@ -456,7 +452,6 @@ let web3;
         console.log('Contract initialized:', contract);
 
         if (!listenersInitialized) {
-            // Écouter les événements de round
             contract.events.PlayerEliminated({
                 filter: {},
                 fromBlock: 'latest'
@@ -464,7 +459,6 @@ let web3;
                 if (error) {
                     console.error('Error fetching PlayerEliminated events:', error);
                 } else {
-                    console.log('PlayerEliminated event:', event); // Debug log
                     if (!eventCache.has(event.id)) {
                         roundEvents.push(event.returnValues);
                         displayRoundEvents();
@@ -479,7 +473,6 @@ let web3;
                 if (error) {
                     console.error('Error fetching WinnerDeclared events:', error);
                 } else {
-                    console.log('WinnerDeclared event:', event); // Debug log
                     if (!eventCache.has(event.id)) {
                         roundEvents.push(event.returnValues);
                         displayRoundEvents();

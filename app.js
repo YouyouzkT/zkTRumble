@@ -467,13 +467,13 @@ document.addEventListener('DOMContentLoaded', () => {
             return 0;
         });
 
-        // Display sorted events
+         // Display sorted events
         sortedEvents.forEach(event => {
             const eventText = document.createElement('p');
             if (event.eventType === 'PlayerEliminated') {
-                eventText.textContent = `${event.pseudo} a été éliminé`;
+                eventText.textContent = getRandomPhrase(eliminationPhrases, event.pseudo);
             } else if (event.eventType === 'WinnerDeclared') {
-                eventText.textContent = `Le gagnant est ${event.pseudo}`;
+                eventText.textContent = getRandomPhrase(winnerPhrases, event.pseudo);
             }
             liveEventsDiv.appendChild(eventText);
             console.log('Event appended to liveEvents:', eventText.textContent);

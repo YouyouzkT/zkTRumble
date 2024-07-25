@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Liste pour suivre les événements déjà ajoutés
     let eventCache = new Set();  // Pour stocker les identifiants des événements déjà traités
-let roundEvents = [];        // Pour stocker les événements du round en cours
+let roundEvents = [];        // Pour stocker les événements de tous les rounds
 let currentGameId = null;    // Identifiant du jeu actuel
 
 const eliminationPhrases = [
@@ -417,7 +417,7 @@ function initializeContract() {
                     event.returnValues.eventType = 'PlayerEliminated';
                     if (currentGameId && event.returnValues.gameId === currentGameId) {
                         roundEvents.push(event.returnValues);
-                        displayRoundEvents();
+                        displayRoundEvents(); // Appeler pour ajouter les nouveaux événements
                     }
                 }
             }
@@ -436,7 +436,7 @@ function initializeContract() {
                     event.returnValues.eventType = 'WinnerDeclared';
                     if (currentGameId && event.returnValues.gameId === currentGameId) {
                         roundEvents.push(event.returnValues);
-                        displayRoundEvents();
+                        displayRoundEvents(); // Appeler pour ajouter les nouveaux événements
                     }
                 }
             }
@@ -452,16 +452,16 @@ function displayRoundEvents() {
         console.error('liveEventsDiv not found');
         return;
     }
-    liveEventsDiv.innerHTML = ''; // Efface les événements précédents
+    // Ne pas vider `liveEventsDiv`, ajouter simplement les nouveaux événements
 
-    // Trie les événements pour avoir les éliminations d'abord et le gagnant en dernier
+    // Trier les événements pour avoir les éliminations d'abord et le gagnant en dernier
     const sortedEvents = roundEvents.sort((a, b) => {
         if (a.eventType === 'WinnerDeclared') return 1;
         if (b.eventType === 'WinnerDeclared') return -1;
         return 0;
     });
 
-    // Affiche les événements triés avec des phrases variées
+    // Afficher les événements triés avec des phrases variées
     sortedEvents.forEach(event => {
         const eventText = document.createElement('p');
         if (event.eventType === 'PlayerEliminated') {
@@ -473,12 +473,6 @@ function displayRoundEvents() {
     });
 }
 
-// Réinitialiser les événements pour un nouveau round ou jeu
-function resetRoundEvents() {
-    roundEvents = []; // Réinitialiser les événements du round
-    displayRoundEvents(); // Mise à jour de l'affichage
-}
-
 // Event listener for filter button
 if (filterButton) {
     filterButton.addEventListener('click', () => {
@@ -487,7 +481,8 @@ if (filterButton) {
             alert('Please enter a Game ID');
             return;
         }
-        resetRoundEvents(); // Réinitialiser les événements lors du changement de jeu
+        // Reset `roundEvents` is removed to keep previous rounds' events
+        displayRoundEvents(); // Afficher les événements actuels
     });
 } else {
     console.error('filterButton not found in the DOM.');

@@ -364,24 +364,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    let web3;
+      let web3;
     let contract;
     let connectedAccount;
-    let listenersInitialized = false; // Ajout du drapeau pour éviter l'initialisation multiple
+    let listenersInitialized = false;
 
     // Liste pour suivre les événements déjà ajoutés
     const eventCache = new Set();
-    let roundEvents = []; // Liste temporaire pour stocker les événements d'un round
+    let roundEvents = [];
     let currentGameId = null;
-
+    let alivePlayers = []; // Liste des joueurs vivants
 
     // Phrases d'élimination et de victoire variées
     const eliminationPhrases = [
-        "{pseudo} a été éliminé !",
-        "Oh non, {pseudo} n'a pas survécu !",
-        "Fin du jeu pour {pseudo}.",
-        "{pseudo} a mordu la poussière.",
-        "C'est terminé pour {pseudo}."
+        "{pseudo} a été éliminé par {pseudoalivefighter} !",
+        "Oh non, {pseudo} n'a pas survécu à l'attaque de {pseudoalivefighter} !",
+        "{pseudoalivefighter} a mis fin au parcours de {pseudo}.",
+        "{pseudo} a été battu par {pseudoalivefighter} avec une grande maîtrise.",
+        "C'est terminé pour {pseudo}, qui a été éliminé par {pseudoalivefighter}."
     ];
 
     const winnerPhrases = [
@@ -392,12 +392,58 @@ document.addEventListener('DOMContentLoaded', () => {
         "Bravo à {pseudo} pour cette victoire éclatante !"
     ];
 
-   function getRandomPhrase(phrases, pseudo) {
-    const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-    console.log(`Selected phrase: ${phrase} for pseudo: ${pseudo}`); // Log de débogage
-    return phrase.replace("{pseudo}", pseudo);
-}
+    function getRandomPhrase(phrases, pseudo, pseudoalivefighter = "") {
+        const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+        return phrase.replace("{pseudo}", pseudo).replace("{pseudoalivefighter}", pseudoalivefighter);
+    }
 
+    function getRandomAlivePlayer() {
+        if (alivePlayers.length > 0) {
+            return alivePlayers[Math.floor(Math.random() * alivePlayers.length)];
+        }
+        return "";
+    }
+
+    async function updateAlivePlayers() {
+        try {
+            if (currentGameId) {
+                alivePlayers = await contract.methods.getRegisteredPlayers(currentGameId).call();
+            }
+        } catch (error) {
+            console.error('Error fetching alive players:', error);
+        }
+    }
+
+    async function displayRoundEvents() {
+        const liveEventsDiv = document.getElementById('liveEvents');
+        if (!liveEventsDiv) {
+            console.error('liveEventsDiv not found');
+            return;
+        }
+        liveEventsDiv.innerHTML = ''; // Clear previous events
+
+        await updateAlivePlayers(); // Update the list of alive players
+
+        // Sort events to have eliminations first and winner last
+        const sortedEvents = roundEvents.sort((a, b) => {
+            if (a.eventType === 'WinnerDeclared') return 1;
+            if (b.eventType === 'WinnerDeclared') return -1;
+            return 0;
+        });
+
+        // Display sorted events
+        sortedEvents.forEach(event => {
+            const eventText = document.createElement('p');
+            if (event.eventType === 'PlayerEliminated') {
+                const randomAlivePlayer = getRandomAlivePlayer();
+                eventText.textContent = getRandomPhrase(eliminationPhrases, event.pseudo, randomAlivePlayer);
+            } else if (event.eventType === 'WinnerDeclared') {
+                eventText.textContent = getRandomPhrase(winnerPhrases, event.pseudo);
+            }
+            liveEventsDiv.appendChild(eventText);
+            console.log('Event appended to liveEvents:', eventText.textContent);
+        });
+    }
 
     // Initialize contract function
     function initializeContract() {
@@ -451,36 +497,6 @@ document.addEventListener('DOMContentLoaded', () => {
             listenersInitialized = true;
         }
     }
-
-    // Function to display round events in the correct order
- function displayRoundEvents() {
-    const liveEventsDiv = document.getElementById('liveEvents');
-    if (!liveEventsDiv) {
-        console.error('liveEventsDiv not found');
-        return;
-    }
-    liveEventsDiv.innerHTML = ''; // Clear previous events
-
-    // Sort events to have eliminations first and winner last
-    const sortedEvents = roundEvents.sort((a, b) => {
-        if (a.eventType === 'WinnerDeclared') return 1;
-        if (b.eventType === 'WinnerDeclared') return -1;
-        return 0;
-    });
-
-    // Display sorted events
-    sortedEvents.forEach(event => {
-        const eventText = document.createElement('p');
-        if (event.eventType === 'PlayerEliminated') {
-            eventText.textContent = getRandomPhrase(eliminationPhrases, event.pseudo);
-        } else if (event.eventType === 'WinnerDeclared') {
-            eventText.textContent = getRandomPhrase(winnerPhrases, event.pseudo);
-        }
-        liveEventsDiv.appendChild(eventText);
-        console.log('Event appended to liveEvents:', eventText.textContent);
-    });
-}
-
 
     // Event listener for filter button
     if (filterButton) {

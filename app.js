@@ -453,7 +453,7 @@ function addNewEventToDisplay() {
         console.error('liveEventsDiv not found');
         return;
     }
-    liveEventsDiv.innerHTML = ''; // Efface l'affichage précédent
+
 
     // Trier les événements pour mettre les éliminations d'abord et les gagnants en dernier
     const sortedEvents = roundEvents.filter(event => event.gameId === currentGameId).sort((a, b) => {

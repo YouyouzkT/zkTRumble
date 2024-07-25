@@ -446,32 +446,22 @@ function initializeContract() {
     }
 }
 
-// Fonction pour afficher les événements en triant pour mettre le gagnant en dernier
-function addNewEventToDisplay() {
+// Fonction pour ajouter les nouveaux événements à l'affichage
+function addNewEventToDisplay(event) {
     const liveEventsDiv = document.getElementById('liveEvents');
     if (!liveEventsDiv) {
         console.error('liveEventsDiv not found');
         return;
     }
-    liveEventsDiv.innerHTML = ''; // Efface l'affichage précédent
-
-    // Trier les événements pour mettre les éliminations d'abord et les gagnants en dernier
-    const sortedEvents = roundEvents.filter(event => event.gameId === currentGameId).sort((a, b) => {
-        if (a.eventType === 'WinnerDeclared') return 1;
-        if (b.eventType === 'WinnerDeclared') return -1;
-        return 0;
-    });
-
-    sortedEvents.forEach(event => {
-        const eventText = document.createElement('p');
-        if (event.eventType === 'PlayerEliminated') {
-            eventText.textContent = getRandomPhrase(eliminationPhrases, event.pseudo);
-        } else if (event.eventType === 'WinnerDeclared') {
-            eventText.textContent = getRandomPhrase(winnerPhrases, event.pseudo);
-        }
-        liveEventsDiv.appendChild(eventText);
-    });
+    const eventText = document.createElement('p');
+    if (event.eventType === 'PlayerEliminated') {
+        eventText.textContent = getRandomPhrase(eliminationPhrases, event.pseudo);
+    } else if (event.eventType === 'WinnerDeclared') {
+        eventText.textContent = getRandomPhrase(winnerPhrases, event.pseudo);
+    }
+    liveEventsDiv.appendChild(eventText);
 }
+
 // Event listener for filter button
 if (filterButton) {
     filterButton.addEventListener('click', () => {

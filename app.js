@@ -370,8 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let listenersInitialized = false; // Ajout du drapeau pour éviter l'initialisation multiple
 
     // Liste pour suivre les événements déjà ajoutés
- let eventCache = new Set();  // Pour stocker les identifiants des événements déjà traités
+let eventCache = new Set();  // Pour stocker les identifiants des événements déjà traités
 let roundEvents = [];        // Pour stocker les événements de tous les rounds
+let displayedEvents = new Set();  // Pour suivre les événements déjà affichés
 let currentGameId = null;    // Identifiant du jeu actuel
 
 const eliminationPhrases = [
@@ -417,7 +418,7 @@ function initializeContract() {
                     event.returnValues.eventType = 'PlayerEliminated';
                     roundEvents.push(event.returnValues);
                     if (event.returnValues.gameId === currentGameId) {
-                        addNewEventToDisplay(); // Ajouter les nouveaux événements
+                        addNewEventToDisplay(event.returnValues); // Ajouter les nouveaux événements
                     }
                 }
             }
@@ -436,7 +437,7 @@ function initializeContract() {
                     event.returnValues.eventType = 'WinnerDeclared';
                     roundEvents.push(event.returnValues);
                     if (event.returnValues.gameId === currentGameId) {
-                        addNewEventToDisplay(); // Ajouter les nouveaux événements
+                        addNewEventToDisplay(event.returnValues); // Ajouter les nouveaux événements
                     }
                 }
             }
@@ -446,31 +447,24 @@ function initializeContract() {
     }
 }
 
-// Fonction pour afficher les événements en triant pour mettre le gagnant en dernier
-function addNewEventToDisplay() {
+// Fonction pour ajouter les nouveaux événements à l'affichage
+function addNewEventToDisplay(event) {
+    if (displayedEvents.has(event.id)) {
+        return; // Ne pas afficher un événement déjà affiché
+    }
     const liveEventsDiv = document.getElementById('liveEvents');
     if (!liveEventsDiv) {
         console.error('liveEventsDiv not found');
         return;
     }
-
-
-    // Trier les événements pour mettre les éliminations d'abord et les gagnants en dernier
-    const sortedEvents = roundEvents.filter(event => event.gameId === currentGameId).sort((a, b) => {
-        if (a.eventType === 'WinnerDeclared') return 1;
-        if (b.eventType === 'WinnerDeclared') return -1;
-        return 0;
-    });
-
-    sortedEvents.forEach(event => {
-        const eventText = document.createElement('p');
-        if (event.eventType === 'PlayerEliminated') {
-            eventText.textContent = getRandomPhrase(eliminationPhrases, event.pseudo);
-        } else if (event.eventType === 'WinnerDeclared') {
-            eventText.textContent = getRandomPhrase(winnerPhrases, event.pseudo);
-        }
-        liveEventsDiv.appendChild(eventText);
-    });
+    const eventText = document.createElement('p');
+    if (event.eventType === 'PlayerEliminated') {
+        eventText.textContent = getRandomPhrase(eliminationPhrases, event.pseudo);
+    } else if (event.eventType === 'WinnerDeclared') {
+        eventText.textContent = getRandomPhrase(winnerPhrases, event.pseudo);
+    }
+    liveEventsDiv.appendChild(eventText);
+    displayedEvents.add(event.id); // Marquer cet événement comme affiché
 }
 
 // Event listener for filter button
@@ -485,14 +479,18 @@ if (filterButton) {
         // Effacer les événements affichés précédemment
         const liveEventsDiv = document.getElementById('liveEvents');
         liveEventsDiv.innerHTML = ''; // Effacer l'affichage précédent
+        displayedEvents.clear(); // Réinitialiser les événements affichés
 
         // Afficher les événements pour le `gameId` sélectionné
-        addNewEventToDisplay();
+        roundEvents.forEach(event => {
+            if (event.gameId === currentGameId) {
+                addNewEventToDisplay(event);
+            }
+        });
     });
 } else {
     console.error('filterButton not found in the DOM.');
 }
-
 
 
 

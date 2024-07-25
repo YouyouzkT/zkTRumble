@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let listenersInitialized = false; // Ajout du drapeau pour éviter l'initialisation multiple
 
     // Liste pour suivre les événements déjà ajoutés
-    let eventCache = new Set();  // Pour stocker les identifiants des événements déjà traités
+  let eventCache = new Set();  // Pour stocker les identifiants des événements déjà traités
 let roundEvents = [];        // Pour stocker les événements de tous les rounds
 let currentGameId = null;    // Identifiant du jeu actuel
 
@@ -415,10 +415,8 @@ function initializeContract() {
                 if (!eventCache.has(uniqueEventId)) {
                     eventCache.add(uniqueEventId);
                     event.returnValues.eventType = 'PlayerEliminated';
-                    if (currentGameId && event.returnValues.gameId === currentGameId) {
-                        roundEvents.push(event.returnValues);
-                        addNewEventToDisplay(event.returnValues); // Ajouter les nouveaux événements
-                    }
+                    roundEvents.push(event.returnValues);
+                    addNewEventToDisplay(event.returnValues); // Ajouter les nouveaux événements
                 }
             }
         });
@@ -434,10 +432,8 @@ function initializeContract() {
                 if (!eventCache.has(uniqueEventId)) {
                     eventCache.add(uniqueEventId);
                     event.returnValues.eventType = 'WinnerDeclared';
-                    if (currentGameId && event.returnValues.gameId === currentGameId) {
-                        roundEvents.push(event.returnValues);
-                        addNewEventToDisplay(event.returnValues); // Ajouter les nouveaux événements
-                    }
+                    roundEvents.push(event.returnValues);
+                    addNewEventToDisplay(event.returnValues); // Ajouter les nouveaux événements
                 }
             }
         });
@@ -470,12 +466,14 @@ if (filterButton) {
             alert('Please enter a Game ID');
             return;
         }
-        // Afficher les événements existants et les nouveaux événements
+        // Afficher les événements déjà existants
+        liveEventsDiv.innerHTML = ''; // Vide le contenu pour ne pas dupliquer
         roundEvents.forEach(event => addNewEventToDisplay(event));
     });
 } else {
     console.error('filterButton not found in the DOM.');
 }
+
 
 
     // Function to connect using MetaMask

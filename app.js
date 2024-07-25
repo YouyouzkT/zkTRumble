@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let listenersInitialized = false; // Ajout du drapeau pour éviter l'initialisation multiple
 
     // Liste pour suivre les événements déjà ajoutés
- let eventCache = new Set();  // Pour stocker les identifiants des événements déjà traités
+let eventCache = new Set();  // Pour stocker les identifiants des événements déjà traités
 let roundEvents = [];        // Pour stocker les événements de tous les rounds
 let displayedEvents = new Map();  // Pour suivre les événements déjà affichés et leurs phrases
 let currentGameId = null;    // Identifiant du jeu actuel
@@ -444,7 +444,7 @@ function handleEvent(event, eventType) {
             } else if (eventType === 'WinnerDeclared') {
                 phrase = getRandomPhrase(winnerPhrases, event.returnValues.pseudo);
             }
-            displayedEvents.set(uniqueEventId, phrase);
+            displayedEvents.set(uniqueEventId, { phrase, eventType });
         }
         roundEvents.push(event.returnValues);
         if (event.returnValues.gameId === currentGameId) {
@@ -462,18 +462,18 @@ function addNewEventToDisplay() {
     }
 
     // Trier les événements en mettant les winners à la fin
-    const sortedEvents = Array.from(displayedEvents.entries()).sort((a, b) => {
-        if (a[1].includes('WinnerDeclared')) return 1;
-        if (b[1].includes('WinnerDeclared')) return -1;
+    const sortedEvents = Array.from(displayedEvents.values()).sort((a, b) => {
+        if (a.eventType === 'WinnerDeclared') return 1;
+        if (b.eventType === 'WinnerDeclared') return -1;
         return 0;
     });
 
     // Afficher les événements triés, tout en évitant de dupliquer ceux déjà affichés
-    sortedEvents.forEach(([uniqueEventId, phrase]) => {
-        if (!liveEventsDiv.querySelector(`[data-id="${uniqueEventId}"]`)) {
+    sortedEvents.forEach(({ phrase, eventType }, index) => {
+        if (!liveEventsDiv.querySelector(`[data-id="${index}"]`)) {
             const eventText = document.createElement('p');
             eventText.textContent = phrase;
-            eventText.setAttribute('data-id', uniqueEventId); // Marquer cet événement pour éviter les duplications
+            eventText.setAttribute('data-id', index); // Marquer cet événement pour éviter les duplications
             liveEventsDiv.appendChild(eventText);
         }
     });
@@ -498,7 +498,6 @@ if (filterButton) {
 } else {
     console.error('filterButton not found in the DOM.');
 }
-
 
 
 

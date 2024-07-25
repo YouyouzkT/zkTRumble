@@ -416,9 +416,7 @@ function initializeContract() {
                     eventCache.add(uniqueEventId);
                     event.returnValues.eventType = 'PlayerEliminated';
                     roundEvents.push(event.returnValues);
-                    if (event.returnValues.gameId === currentGameId) {
-                        addNewEventToDisplay(event.returnValues); // Ajouter les nouveaux événements
-                    }
+                    addNewEventToDisplay(event.returnValues); // Ajouter les nouveaux événements
                 }
             }
         });
@@ -435,9 +433,7 @@ function initializeContract() {
                     eventCache.add(uniqueEventId);
                     event.returnValues.eventType = 'WinnerDeclared';
                     roundEvents.push(event.returnValues);
-                    if (event.returnValues.gameId === currentGameId) {
-                        addNewEventToDisplay(event.returnValues); // Ajouter les nouveaux événements
-                    }
+                    addNewEventToDisplay(event.returnValues); // Ajouter les nouveaux événements
                 }
             }
         });
@@ -470,22 +466,13 @@ if (filterButton) {
             alert('Please enter a Game ID');
             return;
         }
-
-        // Effacer les événements affichés précédemment
-        const liveEventsDiv = document.getElementById('liveEvents');
-        liveEventsDiv.innerHTML = ''; // Effacer l'affichage précédent
-
-        // Afficher les événements pour le `gameId` sélectionné
-        roundEvents.forEach(event => {
-            if (event.gameId === currentGameId) {
-                addNewEventToDisplay(event);
-            }
-        });
+        // Afficher les événements déjà existants
+        liveEventsDiv.innerHTML = ''; // Vide le contenu pour ne pas dupliquer
+        roundEvents.forEach(event => addNewEventToDisplay(event));
     });
 } else {
     console.error('filterButton not found in the DOM.');
 }
-
 
 
 

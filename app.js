@@ -399,7 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (alivePlayers.length > 0) {
             return alivePlayers[Math.floor(Math.random() * alivePlayers.length)];
         }
-        return "";
+        return "un autre joueur"; // Default value if no players are alive
     }
 
     async function updateAlivePlayers() {
@@ -419,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        await updateAlivePlayers();
+        await updateAlivePlayers(); // Mettre à jour la liste des joueurs vivants
 
         const sortedEvents = roundEvents.sort((a, b) => {
             if (a.eventType === 'WinnerDeclared') return 1;
@@ -459,13 +459,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (error) {
                     console.error('Error fetching PlayerEliminated events:', error);
                 } else {
+                    console.log('PlayerEliminated event received:', event);
                     if (!eventCache.has(event.id)) {
                         eventCache.add(event.id);
                         event.returnValues.eventType = 'PlayerEliminated';
-                        if (currentGameId && event.returnValues.gameId === currentGameId) {
-                            roundEvents.push(event.returnValues);
-                            displayRoundEvents();
-                        }
+                        roundEvents.push(event.returnValues);
+                        displayRoundEvents();
                     }
                 }
             });
@@ -477,13 +476,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (error) {
                     console.error('Error fetching WinnerDeclared events:', error);
                 } else {
+                    console.log('WinnerDeclared event received:', event);
                     if (!eventCache.has(event.id)) {
                         eventCache.add(event.id);
                         event.returnValues.eventType = 'WinnerDeclared';
-                        if (currentGameId && event.returnValues.gameId === currentGameId) {
-                            roundEvents.push(event.returnValues);
-                            displayRoundEvents();
-                        }
+                        roundEvents.push(event.returnValues);
+                        displayRoundEvents();
                     }
                 }
             });

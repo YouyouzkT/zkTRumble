@@ -464,27 +464,29 @@ document.addEventListener('DOMContentLoaded', () => {
                         eventCache.add(event.id);
                         event.returnValues.eventType = 'PlayerEliminated';
                         roundEvents.push(event.returnValues);
+ console.log('Updated roundEvents:', roundEvents);
                         displayRoundEvents();
                     }
                 }
             });
 
-            contract.events.WinnerDeclared({
-                filter: {},
-                fromBlock: 'latest'
-            }, function(error, event) {
-                if (error) {
-                    console.error('Error fetching WinnerDeclared events:', error);
-                } else {
-                    console.log('WinnerDeclared event received:', event);
-                    if (!eventCache.has(event.id)) {
-                        eventCache.add(event.id);
-                        event.returnValues.eventType = 'WinnerDeclared';
-                        roundEvents.push(event.returnValues);
-                        displayRoundEvents();
-                    }
+              contract.events.WinnerDeclared({
+            filter: {},
+            fromBlock: 'latest'
+        }, function(error, event) {
+            if (error) {
+                console.error('Error fetching WinnerDeclared events:', error);
+            } else {
+                console.log('WinnerDeclared event received:', event);
+                if (!eventCache.has(event.id)) {
+                    eventCache.add(event.id);
+                    event.returnValues.eventType = 'WinnerDeclared';
+                    roundEvents.push(event.returnValues);
+                    console.log('Updated roundEvents:', roundEvents);
+                    displayRoundEvents();
                 }
-            });
+            }
+        });
 
             listenersInitialized = true;
         }

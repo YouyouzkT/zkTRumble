@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let listenersInitialized = false; // Ajout du drapeau pour éviter l'initialisation multiple
 
     // Liste pour suivre les événements déjà ajoutés
-  let eventCache = new Set();  // Pour stocker les identifiants des événements déjà traités
+ let eventCache = new Set();  // Pour stocker les identifiants des événements déjà traités
 let roundEvents = [];        // Pour stocker les événements de tous les rounds
 let currentGameId = null;    // Identifiant du jeu actuel
 
@@ -417,7 +417,7 @@ function initializeContract() {
                     event.returnValues.eventType = 'PlayerEliminated';
                     roundEvents.push(event.returnValues);
                     if (event.returnValues.gameId === currentGameId) {
-                        addNewEventToDisplay(event.returnValues); // Ajouter les nouveaux événements
+                        addNewEventToDisplay(); // Ajouter les nouveaux événements
                     }
                 }
             }
@@ -436,7 +436,7 @@ function initializeContract() {
                     event.returnValues.eventType = 'WinnerDeclared';
                     roundEvents.push(event.returnValues);
                     if (event.returnValues.gameId === currentGameId) {
-                        addNewEventToDisplay(event.returnValues); // Ajouter les nouveaux événements
+                        addNewEventToDisplay(); // Ajouter les nouveaux événements
                     }
                 }
             }
@@ -472,6 +472,7 @@ function addNewEventToDisplay() {
         liveEventsDiv.appendChild(eventText);
     });
 }
+
 // Event listener for filter button
 if (filterButton) {
     filterButton.addEventListener('click', () => {
@@ -486,11 +487,7 @@ if (filterButton) {
         liveEventsDiv.innerHTML = ''; // Effacer l'affichage précédent
 
         // Afficher les événements pour le `gameId` sélectionné
-        roundEvents.forEach(event => {
-            if (event.gameId === currentGameId) {
-                addNewEventToDisplay(event);
-            }
-        });
+        addNewEventToDisplay();
     });
 } else {
     console.error('filterButton not found in the DOM.');

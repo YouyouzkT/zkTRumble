@@ -371,7 +371,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Liste pour suivre les événements déjà ajoutés
 let eventCache = new Set();  // Pour stocker les identifiants des événements déjà traités
-let roundEvents = [];        // Pour stocker les événements de tous les rounds
 let displayedEvents = new Map();  // Pour suivre les événements déjà affichés et leurs phrases
 let currentGameId = null;    // Identifiant du jeu actuel
 
@@ -435,18 +434,13 @@ function handleEvent(event, eventType) {
     let uniqueEventId = `${event.transactionHash}-${event.logIndex}`;
     if (!eventCache.has(uniqueEventId)) {
         eventCache.add(uniqueEventId);
-        event.returnValues.eventType = eventType;
-        if (!displayedEvents.has(uniqueEventId)) {
-            // Générer et stocker la phrase unique pour cet événement
-            let phrase;
-            if (eventType === 'PlayerEliminated') {
-                phrase = getRandomPhrase(eliminationPhrases, event.returnValues.pseudo);
-            } else if (eventType === 'WinnerDeclared') {
-                phrase = getRandomPhrase(winnerPhrases, event.returnValues.pseudo);
-            }
-            displayedEvents.set(uniqueEventId, { phrase, eventType });
+        let phrase;
+        if (eventType === 'PlayerEliminated') {
+            phrase = getRandomPhrase(eliminationPhrases, event.returnValues.pseudo);
+        } else if (eventType === 'WinnerDeclared') {
+            phrase = getRandomPhrase(winnerPhrases, event.returnValues.pseudo);
         }
-        roundEvents.push(event.returnValues);
+        displayedEvents.set(uniqueEventId, { phrase, eventType });
         if (event.returnValues.gameId === currentGameId) {
             addNewEventToDisplay(); // Ajouter les nouveaux événements
         }
@@ -462,18 +456,18 @@ function addNewEventToDisplay() {
     }
 
     // Trier les événements en mettant les winners à la fin
-    const sortedEvents = Array.from(displayedEvents.values()).sort((a, b) => {
-        if (a.eventType === 'WinnerDeclared') return 1;
-        if (b.eventType === 'WinnerDeclared') return -1;
+    const sortedEvents = Array.from(displayedEvents.entries()).sort((a, b) => {
+        if (a[1].eventType === 'WinnerDeclared') return 1;
+        if (b[1].eventType === 'WinnerDeclared') return -1;
         return 0;
     });
 
     // Afficher les événements triés, tout en évitant de dupliquer ceux déjà affichés
-    sortedEvents.forEach(({ phrase, eventType }, index) => {
-        if (!liveEventsDiv.querySelector(`[data-id="${index}"]`)) {
+    sortedEvents.forEach(([uniqueEventId, { phrase, eventType }], index) => {
+        if (!liveEventsDiv.querySelector(`[data-id="${uniqueEventId}"]`)) {
             const eventText = document.createElement('p');
             eventText.textContent = phrase;
-            eventText.setAttribute('data-id', index); // Marquer cet événement pour éviter les duplications
+            eventText.setAttribute('data-id', uniqueEventId); // Marquer cet événement pour éviter les duplications
             liveEventsDiv.appendChild(eventText);
         }
     });
@@ -488,16 +482,13 @@ if (filterButton) {
             return;
         }
 
-        // Effacer les événements affichés précédemment
-        const liveEventsDiv = document.getElementById('liveEvents');
-        liveEventsDiv.innerHTML = ''; // Effacer l'affichage précédent
-
         // Afficher les événements pour le `gameId` sélectionné
         addNewEventToDisplay();
     });
 } else {
     console.error('filterButton not found in the DOM.');
 }
+
 
 
 

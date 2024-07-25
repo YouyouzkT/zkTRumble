@@ -370,8 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let listenersInitialized = false; // Ajout du drapeau pour éviter l'initialisation multiple
 
     // Liste pour suivre les événements déjà ajoutés
-  let eventCache = new Set();  // Pour stocker les identifiants des événements déjà traités
+ let eventCache = new Set();  // Pour stocker les identifiants des événements déjà traités
 let roundEvents = [];        // Pour stocker les événements de tous les rounds
+let displayedEvents = new Map();  // Pour suivre les événements déjà affichés et leurs phrases
 let currentGameId = null;    // Identifiant du jeu actuel
 
 const eliminationPhrases = [
@@ -411,15 +412,7 @@ function initializeContract() {
             if (error) {
                 console.error('Error fetching PlayerEliminated events:', error);
             } else {
-                let uniqueEventId = `${event.transactionHash}-${event.logIndex}`;
-                if (!eventCache.has(uniqueEventId)) {
-                    eventCache.add(uniqueEventId);
-                    event.returnValues.eventType = 'PlayerEliminated';
-                    roundEvents.push(event.returnValues);
-                    if (event.returnValues.gameId === currentGameId) {
-                        addNewEventToDisplay(event.returnValues); // Ajouter les nouveaux événements
-                    }
-                }
+                handleEvent(event, 'PlayerEliminated');
             }
         });
 
@@ -430,15 +423,7 @@ function initializeContract() {
             if (error) {
                 console.error('Error fetching WinnerDeclared events:', error);
             } else {
-                let uniqueEventId = `${event.transactionHash}-${event.logIndex}`;
-                if (!eventCache.has(uniqueEventId)) {
-                    eventCache.add(uniqueEventId);
-                    event.returnValues.eventType = 'WinnerDeclared';
-                    roundEvents.push(event.returnValues);
-                    if (event.returnValues.gameId === currentGameId) {
-                        addNewEventToDisplay(event.returnValues); // Ajouter les nouveaux événements
-                    }
-                }
+                handleEvent(event, 'WinnerDeclared');
             }
         });
 
@@ -446,20 +431,52 @@ function initializeContract() {
     }
 }
 
+function handleEvent(event, eventType) {
+    let uniqueEventId = `${event.transactionHash}-${event.logIndex}`;
+    if (!eventCache.has(uniqueEventId)) {
+        eventCache.add(uniqueEventId);
+        event.returnValues.eventType = eventType;
+        if (!displayedEvents.has(uniqueEventId)) {
+            // Générer et stocker la phrase unique pour cet événement
+            let phrase;
+            if (eventType === 'PlayerEliminated') {
+                phrase = getRandomPhrase(eliminationPhrases, event.returnValues.pseudo);
+            } else if (eventType === 'WinnerDeclared') {
+                phrase = getRandomPhrase(winnerPhrases, event.returnValues.pseudo);
+            }
+            displayedEvents.set(uniqueEventId, phrase);
+        }
+        roundEvents.push(event.returnValues);
+        if (event.returnValues.gameId === currentGameId) {
+            addNewEventToDisplay(); // Ajouter les nouveaux événements
+        }
+    }
+}
+
 // Fonction pour ajouter les nouveaux événements à l'affichage
-function addNewEventToDisplay(event) {
+function addNewEventToDisplay() {
     const liveEventsDiv = document.getElementById('liveEvents');
     if (!liveEventsDiv) {
         console.error('liveEventsDiv not found');
         return;
     }
-    const eventText = document.createElement('p');
-    if (event.eventType === 'PlayerEliminated') {
-        eventText.textContent = getRandomPhrase(eliminationPhrases, event.pseudo);
-    } else if (event.eventType === 'WinnerDeclared') {
-        eventText.textContent = getRandomPhrase(winnerPhrases, event.pseudo);
-    }
-    liveEventsDiv.appendChild(eventText);
+
+    // Trier les événements en mettant les winners à la fin
+    const sortedEvents = Array.from(displayedEvents.entries()).sort((a, b) => {
+        if (a[1].includes('WinnerDeclared')) return 1;
+        if (b[1].includes('WinnerDeclared')) return -1;
+        return 0;
+    });
+
+    // Afficher les événements triés, tout en évitant de dupliquer ceux déjà affichés
+    sortedEvents.forEach(([uniqueEventId, phrase]) => {
+        if (!liveEventsDiv.querySelector(`[data-id="${uniqueEventId}"]`)) {
+            const eventText = document.createElement('p');
+            eventText.textContent = phrase;
+            eventText.setAttribute('data-id', uniqueEventId); // Marquer cet événement pour éviter les duplications
+            liveEventsDiv.appendChild(eventText);
+        }
+    });
 }
 
 // Event listener for filter button
@@ -476,11 +493,7 @@ if (filterButton) {
         liveEventsDiv.innerHTML = ''; // Effacer l'affichage précédent
 
         // Afficher les événements pour le `gameId` sélectionné
-        roundEvents.forEach(event => {
-            if (event.gameId === currentGameId) {
-                addNewEventToDisplay(event);
-            }
-        });
+        addNewEventToDisplay();
     });
 } else {
     console.error('filterButton not found in the DOM.');

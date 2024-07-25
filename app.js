@@ -370,105 +370,98 @@ document.addEventListener('DOMContentLoaded', () => {
     let listenersInitialized = false; // Ajout du drapeau pour éviter l'initialisation multiple
 
     // Liste pour suivre les événements déjà ajoutés
-    const eventCache = new Set();
-    let roundEvents = []; // Liste temporaire pour stocker les événements d'un round
-    let currentGameId = null;
+    let eventCache = new Set();  // Pour stocker les identifiants des événements déjà traités
+let roundEvents = [];        // Pour stocker les événements du round en cours
+let currentGameId = null;    // Identifiant du jeu actuel
 
+const eliminationPhrases = [
+    "{pseudo} a été éliminé !",
+    "Oh non, {pseudo} n'a pas survécu !",
+    "Fin du jeu pour {pseudo}.",
+    "{pseudo} a mordu la poussière.",
+    "C'est terminé pour {pseudo}."
+];
 
-    // Phrases d'élimination et de victoire variées
-    const eliminationPhrases = [
-        "{pseudo} a été éliminé !",
-        "Oh non, {pseudo} n'a pas survécu !",
-        "Fin du jeu pour {pseudo}.",
-        "{pseudo} a mordu la poussière.",
-        "C'est terminé pour {pseudo}."
-    ];
+const winnerPhrases = [
+    "Le gagnant est {pseudo} !",
+    "Félicitations à {pseudo}, le vainqueur !",
+    "{pseudo} a triomphé de tous les autres.",
+    "{pseudo} est le dernier en vie et remporte la victoire !",
+    "Bravo à {pseudo} pour cette victoire éclatante !"
+];
 
-    const winnerPhrases = [
-        "Le gagnant est {pseudo} !",
-        "Félicitations à {pseudo}, le vainqueur !",
-        "{pseudo} a triomphé de tous les autres.",
-        "{pseudo} est le dernier en vie et remporte la victoire !",
-        "Bravo à {pseudo} pour cette victoire éclatante !"
-    ];
-
-   function getRandomPhrase(phrases, pseudo) {
+function getRandomPhrase(phrases, pseudo) {
     const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-    console.log(`Selected phrase: ${phrase} for pseudo: ${pseudo}`); // Log de débogage
     return phrase.replace("{pseudo}", pseudo);
 }
 
-
-    // Initialize contract function
-    function initializeContract() {
-        if (contract && listenersInitialized) {
-            console.log('Contract and listeners already initialized.');
-            return;
-        }
-        contract = new web3.eth.Contract(contractABI, contractAddress);
-        console.log('Contract initialized:', contract);
-
-        if (!listenersInitialized) {
-            // Écouter les événements de round
-            contract.events.PlayerEliminated({
-                filter: {},
-                fromBlock: 'latest'
-            }, function(error, event) {
-                if (error) {
-                    console.error('Error fetching PlayerEliminated events:', error);
-                } else {
-                    console.log('PlayerEliminated event:', event); // Debug log
-                    if (!eventCache.has(event.id)) {
-                        eventCache.add(event.id);
-                        event.returnValues.eventType = 'PlayerEliminated';
-                        if (currentGameId && event.returnValues.gameId === currentGameId) {
-                            roundEvents.push(event.returnValues);
-                            displayRoundEvents();
-                        }
-                    }
-                }
-            });
-
-            contract.events.WinnerDeclared({
-                filter: {},
-                fromBlock: 'latest'
-            }, function(error, event) {
-                if (error) {
-                    console.error('Error fetching WinnerDeclared events:', error);
-                } else {
-                    console.log('WinnerDeclared event:', event); // Debug log
-                    if (!eventCache.has(event.id)) {
-                        eventCache.add(event.id);
-                        event.returnValues.eventType = 'WinnerDeclared';
-                        if (currentGameId && event.returnValues.gameId === currentGameId) {
-                            roundEvents.push(event.returnValues);
-                            displayRoundEvents();
-                        }
-                    }
-                }
-            });
-
-            listenersInitialized = true;
-        }
+function initializeContract() {
+    if (contract && listenersInitialized) {
+        console.log('Contract and listeners already initialized.');
+        return;
     }
+    contract = new web3.eth.Contract(contractABI, contractAddress);
+    console.log('Contract initialized:', contract);
 
-    // Function to display round events in the correct order
- function displayRoundEvents() {
+    if (!listenersInitialized) {
+        contract.events.PlayerEliminated({
+            filter: {},
+            fromBlock: 'latest'
+        }, function(error, event) {
+            if (error) {
+                console.error('Error fetching PlayerEliminated events:', error);
+            } else {
+                let uniqueEventId = `${event.transactionHash}-${event.logIndex}`;
+                if (!eventCache.has(uniqueEventId)) {
+                    eventCache.add(uniqueEventId);
+                    event.returnValues.eventType = 'PlayerEliminated';
+                    if (currentGameId && event.returnValues.gameId === currentGameId) {
+                        roundEvents.push(event.returnValues);
+                        displayRoundEvents();
+                    }
+                }
+            }
+        });
+
+        contract.events.WinnerDeclared({
+            filter: {},
+            fromBlock: 'latest'
+        }, function(error, event) {
+            if (error) {
+                console.error('Error fetching WinnerDeclared events:', error);
+            } else {
+                let uniqueEventId = `${event.transactionHash}-${event.logIndex}`;
+                if (!eventCache.has(uniqueEventId)) {
+                    eventCache.add(uniqueEventId);
+                    event.returnValues.eventType = 'WinnerDeclared';
+                    if (currentGameId && event.returnValues.gameId === currentGameId) {
+                        roundEvents.push(event.returnValues);
+                        displayRoundEvents();
+                    }
+                }
+            }
+        });
+
+        listenersInitialized = true;
+    }
+}
+
+function displayRoundEvents() {
     const liveEventsDiv = document.getElementById('liveEvents');
     if (!liveEventsDiv) {
         console.error('liveEventsDiv not found');
         return;
     }
-    liveEventsDiv.innerHTML = ''; // Clear previous events
+    liveEventsDiv.innerHTML = ''; // Efface les événements précédents
 
-    // Sort events to have eliminations first and winner last
+    // Trie les événements pour avoir les éliminations d'abord et le gagnant en dernier
     const sortedEvents = roundEvents.sort((a, b) => {
         if (a.eventType === 'WinnerDeclared') return 1;
         if (b.eventType === 'WinnerDeclared') return -1;
         return 0;
     });
 
-    // Display sorted events
+    // Affiche les événements triés avec des phrases variées
     sortedEvents.forEach(event => {
         const eventText = document.createElement('p');
         if (event.eventType === 'PlayerEliminated') {
@@ -477,10 +470,8 @@ document.addEventListener('DOMContentLoaded', () => {
             eventText.textContent = getRandomPhrase(winnerPhrases, event.pseudo);
         }
         liveEventsDiv.appendChild(eventText);
-        console.log('Event appended to liveEvents:', eventText.textContent);
     });
 }
-
 
     // Event listener for filter button
     if (filterButton) {

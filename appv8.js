@@ -373,7 +373,6 @@ document.addEventListener('DOMContentLoaded', () => {
 let eventCache = new Set();  // Pour stocker les identifiants des événements déjà traités
 let displayedEvents = new Map();  // Pour suivre les événements déjà affichés et leurs phrases
 let currentGameId = null;    // Identifiant du jeu actuel
-let currentRoundEvents = []; // Liste pour stocker les événements du round en cours
 
 const eliminationPhrases = [
     "{pseudo} a été éliminé !",
@@ -441,13 +440,9 @@ function handleEvent(event, eventType) {
         } else if (eventType === 'WinnerDeclared') {
             phrase = getRandomPhrase(winnerPhrases, event.returnValues.pseudo);
         }
-        currentRoundEvents.push({ uniqueEventId, phrase, eventType });
-
-        if (eventType === 'WinnerDeclared') {
-            // Afficher les événements lorsque le winner est déclaré
-            displayedEvents = new Map(currentRoundEvents.map(event => [event.uniqueEventId, event]));
-            addNewEventToDisplay();
-            currentRoundEvents = []; // Réinitialiser pour le prochain round
+        displayedEvents.set(uniqueEventId, { phrase, eventType });
+        if (event.returnValues.gameId === currentGameId) {
+            addNewEventToDisplay(); // Ajouter les nouveaux événements
         }
     }
 }

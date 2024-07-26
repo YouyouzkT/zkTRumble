@@ -457,13 +457,13 @@ function addNewEventToDisplay() {
 
     // Trier les événements en mettant les winners à la fin
     const sortedEvents = Array.from(displayedEvents.entries()).sort((a, b) => {
-        if (a[1].eventType === 'WinnerDeclared' && b[1].eventType !== 'WinnerDeclared') return 1;
-        if (a[1].eventType !== 'WinnerDeclared' && b[1].eventType === 'WinnerDeclared') return -1;
+        if (a[1].eventType === 'WinnerDeclared') return 1;
+        if (b[1].eventType === 'WinnerDeclared') return -1;
         return 0;
     });
 
     // Afficher les événements triés, tout en évitant de dupliquer ceux déjà affichés
-    sortedEvents.forEach(([uniqueEventId, { phrase, eventType }]) => {
+    sortedEvents.forEach(([uniqueEventId, { phrase, eventType }], index) => {
         if (!liveEventsDiv.querySelector(`[data-id="${uniqueEventId}"]`)) {
             const eventText = document.createElement('p');
             eventText.textContent = phrase;
@@ -472,7 +472,6 @@ function addNewEventToDisplay() {
         }
     });
 }
-
 
 // Event listener for filter button
 if (filterButton) {

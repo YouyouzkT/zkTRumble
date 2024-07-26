@@ -465,7 +465,7 @@ function addNewEventToDisplay() {
         return 0;
     });
 
-// Débogage: Afficher les événements après le tri
+ // Débogage: Afficher les événements après le tri
     console.log('Événements après le tri:', sortedEvents);
 
     // Afficher les événements triés, tout en évitant de dupliquer ceux déjà affichés

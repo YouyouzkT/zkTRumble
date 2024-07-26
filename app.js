@@ -474,7 +474,12 @@ function addNewEventToDisplay() {
             const eventText = document.createElement('p');
             eventText.textContent = phrase;
             eventText.setAttribute('data-id', uniqueEventId); // Marquer cet événement pour éviter les duplications
+
+ console.log('Ajout de l\'événement:', phrase); // Log avant l'ajout
+
             liveEventsDiv.appendChild(eventText);
+
+console.log('Élément ajouté:', eventText); // Log après l'ajout
         }
     });
 }

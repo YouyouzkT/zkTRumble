@@ -1,4 +1,4 @@
-fhddocument.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     if (typeof Web3 === 'undefined') {
         alert('Web3 is not defined. Please make sure you have included the Web3 library.');
         return;

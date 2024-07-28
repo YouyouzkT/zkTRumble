@@ -364,17 +364,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    let web3;
+ let web3;
     let contract;
     let connectedAccount;
-    let listenersInitialized = false; // Ajout du drapeau pour éviter l'initialisation multiple
+    let listenersInitialized = false;
 
-    // Liste pour suivre les événements déjà ajoutés
     const eventCache = new Set();
-    let roundEvents = []; // Liste temporaire pour stocker les événements d'un round
+    let roundEvents = [];
     let currentGameId = null;
 
-    // Dictionnaire de phrases variées pour chaque type d'événement
     const eventPhrases = {
         'PlayerEliminated': [
             "{pseudo} has been eliminated from the competition.",
@@ -388,7 +386,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
     };
 
-    // Initialize contract function
     function initializeContract() {
         if (contract && listenersInitialized) {
             console.log('Contract and listeners already initialized.');
@@ -398,7 +395,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Contract initialized:', contract);
 
         if (!listenersInitialized) {
-            // Écouter les événements de round
             contract.events.PlayerEliminated({
                 filter: {},
                 fromBlock: 'latest'
@@ -406,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (error) {
                     console.error('Error fetching PlayerEliminated events:', error);
                 } else {
-                    console.log('PlayerEliminated event:', event); // Debug log
+                    console.log('PlayerEliminated event:', event);
                     if (!eventCache.has(event.id)) {
                         eventCache.add(event.id);
                         event.returnValues.eventType = 'PlayerEliminated';
@@ -425,7 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (error) {
                     console.error('Error fetching WinnerDeclared events:', error);
                 } else {
-                    console.log('WinnerDeclared event:', event); // Debug log
+                    console.log('WinnerDeclared event:', event);
                     if (!eventCache.has(event.id)) {
                         eventCache.add(event.id);
                         event.returnValues.eventType = 'WinnerDeclared';
@@ -441,34 +437,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Function to display round events in the correct order with varied phrases
     function displayRoundEvents() {
         const liveEventsDiv = document.getElementById('liveEvents');
         if (!liveEventsDiv) {
             console.error('liveEventsDiv not found');
             return;
         }
-        liveEventsDiv.innerHTML = ''; // Clear previous events
 
-        // Sort events to have eliminations first and winner last
         const sortedEvents = roundEvents.sort((a, b) => {
             if (a.eventType === 'WinnerDeclared') return 1;
             if (b.eventType === 'WinnerDeclared') return -1;
             return 0;
         });
 
-        // Display sorted events with varied phrases
         sortedEvents.forEach(event => {
-            const eventText = document.createElement('p');
-            const phrases = eventPhrases[event.eventType];
-            const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-            eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
-            liveEventsDiv.appendChild(eventText);
-            console.log('Event appended to liveEvents:', eventText.textContent);
+            if (!event.rendered) {
+                const eventText = document.createElement('p');
+                const phrases = eventPhrases[event.eventType];
+                const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+                eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
+                liveEventsDiv.appendChild(eventText);
+                event.rendered = true;
+                console.log('Event appended to liveEvents:', eventText.textContent);
+            }
         });
     }
 
-    // Event listener for filter button
     if (filterButton) {
         filterButton.addEventListener('click', () => {
             currentGameId = gameIdInput.value;
@@ -476,14 +470,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Please enter a Game ID');
                 return;
             }
-            roundEvents = []; // Clear previous events
-            displayRoundEvents(); // Clear display
+            roundEvents = [];
+            displayRoundEvents();
         });
     } else {
         console.error('filterButton not found in the DOM.');
     }
 
-    // Function to connect using MetaMask
     async function connectMetaMask() {
         if (typeof window.ethereum !== 'undefined') {
             try {
@@ -500,10 +493,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Function to connect using WalletConnect
     async function connectWalletConnect() {
         const provider = new WalletConnectProvider.default({
-            infuraId: "YOUR_INFURA_ID" // Remplacez par votre ID de projet Infura
+            infuraId: "YOUR_INFURA_ID"
         });
 
         try {
@@ -532,7 +524,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = page;
     }
 
-    // Reconnect to wallet if already connected
     window.addEventListener('load', () => {
         connectedAccount = localStorage.getItem('connectedAccount');
         if (connectedAccount) {
@@ -542,7 +533,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Event listeners for navigation buttons
     document.getElementById('connectMetaMask')?.addEventListener('click', connectMetaMask);
     document.getElementById('connectWalletConnect')?.addEventListener('click', connectWalletConnect);
     document.getElementById('navigateRegister')?.addEventListener('click', () => navigate('register.html'));
@@ -550,7 +540,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('navigateManage')?.addEventListener('click', () => navigate('manage.html'));
     document.getElementById('navigateHome')?.addEventListener('click', () => navigate('index.html'));
 
-    // Other existing event listeners for contract interactions...
     document.getElementById('createGame')?.addEventListener('click', async () => {
         try {
             const accounts = await web3.eth.getAccounts();

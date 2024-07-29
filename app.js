@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
- let web3;
+  let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -408,7 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         event.returnValues.eventType = 'PlayerEliminated';
                         if (currentGameId && event.returnValues.gameId === currentGameId) {
                             roundEvents.push(event.returnValues);
-                            displayRoundEvents();
+                            processEvents();
                         }
                     }
                 }
@@ -427,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         event.returnValues.eventType = 'WinnerDeclared';
                         if (currentGameId && event.returnValues.gameId === currentGameId) {
                             roundEvents.push(event.returnValues);
-                            displayRoundEvents();
+                            processEvents();
                         }
                     }
                 }
@@ -437,30 +437,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function sortRoundEvents() {
+        roundEvents.sort((a, b) => {
+            if (a.eventType === 'WinnerDeclared') return 1;
+            if (b.eventType === 'WinnerDeclared') return -1;
+            return 0;
+        });
+    }
+
     function displayRoundEvents() {
         const liveEventsDiv = document.getElementById('liveEvents');
         if (!liveEventsDiv) {
             console.error('liveEventsDiv not found');
             return;
         }
+        liveEventsDiv.innerHTML = ''; // Clear previous events
 
-        const sortedEvents = roundEvents.sort((a, b) => {
-            if (a.eventType === 'WinnerDeclared') return 1;
-            if (b.eventType === 'WinnerDeclared') return -1;
-            return 0;
+        roundEvents.forEach(event => {
+            const eventText = document.createElement('p');
+            const phrases = eventPhrases[event.eventType];
+            const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+            eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
+            liveEventsDiv.appendChild(eventText);
         });
 
-        sortedEvents.forEach(event => {
-            if (!event.rendered) {
-                const eventText = document.createElement('p');
-                const phrases = eventPhrases[event.eventType];
-                const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-                eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
-                liveEventsDiv.appendChild(eventText);
-                event.rendered = true;
-                console.log('Event appended to liveEvents:', eventText.textContent);
-            }
-        });
+        // Optionally clear roundEvents after display if not needed anymore
+        roundEvents = [];
+    }
+
+    function processEvents() {
+        sortRoundEvents();
+        displayRoundEvents();
     }
 
     if (filterButton) {
@@ -471,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             roundEvents = [];
-            displayRoundEvents();
+            displayRoundEvents(); // Clear display
         });
     } else {
         console.error('filterButton not found in the DOM.');

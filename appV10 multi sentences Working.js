@@ -466,13 +466,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const phrases = eventPhrases[event.eventType];
                 const phrase = phrases[Math.floor(Math.random() * phrases.length)];
                 eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
-
-// Appliquer une couleur verte pour le gagnant
-            if (event.eventType === 'WinnerDeclared') {
-                eventText.style.color = 'green';
-                eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
-            }
-
                 liveEventsDiv.appendChild(eventText);
                 event.rendered = true; // Marquer comme affiché
                 console.log('Event appended to liveEvents:', eventText.textContent);

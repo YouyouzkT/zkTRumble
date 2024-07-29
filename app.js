@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-  let web3;
+ let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -373,16 +373,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let roundEvents = [];
     let currentGameId = null;
 
+    // Phrases variées pour chaque type d'événement
     const eventPhrases = {
         'PlayerEliminated': [
             "{pseudo} has been eliminated from the competition.",
             "Another one bites the dust! {pseudo} is out.",
-            "{pseudo} couldn't make it and has been eliminated."
+            "{pseudo} couldn't make it and has been eliminated.",
+            "{pseudo} is no longer in the game.",
+            "It's the end of the road for {pseudo}."
         ],
         'WinnerDeclared': [
             "And the winner is... {pseudo}! Congratulations!",
             "Victory goes to {pseudo}! What a match!",
-            "The champion of the game is {pseudo}!"
+            "The champion of the game is {pseudo}!",
+            "{pseudo} takes the crown!",
+            "All hail {pseudo}, the winner!"
         ]
     };
 
@@ -408,7 +413,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         event.returnValues.eventType = 'PlayerEliminated';
                         if (currentGameId && event.returnValues.gameId === currentGameId) {
                             roundEvents.push(event.returnValues);
-                            processEvents();
+                            displayRoundEvents();
                         }
                     }
                 }
@@ -427,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         event.returnValues.eventType = 'WinnerDeclared';
                         if (currentGameId && event.returnValues.gameId === currentGameId) {
                             roundEvents.push(event.returnValues);
-                            processEvents();
+                            displayRoundEvents();
                         }
                     }
                 }
@@ -451,23 +456,21 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('liveEventsDiv not found');
             return;
         }
-        liveEventsDiv.innerHTML = ''; // Clear previous events
 
+        sortRoundEvents(); // Assurer le tri avant l'affichage
+
+        // Display sorted events
         roundEvents.forEach(event => {
-            const eventText = document.createElement('p');
-            const phrases = eventPhrases[event.eventType];
-            const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-            eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
-            liveEventsDiv.appendChild(eventText);
+            if (!event.rendered) {
+                const eventText = document.createElement('p');
+                const phrases = eventPhrases[event.eventType];
+                const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+                eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
+                liveEventsDiv.appendChild(eventText);
+                event.rendered = true; // Marquer comme affiché
+                console.log('Event appended to liveEvents:', eventText.textContent);
+            }
         });
-
-        // Optionally clear roundEvents after display if not needed anymore
-        roundEvents = [];
-    }
-
-    function processEvents() {
-        sortRoundEvents();
-        displayRoundEvents();
     }
 
     if (filterButton) {
@@ -477,7 +480,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Please enter a Game ID');
                 return;
             }
-            roundEvents = [];
+            roundEvents = []; // Clear previous events
             displayRoundEvents(); // Clear display
         });
     } else {

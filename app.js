@@ -391,6 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
     };
 
+    // Initialisation du contrat et des listeners
     function initializeContract() {
         if (contract && listenersInitialized) {
             console.log('Contract and listeners already initialized.');
@@ -459,7 +460,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         sortRoundEvents(); // Assurer le tri avant l'affichage
 
-        // Display sorted events
+        // Affichage des événements triés
         roundEvents.forEach(event => {
             if (!event.rendered) {
                 const eventText = document.createElement('p');
@@ -503,6 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Gestion des filtres et connexion
     if (filterButton) {
         filterButton.addEventListener('click', () => {
             currentGameId = gameIdInput.value;

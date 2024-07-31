@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    let web3;
+ let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -457,16 +457,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Ajouter un indicateur de nouveau round si nécessaire
-        if (roundEvents.length === 0) {
-            const newRoundText = document.createElement('p');
-            newRoundText.textContent = "New Round:";
-            newRoundText.style.fontWeight = 'bold';
-            newRoundText.style.fontSize = '1.2em';
-            newRoundText.style.color = 'blue';
-            liveEventsDiv.appendChild(newRoundText);
-        }
-
         sortRoundEvents(); // Assurer le tri avant l'affichage
 
         // Display sorted events
@@ -477,11 +467,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const phrase = phrases[Math.floor(Math.random() * phrases.length)];
                 eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
 
-                // Appliquer une couleur verte pour le gagnant
-                if (event.eventType === 'WinnerDeclared') {
-                    eventText.style.color = 'green';
-                    eventText.style.fontWeight = 'bold';
-                }
+// Appliquer une couleur verte pour le gagnant
+            if (event.eventType === 'WinnerDeclared') {
+                eventText.style.color = 'green';
+                eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
+            }
 
                 liveEventsDiv.appendChild(eventText);
                 event.rendered = true; // Marquer comme affiché

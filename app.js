@@ -364,24 +364,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
- document.addEventListener('DOMContentLoaded', () => {
-    if (typeof Web3 === 'undefined') {
-        alert('Web3 is not defined. Please make sure you have included the Web3 library.');
-        return;
-    }
-
-    const connectMetaMaskButton = document.getElementById('connectMetaMask');
-    const connectWalletConnectButton = document.getElementById('connectWalletConnect');
-    const statusDiv = document.getElementById('status');
-    const outputContent = document.getElementById('outputContent');
-    const gameIdInput = document.getElementById('gameIdInput');
-    const filterButton = document.getElementById('filterButton');
-
-    const contractAddress = "0x6f19096082Dc30f51189336c66927fb182eAD715";
-    const contractABI = [
-        // Votre ABI ici
-    ];
-
     let web3;
     let contract;
     let connectedAccount;

@@ -450,45 +450,58 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-function displayRoundEvents() {
-    const liveEventsDiv = document.getElementById('liveEvents');
-    if (!liveEventsDiv) {
-        console.error('liveEventsDiv not found');
-        return;
+    function displayRoundEvents() {
+        const liveEventsDiv = document.getElementById('liveEvents');
+        if (!liveEventsDiv) {
+            console.error('liveEventsDiv not found');
+            return;
+        }
+
+        sortRoundEvents(); // Assurer le tri avant l'affichage
+
+        // Display sorted events
+        roundEvents.forEach(event => {
+            if (!event.rendered) {
+                const eventText = document.createElement('p');
+                const phrases = eventPhrases[event.eventType];
+                const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+                eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
+
+                // Appliquer une couleur verte pour le gagnant
+                if (event.eventType === 'WinnerDeclared') {
+                    eventText.style.color = 'green';
+                    eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
+                }
+
+                liveEventsDiv.appendChild(eventText);
+                event.rendered = true; // Marquer comme affiché
+                console.log('Event appended to liveEvents:', eventText.textContent);
+            }
+        });
     }
 
-    // Ajouter un indicateur de nouveau round
-    const newRoundText = document.createElement('p');
-    newRoundText.textContent = "New Round:";
-    newRoundText.style.fontWeight = 'bold';
-    newRoundText.style.fontSize = '1.2em';
-    newRoundText.style.color = 'blue';
-    liveEventsDiv.appendChild(newRoundText);
+    async function startRound() {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const gameId = getGameId();
 
-    // Trier les événements avant l'affichage
-    sortRoundEvents();
-
-    // Afficher les événements triés
-    roundEvents.forEach(event => {
-        if (!event.rendered) {
-            const eventText = document.createElement('p');
-            const phrases = eventPhrases[event.eventType];
-            const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-            eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
-
-            // Appliquer une couleur verte pour le gagnant
-            if (event.eventType === 'WinnerDeclared') {
-                eventText.style.color = 'green';
-                eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
+            // Ajouter "New Round" à l'affichage des événements
+            const liveEventsDiv = document.getElementById('liveEvents');
+            if (liveEventsDiv) {
+                const newRoundText = document.createElement('p');
+                newRoundText.textContent = "New Round:";
+                newRoundText.style.fontWeight = 'bold';
+                newRoundText.style.fontSize = '1.2em';
+                newRoundText.style.color = 'blue';
+                liveEventsDiv.appendChild(newRoundText);
             }
 
-            liveEventsDiv.appendChild(eventText);
-            event.rendered = true; // Marquer comme affiché
-            console.log('Event appended to liveEvents:', eventText.textContent);
+            await contract.methods.startRound(gameId).send({ from: accounts[0] });
+            alert('Round started');
+        } catch (error) {
+            alert('Error: ' + error.message);
         }
-    });
-}
-
+    }
 
     if (filterButton) {
         filterButton.addEventListener('click', () => {
@@ -626,16 +639,7 @@ function displayRoundEvents() {
         }
     });
 
-    document.getElementById('startRound')?.addEventListener('click', async () => {
-        try {
-            const accounts = await web3.eth.getAccounts();
-            const gameId = getGameId();
-            await contract.methods.startRound(gameId).send({ from: accounts[0] });
-            alert('Round started');
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
-    });
+    document.getElementById('startRound')?.addEventListener('click', startRound);
 
     document.getElementById('closeRegistration')?.addEventListener('click', async () => {
         try {

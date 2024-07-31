@@ -364,25 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
- document.addEventListener('DOMContentLoaded', () => {
-    if (typeof Web3 === 'undefined') {
-        alert('Web3 is not defined. Please make sure you have included the Web3 library.');
-        return;
-    }
-
-    const connectMetaMaskButton = document.getElementById('connectMetaMask');
-    const connectWalletConnectButton = document.getElementById('connectWalletConnect');
-    const statusDiv = document.getElementById('status');
-    const outputContent = document.getElementById('outputContent');
-    const gameIdInput = document.getElementById('gameIdInput');
-    const filterButton = document.getElementById('filterButton');
-
-    const contractAddress = "0x6f19096082Dc30f51189336c66927fb182eAD715";
-    const contractABI = [
-        // Votre ABI ici
-    ];
-
-    let web3;
+ let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -475,16 +457,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Ajouter un indicateur de nouveau round si nécessaire
-        if (roundEvents.length === 0) {
-            const newRoundText = document.createElement('p');
-            newRoundText.textContent = "New Round:";
-            newRoundText.style.fontWeight = 'bold';
-            newRoundText.style.fontSize = '1.2em';
-            newRoundText.style.color = 'blue';
-            liveEventsDiv.appendChild(newRoundText);
-        }
-
         sortRoundEvents(); // Assurer le tri avant l'affichage
 
         // Display sorted events
@@ -495,11 +467,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const phrase = phrases[Math.floor(Math.random() * phrases.length)];
                 eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
 
-                // Appliquer une couleur verte pour le gagnant
-                if (event.eventType === 'WinnerDeclared') {
-                    eventText.style.color = 'green';
-                    eventText.style.fontWeight = 'bold';
-                }
+// Appliquer une couleur verte pour le gagnant
+            if (event.eventType === 'WinnerDeclared') {
+                eventText.style.color = 'green';
+                eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
+            }
 
                 liveEventsDiv.appendChild(eventText);
                 event.rendered = true; // Marquer comme affiché

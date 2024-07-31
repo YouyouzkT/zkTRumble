@@ -490,7 +490,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const liveEventsDiv = document.getElementById('liveEvents');
             if (liveEventsDiv) {
                 const newRoundText = document.createElement('p');
-                newRoundText.textContent = "New Round:";
+                newRoundText.textContent = "New Round Started:";
                 newRoundText.style.fontWeight = 'bold';
                 newRoundText.style.fontSize = '1.2em';
                 newRoundText.style.color = 'blue';

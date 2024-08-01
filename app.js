@@ -478,30 +478,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Nouvelle fonction pour mettre à jour la liste des joueurs
-    function updatePlayerList() {
+    function updatePlayerList(gameId) {
         const playerList = document.getElementById('players');
         if (!playerList) {
             console.error('playerList element not found');
             return;
         }
 
-        // Effacez la liste actuelle
+        // Clear the current list
         playerList.innerHTML = '';
 
-        // Récupère les joueurs inscrits pour le jeu actuel
-        if (currentGameId !== null) {
-            contract.methods.getRegisteredPlayers(currentGameId).call()
-                .then(players => {
-                    players.forEach(player => {
-                        const li = document.createElement('li');
-                        li.textContent = player;
-                        playerList.appendChild(li);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching registered players:', error);
-                });
-        }
+        // Listen to PlayerRegistered events
+        contract.getPastEvents('PlayerRegistered', {
+            filter: { gameId: gameId },
+            fromBlock: 0,
+            toBlock: 'latest'
+        }, (error, events) => {
+            if (error) {
+                console.error('Error fetching PlayerRegistered events:', error);
+                return;
+            }
+
+            events.forEach(event => {
+                const player = event.returnValues.pseudo;
+                const li = document.createElement('li');
+                li.textContent = player;
+                playerList.appendChild(li);
+            });
+        });
     }
 
     if (filterButton) {
@@ -513,7 +517,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             roundEvents = []; // Clear previous events
             displayRoundEvents(); // Clear display
-            updatePlayerList(); // Update player list
+            updatePlayerList(currentGameId); // Update player list
         });
     } else {
         console.error('filterButton not found in the DOM.');

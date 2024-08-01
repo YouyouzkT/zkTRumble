@@ -149,9 +149,10 @@ h1, h2, p {
 /* Styles spécifiques à la page live.html */
 .live-content-wrapper {
     display: flex;
+    justify-content: space-between;
     width: 100%;
     max-width: 1000px;
-    margin: 0 auto;
+    margin: 20px auto; /* Ajoutez une marge pour espacer le haut */
     padding: 20px;
     box-sizing: border-box;
 }
@@ -161,14 +162,9 @@ h1, h2, p {
     background-color: black;
     color: white;
     padding: 20px;
-    height: 100vh;
+    height: auto; /* Ajuste la hauteur automatiquement en fonction du contenu */
     overflow-y: auto;
-    margin-right: 20px;
-}
-
-.live-events p {
-    margin: 10px 0;
-    font-size: 18px;
+    margin-right: 20px; /* Espace à droite pour séparer des joueurs */
 }
 
 .player-list {
@@ -178,10 +174,8 @@ h1, h2, p {
     padding: 20px;
     border-left: 1px solid #ddd;
     overflow-y: auto;
-}
-
-.player-list h3 {
-    margin-top: 0;
+    box-sizing: border-box;
+    word-wrap: break-word; /* Assure que les longs pseudonymes se cassent à la ligne */
 }
 
 .player-list ul {

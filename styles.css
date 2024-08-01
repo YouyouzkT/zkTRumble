@@ -152,30 +152,27 @@ h1, h2, p {
     justify-content: space-between;
     width: 100%;
     max-width: 1000px;
-    margin: 20px auto; /* Ajoutez une marge pour espacer le haut */
+    margin: 20px auto;
     padding: 20px;
     box-sizing: border-box;
 }
 
 .live-events {
-    flex: 3;
+    flex: 1;
     background-color: black;
     color: white;
     padding: 20px;
-    height: auto; /* Ajuste la hauteur automatiquement en fonction du contenu */
+    height: auto;
     overflow-y: auto;
-    margin-right: 20px; /* Espace à droite pour séparer des joueurs */
+    margin-right: 20px;
 }
 
 .player-list {
-    flex: 1;
-    max-width: 300px;
+    flex: 0 0 300px; /* Fixe la largeur à 300px */
     background-color: #f9f9f9;
     padding: 20px;
     border-left: 1px solid #ddd;
     overflow-y: auto;
-    box-sizing: border-box;
-    word-wrap: break-word; /* Assure que les longs pseudonymes se cassent à la ligne */
 }
 
 .player-list ul {
@@ -186,6 +183,18 @@ h1, h2, p {
 .player-list li {
     padding: 5px 0;
     font-size: 16px;
+}
+
+/* Media query pour la responsivité */
+@media (max-width: 800px) {
+    .live-content-wrapper {
+        flex-direction: column;
+    }
+
+    .live-events, .player-list {
+        max-width: 100%;
+        margin-right: 0;
+    }
 }
 
 /* Media query pour la responsivité */

@@ -15,18 +15,18 @@
         <p>Rumble Fight 3.0 OnChain For Full Transparency</p>
         </h1>
     </header>
-    <header>
-        <h1>Live Round Events</h1>
-    </header>
+    <div class="game-id-filter">
+        <label for="gameIdInput">Enter Game ID: </label>
+        <input type="text" id="gameIdInput" placeholder="Game ID">
+        <button id="filterButton">Apply Filter</button>
+    </div>
     <div class="content-wrapper">
-        <div id="status" class="status"></div>
-        <div class="game-id-filter">
-            <label for="gameIdInput">Enter Game ID: </label>
-            <input type="text" id="gameIdInput" placeholder="Game ID">
-            <button id="filterButton">Apply Filter</button>
-        </div>
         <div id="liveEvents" class="live-events">
             <!-- Les événements du round seront affichés ici -->
+        </div>
+        <div id="playerList" class="player-list">
+            <h3>Registered Players</h3>
+            <ul id="players"></ul>
         </div>
     </div>
 </body>

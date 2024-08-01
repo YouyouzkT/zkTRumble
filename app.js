@@ -391,7 +391,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
     };
 
-    // Initialisation du contrat et des listeners
     function initializeContract() {
         if (contract && listenersInitialized) {
             console.log('Contract and listeners already initialized.');
@@ -443,6 +442,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+// Ajoutez cette fonction pour mettre à jour la liste des joueurs
+function updatePlayerList() {
+    const playerList = document.getElementById('players');
+    if (!playerList) {
+        console.error('playerList element not found');
+        return;
+    }
+
+    // Effacez la liste actuelle des joueurs
+    playerList.innerHTML = '';
+
+    // Récupère les joueurs inscrits
+    contract.methods.getRegisteredPlayers(currentGameId).call().then(players => {
+        players.forEach(player => {
+            const playerItem = document.createElement('li');
+            playerItem.textContent = player;
+
+            // Vérifie si le joueur est éliminé
+            if (roundEvents.some(event => event.eventType === 'PlayerEliminated' && event.pseudo === player)) {
+                playerItem.style.textDecoration = 'line-through'; // Barrez les joueurs éliminés
+            }
+
+            playerList.appendChild(playerItem);
+        });
+    }).catch(error => {
+        console.error('Error fetching registered players:', error);
+    });
+}
+
     function sortRoundEvents() {
         roundEvents.sort((a, b) => {
             if (a.eventType === 'WinnerDeclared') return 1;
@@ -452,72 +480,51 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayRoundEvents() {
-        const liveEventsDiv = document.getElementById('liveEvents');
-        if (!liveEventsDiv) {
-            console.error('liveEventsDiv not found');
+    const liveEventsDiv = document.getElementById('liveEvents');
+    if (!liveEventsDiv) {
+        console.error('liveEventsDiv not found');
+        return;
+    }
+
+    sortRoundEvents(); // Assurer le tri avant l'affichage
+
+    // Affichage des événements triés
+    roundEvents.forEach(event => {
+        if (!event.rendered) {
+            const eventText = document.createElement('p');
+            const phrases = eventPhrases[event.eventType];
+            const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+            eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
+
+            // Appliquer une couleur verte pour le gagnant
+            if (event.eventType === 'WinnerDeclared') {
+                eventText.style.color = 'green';
+                eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
+            }
+
+            liveEventsDiv.appendChild(eventText);
+            event.rendered = true; // Marquer comme affiché
+            console.log('Event appended to liveEvents:', eventText.textContent);
+        }
+    });
+
+    updatePlayerList(); // Mettre à jour la liste des joueurs
+}
+
+if (filterButton) {
+    filterButton.addEventListener('click', () => {
+        currentGameId = gameIdInput.value;
+        if (!currentGameId) {
+            alert('Please enter a Game ID');
             return;
         }
-
-        sortRoundEvents(); // Assurer le tri avant l'affichage
-
-        // Affichage des événements triés
-        roundEvents.forEach(event => {
-            if (!event.rendered) {
-                const eventText = document.createElement('p');
-                const phrases = eventPhrases[event.eventType];
-                const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-                eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
-
-                // Appliquer une couleur verte pour le gagnant
-                if (event.eventType === 'WinnerDeclared') {
-                    eventText.style.color = 'green';
-                    eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
-                }
-
-                liveEventsDiv.appendChild(eventText);
-                event.rendered = true; // Marquer comme affiché
-                console.log('Event appended to liveEvents:', eventText.textContent);
-            }
-        });
-    }
-
-    async function startRound() {
-        try {
-            const accounts = await web3.eth.getAccounts();
-            const gameId = getGameId();
-
-            // Ajouter "New Round" à l'affichage des événements
-            const liveEventsDiv = document.getElementById('liveEvents');
-            if (liveEventsDiv) {
-                const newRoundText = document.createElement('p');
-                newRoundText.textContent = "New Round Started:";
-                newRoundText.style.fontWeight = 'bold';
-                newRoundText.style.fontSize = '1.2em';
-                newRoundText.style.color = 'blue';
-                liveEventsDiv.appendChild(newRoundText);
-            }
-
-            await contract.methods.startRound(gameId).send({ from: accounts[0] });
-            alert('Round started');
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
-    }
-
-    // Gestion des filtres et connexion
-    if (filterButton) {
-        filterButton.addEventListener('click', () => {
-            currentGameId = gameIdInput.value;
-            if (!currentGameId) {
-                alert('Please enter a Game ID');
-                return;
-            }
-            roundEvents = []; // Clear previous events
-            displayRoundEvents(); // Clear display
-        });
-    } else {
-        console.error('filterButton not found in the DOM.');
-    }
+        roundEvents = []; // Clear previous events
+        displayRoundEvents(); // Clear display
+        updatePlayerList(); // Update player list on filter application
+    });
+} else {
+    console.error('filterButton not found in the DOM.');
+}
 
     async function connectMetaMask() {
         if (typeof window.ethereum !== 'undefined') {
@@ -641,7 +648,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('startRound')?.addEventListener('click', startRound);
+    document.getElementById('startRound')?.addEventListener('click', async () => {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const gameId = getGameId();
+            await contract.methods.startRound(gameId).send({ from: accounts[0] });
+            alert('Round started');
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
 
     document.getElementById('closeRegistration')?.addEventListener('click', async () => {
         try {

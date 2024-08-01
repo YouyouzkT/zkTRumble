@@ -479,34 +479,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Nouvelle fonction pour mettre à jour la liste des joueurs
     function updatePlayerList(gameId) {
-        const playerList = document.getElementById('players');
-        if (!playerList) {
-            console.error('playerList element not found');
-            return;
-        }
-
-        // Clear the current list
-        playerList.innerHTML = '';
-
-        // Listen to PlayerRegistered events
-        contract.getPastEvents('PlayerRegistered', {
-            filter: { gameId: gameId },
-            fromBlock: 0,
-            toBlock: 'latest'
-        }, (error, events) => {
-            if (error) {
-                console.error('Error fetching PlayerRegistered events:', error);
-                return;
-            }
-
-            events.forEach(event => {
-                const player = event.returnValues.pseudo;
-                const li = document.createElement('li');
-                li.textContent = player;
-                playerList.appendChild(li);
-            });
-        });
+    const playerList = document.getElementById('players');
+    if (!playerList) {
+        console.error('playerList element not found');
+        return;
     }
+
+    // Effacez la liste actuelle
+    playerList.innerHTML = '';
+
+    const blockRangeLimit = 1000; // Limitez à 1000 blocs par requête
+
+    web3.eth.getBlockNumber().then(currentBlock => {
+        const fetchEvents = (fromBlock, toBlock) => {
+            contract.getPastEvents('PlayerRegistered', {
+                filter: { gameId: gameId },
+                fromBlock: fromBlock,
+                toBlock: toBlock
+            }, (error, events) => {
+                if (error) {
+                    console.error('Error fetching PlayerRegistered events:', error);
+                    return;
+                }
+
+                events.forEach(event => {
+                    const player = event.returnValues.pseudo;
+                    const li = document.createElement('li');
+                    li.textContent = player;
+                    playerList.appendChild(li);
+                });
+
+                // Si le bloc de fin est plus bas que le bloc actuel, itérer
+                if (toBlock < currentBlock) {
+                    fetchEvents(toBlock + 1, Math.min(toBlock + blockRangeLimit, currentBlock));
+                }
+            });
+        };
+
+        // Commencez à partir de 0 jusqu'au bloc actuel, en segmentant les requêtes
+        fetchEvents(0, Math.min(blockRangeLimit, currentBlock));
+    }).catch(err => {
+        console.error('Error getting current block number:', err);
+    });
+}
 
     if (filterButton) {
         filterButton.addEventListener('click', () => {

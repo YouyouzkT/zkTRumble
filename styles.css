@@ -84,6 +84,7 @@ h1, h2, p {
     align-items: center;
 }
 
+
 .square-btn {
     position: relative;
     display: flex;
@@ -114,6 +115,7 @@ h1, h2, p {
     background-color: #007bff;
     color: #fff;
 }
+
 
 .btn-img {
     width: 100%;
@@ -146,56 +148,6 @@ h1, h2, p {
     margin-right: 10px;
 }
 
-/* Styles spécifiques à la page live.html */
-.live-content-wrapper {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 1000px;
-    margin: 20px auto;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.live-events {
-    flex: 1;
-    background-color: black;
-    color: white;
-    padding: 20px;
-    height: auto;
-    overflow-y: auto;
-    margin-right: 20px;
-}
-
-.player-list {
-    flex: 0 0 300px; /* Fixe la largeur à 300px */
-    background-color: #f9f9f9;
-    padding: 20px;
-    border-left: 1px solid #ddd;
-    overflow-y: auto;
-}
-
-.player-list ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.player-list li {
-    padding: 5px 0;
-    font-size: 16px;
-}
-
-/* Media query pour la responsivité */
-@media (max-width: 800px) {
-    .live-content-wrapper {
-        flex-direction: column;
-    }
-
-    .live-events, .player-list {
-        max-width: 100%;
-        margin-right: 0;
-    }
-}
 
 /* Media query pour la responsivité */
 @media (max-width: 600px) {
@@ -216,12 +168,5 @@ h1, h2, p {
         height: auto;
     }
 
-    .live-content-wrapper {
-        flex-direction: column;
-    }
 
-    .live-events, .player-list {
-        max-width: 100%;
-        margin-right: 0;
-    }
 }

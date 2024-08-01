@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-  let web3;
+   let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -477,51 +477,47 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Nouvelle fonction pour mettre à jour la liste des joueurs
     function updatePlayerList(gameId) {
-    const playerList = document.getElementById('players');
-    if (!playerList) {
-        console.error('playerList element not found');
-        return;
-    }
+        const playerList = document.getElementById('players');
+        if (!playerList) {
+            console.error('playerList element not found');
+            return;
+        }
 
-    // Effacez la liste actuelle
-    playerList.innerHTML = '';
+        playerList.innerHTML = '';
 
-    const blockRangeLimit = 1000; // Limitez à 1000 blocs par requête
+        const blockRangeLimit = 1000;
 
-    web3.eth.getBlockNumber().then(currentBlock => {
-        const fetchEvents = (fromBlock, toBlock) => {
-            contract.getPastEvents('PlayerRegistered', {
-                filter: { gameId: gameId },
-                fromBlock: fromBlock,
-                toBlock: toBlock
-            }, (error, events) => {
-                if (error) {
-                    console.error('Error fetching PlayerRegistered events:', error);
-                    return;
-                }
+        web3.eth.getBlockNumber().then(currentBlock => {
+            const fetchEvents = (fromBlock, toBlock) => {
+                contract.getPastEvents('PlayerRegistered', {
+                    filter: { gameId: gameId },
+                    fromBlock: fromBlock,
+                    toBlock: toBlock
+                }, (error, events) => {
+                    if (error) {
+                        console.error('Error fetching PlayerRegistered events:', error);
+                        return;
+                    }
 
-                events.forEach(event => {
-                    const player = event.returnValues.pseudo;
-                    const li = document.createElement('li');
-                    li.textContent = player;
-                    playerList.appendChild(li);
+                    events.forEach(event => {
+                        const player = event.returnValues.pseudo;
+                        const li = document.createElement('li');
+                        li.textContent = player;
+                        playerList.appendChild(li);
+                    });
+
+                    if (toBlock < currentBlock) {
+                        fetchEvents(toBlock + 1, Math.min(toBlock + blockRangeLimit, currentBlock));
+                    }
                 });
+            };
 
-                // Si le bloc de fin est plus bas que le bloc actuel, itérer
-                if (toBlock < currentBlock) {
-                    fetchEvents(toBlock + 1, Math.min(toBlock + blockRangeLimit, currentBlock));
-                }
-            });
-        };
-
-        // Commencez à partir de 0 jusqu'au bloc actuel, en segmentant les requêtes
-        fetchEvents(0, Math.min(blockRangeLimit, currentBlock));
-    }).catch(err => {
-        console.error('Error getting current block number:', err);
-    });
-}
+            fetchEvents(0, Math.min(blockRangeLimit, currentBlock));
+        }).catch(err => {
+            console.error('Error getting current block number:', err);
+        });
+    }
 
     if (filterButton) {
         filterButton.addEventListener('click', () => {
@@ -530,9 +526,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert('Please enter a Game ID');
                 return;
             }
-            roundEvents = []; // Clear previous events
-            displayRoundEvents(); // Clear display
-            updatePlayerList(currentGameId); // Update player list
+            roundEvents = [];
+            displayRoundEvents();
+            updatePlayerList(currentGameId);
         });
     } else {
         console.error('filterButton not found in the DOM.');

@@ -477,62 +477,51 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function updatePlayerList(gameId) {
-        const playerList = document.getElementById('players');
-        if (!playerList) {
-            console.error('playerList element not found');
-            return;
-        }
+   function updatePlayerList(gameId) {
+    const playerList = document.getElementById('players');
+    if (!playerList) {
+        console.error('playerList element not found');
+        return;
+    }
 
-        playerList.innerHTML = '';
+    playerList.innerHTML = '';
 
-        const blockRangeLimit = 1000;
+    const blockRangeLimit = 1000;
 
-        web3.eth.getBlockNumber().then(currentBlock => {
-            const fetchEvents = (fromBlock, toBlock) => {
-                contract.getPastEvents('PlayerRegistered', {
-                    filter: { gameId: gameId },
-                    fromBlock: fromBlock,
-                    toBlock: toBlock
-                }, (error, events) => {
-                    if (error) {
-                        console.error('Error fetching PlayerRegistered events:', error);
-                        return;
-                    }
+    web3.eth.getBlockNumber().then(currentBlock => {
+        const fetchEvents = (fromBlock, toBlock) => {
+            contract.getPastEvents('PlayerRegistered', {
+                filter: { gameId: gameId },
+                fromBlock: fromBlock,
+                toBlock: toBlock
+            }, (error, events) => {
+                if (error) {
+                    console.error('Error fetching PlayerRegistered events:', error);
+                    return;
+                }
 
-                    events.forEach(event => {
+                events.forEach(event => {
+                    // Filtrer par gameId si nécessaire
+                    if (event.returnValues.gameId === gameId) {
                         const player = event.returnValues.pseudo;
                         const li = document.createElement('li');
                         li.textContent = player;
                         playerList.appendChild(li);
-                    });
-
-                    if (toBlock < currentBlock) {
-                        fetchEvents(toBlock + 1, Math.min(toBlock + blockRangeLimit, currentBlock));
                     }
                 });
-            };
 
-            fetchEvents(0, Math.min(blockRangeLimit, currentBlock));
-        }).catch(err => {
-            console.error('Error getting current block number:', err);
-        });
-    }
+                if (toBlock < currentBlock) {
+                    fetchEvents(toBlock + 1, Math.min(toBlock + blockRangeLimit, currentBlock));
+                }
+            });
+        };
 
-    if (filterButton) {
-        filterButton.addEventListener('click', () => {
-            currentGameId = gameIdInput.value;
-            if (!currentGameId) {
-                alert('Please enter a Game ID');
-                return;
-            }
-            roundEvents = [];
-            displayRoundEvents();
-            updatePlayerList(currentGameId);
-        });
-    } else {
-        console.error('filterButton not found in the DOM.');
-    }
+        fetchEvents(0, Math.min(blockRangeLimit, currentBlock));
+    }).catch(err => {
+        console.error('Error getting current block number:', err);
+    });
+}
+
 
     async function connectMetaMask() {
         if (typeof window.ethereum !== 'undefined') {

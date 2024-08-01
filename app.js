@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
- let web3;
+  let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -373,7 +373,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let roundEvents = [];
     let currentGameId = null;
 
-    // Phrases variées pour chaque type d'événement
     const eventPhrases = {
         'PlayerEliminated': [
             "{pseudo} has been eliminated from the competition.",
@@ -459,7 +458,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         sortRoundEvents(); // Assurer le tri avant l'affichage
 
-        // Display sorted events
         roundEvents.forEach(event => {
             if (!event.rendered) {
                 const eventText = document.createElement('p');
@@ -467,17 +465,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 const phrase = phrases[Math.floor(Math.random() * phrases.length)];
                 eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
 
-// Appliquer une couleur verte pour le gagnant
-            if (event.eventType === 'WinnerDeclared') {
-                eventText.style.color = 'green';
-                eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
-            }
+                if (event.eventType === 'WinnerDeclared') {
+                    eventText.style.color = 'green';
+                    eventText.style.fontWeight = 'bold';
+                }
 
                 liveEventsDiv.appendChild(eventText);
-                event.rendered = true; // Marquer comme affiché
+                event.rendered = true;
                 console.log('Event appended to liveEvents:', eventText.textContent);
             }
         });
+    }
+
+    // Nouvelle fonction pour mettre à jour la liste des joueurs
+    function updatePlayerList() {
+        const playerList = document.getElementById('players');
+        if (!playerList) {
+            console.error('playerList element not found');
+            return;
+        }
+
+        // Effacez la liste actuelle
+        playerList.innerHTML = '';
+
+        // Récupère les joueurs inscrits pour le jeu actuel
+        if (currentGameId !== null) {
+            contract.methods.getRegisteredPlayers(currentGameId).call()
+                .then(players => {
+                    players.forEach(player => {
+                        const li = document.createElement('li');
+                        li.textContent = player;
+                        playerList.appendChild(li);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching registered players:', error);
+                });
+        }
     }
 
     if (filterButton) {
@@ -489,6 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             roundEvents = []; // Clear previous events
             displayRoundEvents(); // Clear display
+            updatePlayerList(); // Update player list
         });
     } else {
         console.error('filterButton not found in the DOM.');

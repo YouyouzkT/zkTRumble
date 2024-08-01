@@ -391,7 +391,6 @@ document.addEventListener('DOMContentLoaded', () => {
         ]
     };
 
-    // Initialisation du contrat et des listeners
     function initializeContract() {
         if (contract && listenersInitialized) {
             console.log('Contract and listeners already initialized.');
@@ -460,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         sortRoundEvents(); // Assurer le tri avant l'affichage
 
-        // Affichage des événements triés
+        // Display sorted events
         roundEvents.forEach(event => {
             if (!event.rendered) {
                 const eventText = document.createElement('p');
@@ -468,11 +467,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const phrase = phrases[Math.floor(Math.random() * phrases.length)];
                 eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
 
-                // Appliquer une couleur verte pour le gagnant
-                if (event.eventType === 'WinnerDeclared') {
-                    eventText.style.color = 'green';
-                    eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
-                }
+// Appliquer une couleur verte pour le gagnant
+            if (event.eventType === 'WinnerDeclared') {
+                eventText.style.color = 'green';
+                eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
+            }
 
                 liveEventsDiv.appendChild(eventText);
                 event.rendered = true; // Marquer comme affiché
@@ -481,30 +480,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    async function startRound() {
-        try {
-            const accounts = await web3.eth.getAccounts();
-            const gameId = getGameId();
-
-            // Ajouter "New Round" à l'affichage des événements
-            const liveEventsDiv = document.getElementById('liveEvents');
-            if (liveEventsDiv) {
-                const newRoundText = document.createElement('p');
-                newRoundText.textContent = "New Round Started:";
-                newRoundText.style.fontWeight = 'bold';
-                newRoundText.style.fontSize = '1.2em';
-                newRoundText.style.color = 'blue';
-                liveEventsDiv.appendChild(newRoundText);
-            }
-
-            await contract.methods.startRound(gameId).send({ from: accounts[0] });
-            alert('Round started');
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
-    }
-
-    // Gestion des filtres et connexion
     if (filterButton) {
         filterButton.addEventListener('click', () => {
             currentGameId = gameIdInput.value;
@@ -641,7 +616,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('startRound')?.addEventListener('click', startRound);
+    document.getElementById('startRound')?.addEventListener('click', async () => {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const gameId = getGameId();
+            await contract.methods.startRound(gameId).send({ from: accounts[0] });
+            alert('Round started');
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
 
     document.getElementById('closeRegistration')?.addEventListener('click', async () => {
         try {

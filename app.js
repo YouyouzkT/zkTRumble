@@ -366,7 +366,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-
     let web3;
     let contract;
     let connectedAccount;
@@ -376,6 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let roundEvents = [];
     let currentGameId = null;
     let playerListUpdated = false; // Indicateur de mise à jour de la liste
+    let deadPlayerListUpdated = false; // Indicateur de mise à jour de la liste des joueurs morts
 
     const eventPhrases = {
         'PlayerEliminated': [
@@ -534,11 +534,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 liveEventsDiv.appendChild(eventText);
                 event.rendered = true; // Marquer comme affiché
                 console.log('Event appended to liveEvents:', eventText.textContent);
-
-                // Mettre à jour la liste des joueurs morts
-                if (event.eventType === 'PlayerEliminated') {
-                    updateDeadPlayerList(currentGameId);
-                }
             }
         });
 
@@ -546,6 +541,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentGameId && !playerListUpdated) {
             updatePlayerList(currentGameId);
             playerListUpdated = true; // Marquer comme mis à jour
+        }
+
+        // Mettre à jour la liste des joueurs morts à la fin de chaque round
+        if (currentGameId && !deadPlayerListUpdated) {
+            updateDeadPlayerList(currentGameId);
+            deadPlayerListUpdated = true; // Marquer comme mis à jour
         }
     }
 
@@ -592,6 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     deadPlayerList.appendChild(li);
                     console.log(`Added dead player: ${player}`);
                 });
+                deadPlayerListUpdated = false; // Réinitialiser l'indicateur après mise à jour
             })
             .catch(error => {
                 console.error('Error fetching eliminated players:', error);
@@ -609,15 +611,16 @@ document.addEventListener('DOMContentLoaded', () => {
             displayRoundEvents(); // Clear display
             if (!playerListUpdated) {
                 updatePlayerList(currentGameId); // Update player list
-                updateDeadPlayerList(currentGameId); // Update dead player list
                 playerListUpdated = true; // Marquer comme mis à jour
+            }
+            if (!deadPlayerListUpdated) {
+                updateDeadPlayerList(currentGameId); // Update dead player list
+                deadPlayerListUpdated = true; // Marquer comme mis à jour
             }
         });
     } else {
         console.error('filterButton not found in the DOM.');
     }
-
-
 
     async function connectMetaMask() {
         if (typeof window.ethereum !== 'undefined') {

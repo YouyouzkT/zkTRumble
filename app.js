@@ -591,6 +591,8 @@ let web3;
     document.getElementById('connectWalletConnect')?.addEventListener('click', connectWalletConnect);
     document.getElementById('navigateRegister')?.addEventListener('click', () => navigate('register.html'));
     document.getElementById('navigateCreate')?.addEventListener('click', () => navigate('create.html'));
+document.getElementById('navigatelive')?.addEventListener('click', () => navigate('live.html'));
+
     document.getElementById('navigateManage')?.addEventListener('click', () => navigate('manage.html'));
     document.getElementById('navigateHome')?.addEventListener('click', () => navigate('index.html'));
 

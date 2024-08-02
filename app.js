@@ -488,29 +488,29 @@ let web3;
     }
 
    function updatePlayerList(gameId) {
-        const playerList = document.getElementById('players');
-        if (!playerList) {
-            console.error('playerList element not found');
-            return;
-        }
-
-        playerList.innerHTML = '';
-
-        contract.methods.getRegisteredPlayers(gameId).call()
-            .then(players => {
-                players.sort(); // Trier les joueurs par ordre alphabétique
-                players.forEach(player => {
-                    const li = document.createElement('li');
-                    li.textContent = player;
-                    playerList.appendChild(li);
-                    console.log(`Added player: ${player}`);
-                });
-                playerListUpdated = false; // Réinitialiser l'indicateur après mise à jour
-            })
-            .catch(error => {
-                console.error('Error fetching registered players:', error);
-            });
+    const playerList = document.getElementById('players');
+    if (!playerList) {
+        console.error('playerList element not found');
+        return;
     }
+
+    playerList.innerHTML = '';
+
+    contract.methods.getRegisteredPlayers(gameId).call()
+        .then(players => {
+            players.sort((a, b) => a.localeCompare(b)); // Trier les joueurs par ordre alphabétique
+            players.forEach(player => {
+                const li = document.createElement('li');
+                li.textContent = player;
+                playerList.appendChild(li);
+                console.log(`Added player: ${player}`);
+            });
+            playerListUpdated = false; // Réinitialiser l'indicateur après mise à jour
+        })
+        .catch(error => {
+            console.error('Error fetching registered players:', error);
+        });
+}
 
     if (filterButton) {
         filterButton.addEventListener('click', () => {

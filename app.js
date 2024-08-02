@@ -487,7 +487,7 @@ let web3;
         }
     }
 
-   function updatePlayerList(gameId) {
+ function updatePlayerList(gameId) {
     const playerList = document.getElementById('players');
     if (!playerList) {
         console.error('playerList element not found');
@@ -498,8 +498,8 @@ let web3;
 
     contract.methods.getRegisteredPlayers(gameId).call()
         .then(players => {
-            players.sort((a, b) => a.localeCompare(b)); // Trier les joueurs par ordre alphabétique
-            players.forEach(player => {
+            const sortedPlayers = [...players].sort((a, b) => a.localeCompare(b)); // Créer une copie et trier les joueurs par ordre alphabétique
+            sortedPlayers.forEach(player => {
                 const li = document.createElement('li');
                 li.textContent = player;
                 playerList.appendChild(li);

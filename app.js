@@ -365,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
 
-    let web3;
+   let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -373,6 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const eventCache = new Set();
     let roundEvents = [];
     let currentGameId = null;
+    let playerListUpdated = false; // Indicateur de mise à jour de la liste
 
     const eventPhrases = {
         'PlayerEliminated': [
@@ -480,8 +481,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Mettre à jour la liste des joueurs enregistrés à la fin de chaque round
-        if (currentGameId) {
+        if (currentGameId && !playerListUpdated) {
             updatePlayerList(currentGameId);
+            playerListUpdated = true; // Marquer comme mis à jour
         }
     }
 
@@ -502,6 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     playerList.appendChild(li);
                     console.log(`Added player: ${player}`);
                 });
+                playerListUpdated = false; // Réinitialiser l'indicateur après mise à jour
             })
             .catch(error => {
                 console.error('Error fetching registered players:', error);
@@ -522,6 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error('filterButton not found in the DOM.');
     }
+
 
     async function connectMetaMask() {
         if (typeof window.ethereum !== 'undefined') {

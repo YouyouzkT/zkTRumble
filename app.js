@@ -478,56 +478,55 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
  function updatePlayerList(gameId) {
-        const playerList = document.getElementById('players');
-        if (!playerList) {
-            console.error('playerList element not found');
-            return;
-        }
-
-        playerList.innerHTML = '';
-
-        const blockRangeLimit = 1000;
-
-        console.log(`Fetching player list for gameId: ${gameId}`);
-
-        web3.eth.getBlockNumber().then(currentBlock => {
-            const fetchEvents = (fromBlock, toBlock) => {
-                console.log(`Fetching events from block ${fromBlock} to block ${toBlock}`);
-
-                contract.getPastEvents('PlayerRegistered', {
-                    filter: { gameId: gameId },
-                    fromBlock: fromBlock,
-                    toBlock: toBlock
-                }, (error, events) => {
-                    if (error) {
-                        console.error('Error fetching PlayerRegistered events:', error);
-                        return;
-                    }
-
-                    console.log(`Fetched ${events.length} events`);
-
-                    events.forEach(event => {
-                        // Filtrer par gameId si nécessaire
-                        if (event.returnValues.gameId === gameId) {
-                            const player = event.returnValues.pseudo;
-                            const li = document.createElement('li');
-                            li.textContent = player;
-                            playerList.appendChild(li);
-                            console.log(`Added player: ${player}`);
-                        }
-                    });
-
-                    if (toBlock < currentBlock) {
-                        fetchEvents(toBlock + 1, Math.min(toBlock + blockRangeLimit, currentBlock));
-                    }
-                });
-            };
-
-            fetchEvents(0, Math.min(blockRangeLimit, currentBlock));
-        }).catch(err => {
-            console.error('Error getting current block number:', err);
-        });
+    const playerList = document.getElementById('players');
+    if (!playerList) {
+        console.error('playerList element not found');
+        return;
     }
+
+    playerList.innerHTML = '';
+
+    const blockRangeLimit = 1000; // Limite de blocs par requête
+    const maxBlocks = 60000; // Maximum de blocs à couvrir
+
+    web3.eth.getBlockNumber().then(currentBlock => {
+        const startBlock = Math.max(0, currentBlock - maxBlocks); // Calculer le bloc de départ
+
+        const fetchEvents = (fromBlock, toBlock) => {
+            console.log(`Fetching events from block ${fromBlock} to block ${toBlock}`);
+
+            contract.getPastEvents('PlayerRegistered', {
+                filter: { gameId: gameId },
+                fromBlock: fromBlock,
+                toBlock: toBlock
+            }, (error, events) => {
+                if (error) {
+                    console.error('Error fetching PlayerRegistered events:', error);
+                    return;
+                }
+
+                console.log(`Fetched ${events.length} events`);
+
+                events.forEach(event => {
+                    const player = event.returnValues.pseudo;
+                    const li = document.createElement('li');
+                    li.textContent = player;
+                    playerList.appendChild(li);
+                    console.log(`Added player: ${player}`);
+                });
+
+                if (toBlock < currentBlock) {
+                    fetchEvents(toBlock + 1, Math.min(toBlock + blockRangeLimit, currentBlock));
+                }
+            });
+        };
+
+        fetchEvents(startBlock, Math.min(startBlock + blockRangeLimit, currentBlock));
+    }).catch(err => {
+        console.error('Error getting current block number:', err);
+    });
+}
+
 
     if (filterButton) {
         filterButton.addEventListener('click', () => {

@@ -165,14 +165,20 @@ h1, h2, p {
 .player-list, .dead-player-list {
     flex: 1;
     max-width: 300px;
-    background-color: #f9f9f9;
     padding: 20px;
-    border-left: 1px solid #ddd;
+    margin-left: 10px;
+    border-radius: 5px;
     overflow-y: auto;
 }
 
+.player-list {
+    background-color: #e8f5e9; /* Fond vert clair */
+    border: 1px solid #4CAF50; /* Bordure verte */
+}
+
 .dead-player-list {
-    border-left: 1px solid #ddd;
+    background-color: #ffebee; /* Fond rouge clair */
+    border: 1px solid #f44336; /* Bordure rouge */
 }
 
 .player-list h3, .dead-player-list h3 {
@@ -187,6 +193,11 @@ h1, h2, p {
 .player-list li, .dead-player-list li {
     padding: 5px 0;
     font-size: 16px;
+}
+
+.dead-player-list li {
+    text-decoration: line-through; /* Texte barré pour les joueurs morts */
+    color: #b71c1c; /* Couleur du texte rouge foncé */
 }
 
 @media (max-width: 600px) {

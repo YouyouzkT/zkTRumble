@@ -508,47 +508,60 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function displayRoundEvents() {
-        const liveEventsDiv = document.getElementById('liveEvents');
-        if (!liveEventsDiv) {
-            console.error('liveEventsDiv not found');
-            return;
-        }
-
-        sortRoundEvents(); // Assurer le tri avant l'affichage
-
-        // Display sorted events
-        roundEvents.forEach(event => {
-            if (!event.rendered) {
-                const eventText = document.createElement('p');
-                const phrases = eventPhrases[event.eventType];
-                const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-                eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
-
-                // Appliquer une couleur verte pour le gagnant
-                if (event.eventType === 'WinnerDeclared') {
-                    eventText.style.color = 'green';
-                    eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
-                }
-
-                liveEventsDiv.appendChild(eventText);
-                event.rendered = true; // Marquer comme affiché
-                console.log('Event appended to liveEvents:', eventText.textContent);
+ function typewriterEffect(element, text, speed = 50) {
+        let i = 0;
+        function type() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
             }
-        });
-
-        // Mettre à jour la liste des joueurs enregistrés à la fin de chaque round
-        if (currentGameId && !playerListUpdated) {
-            updatePlayerList(currentGameId);
-            playerListUpdated = true; // Marquer comme mis à jour
         }
-
-        // Mettre à jour la liste des joueurs morts à la fin de chaque round
-        if (currentGameId && !deadPlayerListUpdated) {
-            updateDeadPlayerList(currentGameId);
-            deadPlayerListUpdated = true; // Marquer comme mis à jour
-        }
+        type();
     }
+    function displayRoundEvents() {
+    const liveEventsDiv = document.getElementById('liveEvents');
+    if (!liveEventsDiv) {
+        console.error('liveEventsDiv not found');
+        return;
+    }
+
+    sortRoundEvents(); // Assurer le tri avant l'affichage
+
+    // Display sorted events
+    roundEvents.forEach((event, index) => {
+        if (!event.rendered) {
+            const eventText = document.createElement('p');
+            const phrases = eventPhrases[event.eventType];
+            const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+            const formattedText = phrase.replace("{pseudo}", event.pseudo);
+
+            // Appliquer une couleur verte pour le gagnant
+            if (event.eventType === 'WinnerDeclared') {
+                eventText.style.color = 'green';
+                eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
+            }
+
+            liveEventsDiv.appendChild(eventText);
+            typewriterEffect(eventText, formattedText);
+            event.rendered = true; // Marquer comme affiché
+            console.log('Event appended to liveEvents:', formattedText);
+        }
+    });
+
+    // Mettre à jour la liste des joueurs enregistrés à la fin de chaque round
+    if (currentGameId && !playerListUpdated) {
+        updatePlayerList(currentGameId);
+        playerListUpdated = true; // Marquer comme mis à jour
+    }
+
+    // Mettre à jour la liste des joueurs morts à la fin de chaque round
+    if (currentGameId && !deadPlayerListUpdated) {
+        updateDeadPlayerList(currentGameId);
+        deadPlayerListUpdated = true; // Marquer comme mis à jour
+    }
+}
+
 
     function updatePlayerList(gameId) {
         const playerList = document.getElementById('players');

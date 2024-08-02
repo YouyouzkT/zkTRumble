@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-   let web3;
+    let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -373,6 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let roundEvents = [];
     let currentGameId = null;
 
+    // Phrases variées pour chaque type d'événement
     const eventPhrases = {
         'PlayerEliminated': [
             "{pseudo} has been eliminated from the competition.",
@@ -477,11 +478,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Event appended to liveEvents:', eventText.textContent);
             }
         });
-
-        // Mettre à jour la liste des joueurs enregistrés à la fin de chaque round
-        if (currentGameId) {
-            updatePlayerList(currentGameId);
-        }
     }
 
     function updatePlayerList(gameId) {

@@ -148,6 +148,21 @@ h1, h2, p {
     margin-right: 10px;
 }
 
+/* Styles pour la page live */
+.live-events {
+    background-color: black;
+    color: white;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.live-events p {
+    margin: 10px 0;
+    font-size: 18px;
+}
+
 
 /* Media query pour la responsivité */
 @media (max-width: 600px) {

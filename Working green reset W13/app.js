@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-   let web3;
+ let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -373,6 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let roundEvents = [];
     let currentGameId = null;
 
+    // Phrases variées pour chaque type d'événement
     const eventPhrases = {
         'PlayerEliminated': [
             "{pseudo} has been eliminated from the competition.",
@@ -458,6 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         sortRoundEvents(); // Assurer le tri avant l'affichage
 
+        // Display sorted events
         roundEvents.forEach(event => {
             if (!event.rendered) {
                 const eventText = document.createElement('p');
@@ -465,74 +467,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 const phrase = phrases[Math.floor(Math.random() * phrases.length)];
                 eventText.textContent = phrase.replace("{pseudo}", event.pseudo);
 
-                if (event.eventType === 'WinnerDeclared') {
-                    eventText.style.color = 'green';
-                    eventText.style.fontWeight = 'bold';
-                }
+// Appliquer une couleur verte pour le gagnant
+            if (event.eventType === 'WinnerDeclared') {
+                eventText.style.color = 'green';
+                eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
+            }
 
                 liveEventsDiv.appendChild(eventText);
-                event.rendered = true;
+                event.rendered = true; // Marquer comme affiché
                 console.log('Event appended to liveEvents:', eventText.textContent);
             }
         });
     }
 
-    function updatePlayerList(gameId) {
-        const playerList = document.getElementById('players');
-        if (!playerList) {
-            console.error('playerList element not found');
-            return;
-        }
-
-        playerList.innerHTML = '';
-
-        const blockRangeLimit = 1000;
-
-        web3.eth.getBlockNumber().then(currentBlock => {
-            const fetchEvents = (fromBlock, toBlock) => {
-                contract.getPastEvents('PlayerRegistered', {
-                    filter: { gameId: gameId },
-                    fromBlock: fromBlock,
-                    toBlock: toBlock
-                }, (error, events) => {
-                    if (error) {
-                        console.error('Error fetching PlayerRegistered events:', error);
-                        return;
-                    }
-
-                    events.forEach(event => {
-                        // Filtrer par gameId si nécessaire
-                        if (event.returnValues.gameId === gameId) {
-                            const player = event.returnValues.pseudo;
-                            const li = document.createElement('li');
-                            li.textContent = player;
-                            playerList.appendChild(li);
-                        }
-                    });
-
-                    if (toBlock < currentBlock) {
-                        fetchEvents(toBlock + 1, Math.min(toBlock + blockRangeLimit, currentBlock));
-                    }
-                });
-            };
-
-            fetchEvents(0, Math.min(blockRangeLimit, currentBlock));
-        }).catch(err => {
-            console.error('Error getting current block number:', err);
-        });
-    }
-
     if (filterButton) {
         filterButton.addEventListener('click', () => {
-            const gameId = gameIdInput.value;
-            if (!gameId) {
+            currentGameId = gameIdInput.value;
+            if (!currentGameId) {
                 alert('Please enter a Game ID');
                 return;
             }
-            currentGameId = gameId; // Mettez à jour le currentGameId
-            roundEvents = [];
-            displayRoundEvents();
-            updatePlayerList(gameId);
+            roundEvents = []; // Clear previous events
+            displayRoundEvents(); // Clear display
         });
     } else {
         console.error('filterButton not found in the DOM.');

@@ -366,6 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+
     let web3;
     let contract;
     let connectedAccount;
@@ -615,6 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error('filterButton not found in the DOM.');
     }
+
 
 
     async function connectMetaMask() {

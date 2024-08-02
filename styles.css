@@ -162,7 +162,7 @@ h1, h2, p {
     overflow-y: auto;
 }
 
-.player-list {
+.player-list, .dead-player-list {
     flex: 1;
     max-width: 300px;
     background-color: #f9f9f9;
@@ -171,16 +171,20 @@ h1, h2, p {
     overflow-y: auto;
 }
 
-.player-list h3 {
+.dead-player-list {
+    border-left: 1px solid #ddd;
+}
+
+.player-list h3, .dead-player-list h3 {
     margin-top: 0;
 }
 
-.player-list ul {
+.player-list ul, .dead-player-list ul {
     list-style-type: none;
     padding: 0;
 }
 
-.player-list li {
+.player-list li, .dead-player-list li {
     padding: 5px 0;
     font-size: 16px;
 }
@@ -190,7 +194,7 @@ h1, h2, p {
         flex-direction: column;
     }
 
-    .live-events, .player-list {
+    .live-events, .player-list, .dead-player-list {
         width: 100%;
     }
 }

@@ -365,7 +365,8 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
 
-let web3;
+
+    let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -378,72 +379,72 @@ let web3;
     const eventPhrases = {
         'PlayerEliminated': [
             "{pseudo} just got forked out of the chain.",
-"The blockchain has pruned {pseudo}'s blocks.",
-"{pseudo} ran out of gas and is out of the game.",
-"A double spend attack took down {pseudo}.",
-"{pseudo} failed to reach consensus and is eliminated.",
-"The network dropped {pseudo} from the nodes.",
-"{pseudo} has been slashed from the validator set.",
-"Smart contract breach! {pseudo} is no more.",
-"{pseudo} got rugged and is out.",
-"A hard fork ejected {pseudo} from the chain.",
-"{pseudo} lost the key and is eliminated.",
-"The mempool rejected {pseudo}.",
-"{pseudo}'s transaction failed and they are out.",
-"Consensus rules out {pseudo} from the game.",
-"{pseudo} has been orphaned from the chain.",
-"A bug in the code took out {pseudo}.",
-"{pseudo}'s block reward just halved out of existence.",
-"No confirmation for {pseudo}, they are out.",
-"{pseudo} got slashed and burned.",
-"The chain reorganized and lost {pseudo}.",
-"{pseudo}'s hash power wasn't enough.",
-"Network congestion dropped {pseudo}.",
-"{pseudo} hit a 51% attack and is out.",
-"The oracle betrayed {pseudo}.",
-"{pseudo} faced a Sybil attack and lost.",
-"A DDoS attack removed {pseudo} from the game.",
-"{pseudo} missed the block and is out.",
-"The consensus algorithm rejected {pseudo}.",
-"{pseudo} got dumped from the pool.",
-"Too many forks! {pseudo} is out.",
-"{pseudo} faced a reorg and lost.",
-"An off-chain error eliminated {pseudo}.",
-"The validator slashed {pseudo}.",
-"{pseudo} couldn't stake enough and is out.",
-"Failed to verify! {pseudo} is eliminated.",
-"{pseudo} encountered a double spend and is out.",
-"The chain split and lost {pseudo}.",
-"An invalid transaction took out {pseudo}.",
-"{pseudo} faced a gas limit and lost.",
-"The mainnet rejected {pseudo}.",
-"{pseudo}'s transaction was reverted.",
-"The chain forked away from {pseudo}.",
-"{pseudo}'s transaction pool ran dry.",
-"Consensus split and dropped {pseudo}.",
-"A protocol upgrade ousted {pseudo}."
+            "The blockchain has pruned {pseudo}'s blocks.",
+            "{pseudo} ran out of gas and is out of the game.",
+            "A double spend attack took down {pseudo}.",
+            "{pseudo} failed to reach consensus and is eliminated.",
+            "The network dropped {pseudo} from the nodes.",
+            "{pseudo} has been slashed from the validator set.",
+            "Smart contract breach! {pseudo} is no more.",
+            "{pseudo} got rugged and is out.",
+            "A hard fork ejected {pseudo} from the chain.",
+            "{pseudo} lost the key and is eliminated.",
+            "The mempool rejected {pseudo}.",
+            "{pseudo}'s transaction failed and they are out.",
+            "Consensus rules out {pseudo} from the game.",
+            "{pseudo} has been orphaned from the chain.",
+            "A bug in the code took out {pseudo}.",
+            "{pseudo}'s block reward just halved out of existence.",
+            "No confirmation for {pseudo}, they are out.",
+            "{pseudo} got slashed and burned.",
+            "The chain reorganized and lost {pseudo}.",
+            "{pseudo}'s hash power wasn't enough.",
+            "Network congestion dropped {pseudo}.",
+            "{pseudo} hit a 51% attack and is out.",
+            "The oracle betrayed {pseudo}.",
+            "{pseudo} faced a Sybil attack and lost.",
+            "A DDoS attack removed {pseudo} from the game.",
+            "{pseudo} missed the block and is out.",
+            "The consensus algorithm rejected {pseudo}.",
+            "{pseudo} got dumped from the pool.",
+            "Too many forks! {pseudo} is out.",
+            "{pseudo} faced a reorg and lost.",
+            "An off-chain error eliminated {pseudo}.",
+            "The validator slashed {pseudo}.",
+            "{pseudo} couldn't stake enough and is out.",
+            "Failed to verify! {pseudo} is eliminated.",
+            "{pseudo} encountered a double spend and is out.",
+            "The chain split and lost {pseudo}.",
+            "An invalid transaction took out {pseudo}.",
+            "{pseudo} faced a gas limit and lost.",
+            "The mainnet rejected {pseudo}.",
+            "{pseudo}'s transaction was reverted.",
+            "The chain forked away from {pseudo}.",
+            "{pseudo}'s transaction pool ran dry.",
+            "Consensus split and dropped {pseudo}.",
+            "A protocol upgrade ousted {pseudo}."
         ],
         'WinnerDeclared': [
-           "{pseudo} has reached consensus and claimed victory!",
-"The final block belongs to {pseudo}!",
-"{pseudo} mined the winning block!",
-"The chain celebrates {pseudo} as the ultimate winner!",
-"{pseudo} has validated their way to victory!",
-"Block reward goes to {pseudo}! Champion!",
-"{pseudo} outperformed all nodes to win!",
-"Consensus achieved! {pseudo} is the winner!",
-"The blockchain bows to {pseudo}, the victor!",
-"{pseudo} staked their claim on victory!",
-"The network confirms {pseudo} as the winner!",
-"{pseudo} has written their name on the blockchain of winners!",
-"{pseudo} mined through all challenges to win!",
-"The final confirmation: {pseudo} is the winner!",
-"{pseudo} holds the private key to victory!",
-"Smart contract declares {pseudo} the winner!",
-"{pseudo} achieved the ultimate transaction: Victory!",
-"Proof of work? More like proof of {pseudo}'s victory!",
-"The ledger shows {pseudo} as the champion!",
-"{pseudo}'s block is the last standing, making them the winner!"
+            "{pseudo} has reached consensus and claimed victory!",
+            "The final block belongs to {pseudo}!",
+            "{pseudo} mined the winning block!",
+            "The chain celebrates {pseudo} as the ultimate winner!",
+            "{pseudo} has validated their way to victory!",
+            "Block reward goes to {pseudo}! Champion!",
+            "{pseudo} outperformed all nodes to win!",
+            "Consensus achieved! {pseudo} is the winner!",
+            "The blockchain bows to {pseudo}, the victor!",
+            "{pseudo} staked their claim on victory!",
+            "The network confirms {pseudo} as the winner!",
+            "{pseudo} has written their name on the blockchain of winners!",
+            "{pseudo} mined through all challenges to win!",
+            "The final confirmation: {pseudo} is the winner!",
+            "{pseudo} holds the private key to victory!",
+            "Smart contract declares {pseudo} the winner!",
+            "{pseudo} achieved the ultimate transaction: Victory!",
+            "Proof of work? More like proof of {pseudo}'s victory!",
+            "The ledger shows {pseudo} as the champion!",
+            "{pseudo}'s block is the last standing, making them the winner!"
         ]
     };
 
@@ -532,6 +533,11 @@ let web3;
                 liveEventsDiv.appendChild(eventText);
                 event.rendered = true; // Marquer comme affiché
                 console.log('Event appended to liveEvents:', eventText.textContent);
+
+                // Mettre à jour la liste des joueurs morts
+                if (event.eventType === 'PlayerEliminated') {
+                    updateDeadPlayerList(currentGameId);
+                }
             }
         });
 
@@ -542,30 +548,54 @@ let web3;
         }
     }
 
- function updatePlayerList(gameId) {
-    const playerList = document.getElementById('players');
-    if (!playerList) {
-        console.error('playerList element not found');
-        return;
+    function updatePlayerList(gameId) {
+        const playerList = document.getElementById('players');
+        if (!playerList) {
+            console.error('playerList element not found');
+            return;
+        }
+
+        playerList.innerHTML = '';
+
+        contract.methods.getRegisteredPlayers(gameId).call()
+            .then(players => {
+                const sortedPlayers = [...players].sort((a, b) => a.localeCompare(b)); // Créer une copie et trier les joueurs par ordre alphabétique
+                sortedPlayers.forEach(player => {
+                    const li = document.createElement('li');
+                    li.textContent = player;
+                    playerList.appendChild(li);
+                    console.log(`Added player: ${player}`);
+                });
+                playerListUpdated = false; // Réinitialiser l'indicateur après mise à jour
+            })
+            .catch(error => {
+                console.error('Error fetching registered players:', error);
+            });
     }
 
-    playerList.innerHTML = '';
+    function updateDeadPlayerList(gameId) {
+        const deadPlayerList = document.getElementById('deadPlayers');
+        if (!deadPlayerList) {
+            console.error('deadPlayerList element not found');
+            return;
+        }
 
-    contract.methods.getRegisteredPlayers(gameId).call()
-        .then(players => {
-            const sortedPlayers = [...players].sort((a, b) => a.localeCompare(b)); // Créer une copie et trier les joueurs par ordre alphabétique
-            sortedPlayers.forEach(player => {
-                const li = document.createElement('li');
-                li.textContent = player;
-                playerList.appendChild(li);
-                console.log(`Added player: ${player}`);
+        deadPlayerList.innerHTML = '';
+
+        contract.methods.getEliminatedPlayers(gameId).call()
+            .then(players => {
+                const sortedPlayers = [...players].sort((a, b) => a.localeCompare(b)); // Créer une copie et trier les joueurs par ordre alphabétique
+                sortedPlayers.forEach(player => {
+                    const li = document.createElement('li');
+                    li.textContent = player;
+                    deadPlayerList.appendChild(li);
+                    console.log(`Added dead player: ${player}`);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching eliminated players:', error);
             });
-            playerListUpdated = false; // Réinitialiser l'indicateur après mise à jour
-        })
-        .catch(error => {
-            console.error('Error fetching registered players:', error);
-        });
-}
+    }
 
     if (filterButton) {
         filterButton.addEventListener('click', () => {
@@ -578,6 +608,7 @@ let web3;
             displayRoundEvents(); // Clear display
             if (!playerListUpdated) {
                 updatePlayerList(currentGameId); // Update player list
+                updateDeadPlayerList(currentGameId); // Update dead player list
                 playerListUpdated = true; // Marquer comme mis à jour
             }
         });

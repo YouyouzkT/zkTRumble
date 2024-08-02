@@ -365,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
 
-   let web3;
+let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -520,7 +520,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             roundEvents = []; // Clear previous events
             displayRoundEvents(); // Clear display
-            updatePlayerList(currentGameId); // Update player list
+            if (!playerListUpdated) {
+                updatePlayerList(currentGameId); // Update player list
+                playerListUpdated = true; // Marquer comme mis à jour
+            }
         });
     } else {
         console.error('filterButton not found in the DOM.');

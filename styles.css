@@ -200,6 +200,10 @@ h1, h2, p {
     color: #b71c1c; /* Couleur du texte rouge foncé */
 }
 
+.game-id-filter {
+    margin-bottom: 20px; /* Ajouter de la marge inférieure */
+}
+
 @media (max-width: 600px) {
     .live-content {
         flex-direction: column;

@@ -477,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function updatePlayerList(gameId) {
+ function updatePlayerList(gameId) {
         const playerList = document.getElementById('players');
         if (!playerList) {
             console.error('playerList element not found');
@@ -488,8 +488,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const blockRangeLimit = 1000;
 
+        console.log(`Fetching player list for gameId: ${gameId}`);
+
         web3.eth.getBlockNumber().then(currentBlock => {
             const fetchEvents = (fromBlock, toBlock) => {
+                console.log(`Fetching events from block ${fromBlock} to block ${toBlock}`);
+
                 contract.getPastEvents('PlayerRegistered', {
                     filter: { gameId: gameId },
                     fromBlock: fromBlock,
@@ -500,6 +504,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         return;
                     }
 
+                    console.log(`Fetched ${events.length} events`);
+
                     events.forEach(event => {
                         // Filtrer par gameId si nécessaire
                         if (event.returnValues.gameId === gameId) {
@@ -507,6 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             const li = document.createElement('li');
                             li.textContent = player;
                             playerList.appendChild(li);
+                            console.log(`Added player: ${player}`);
                         }
                     });
 
@@ -537,6 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error('filterButton not found in the DOM.');
     }
+
 
     async function connectMetaMask() {
         if (typeof window.ethereum !== 'undefined') {

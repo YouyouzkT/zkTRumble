@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    let web3;
+ let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -590,6 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 sortedPlayers.forEach(player => {
                     const li = document.createElement('li');
                     li.textContent = player;
+                    li.style.textDecoration = 'line-through'; // Appliquer le style rayé
                     deadPlayerList.appendChild(li);
                     console.log(`Added dead player: ${player}`);
                 });
@@ -621,7 +622,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error('filterButton not found in the DOM.');
     }
-
     async function connectMetaMask() {
         if (typeof window.ethereum !== 'undefined') {
             try {

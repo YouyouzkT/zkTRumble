@@ -30,6 +30,8 @@ header {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 
 h1, h2, p {
@@ -141,8 +143,8 @@ h1, h2, p {
 }
 
 .btn-home .icon-home {
-    width: 50px;
-    height: 50px;
+    width: 24px;
+    height: 24px;
     margin-right: 10px;
 }
 
@@ -151,6 +153,7 @@ h1, h2, p {
     display: flex;
     justify-content: space-between;
     width: 100%;
+    flex-wrap: wrap;
 }
 
 .live-events {
@@ -160,6 +163,8 @@ h1, h2, p {
     padding: 20px;
     height: 100vh;
     overflow-y: auto;
+    box-sizing: border-box;
+    margin-bottom: 20px;
 }
 
 .player-list, .dead-player-list {
@@ -169,6 +174,8 @@ h1, h2, p {
     margin-left: 10px;
     border-radius: 5px;
     overflow-y: auto;
+    box-sizing: border-box;
+    margin-bottom: 20px;
 }
 
 .player-list {
@@ -204,12 +211,23 @@ h1, h2, p {
     margin-bottom: 20px; /* Ajouter de la marge inférieure */
 }
 
-@media (max-width: 600px) {
+/* Media queries pour améliorer l'affichage sur mobile */
+@media (max-width: 768px) {
     .live-content {
         flex-direction: column;
     }
 
     .live-events, .player-list, .dead-player-list {
         width: 100%;
+        margin-left: 0; /* Supprimer la marge gauche */
+    }
+
+    .player-list, .dead-player-list {
+        max-width: 100%; /* S'assurer que la largeur maximale est de 100% */
+    }
+
+    .btn-home {
+        width: 100%; /* Faire en sorte que le bouton prenne toute la largeur */
+        justify-content: center; /* Centrer le contenu */
     }
 }

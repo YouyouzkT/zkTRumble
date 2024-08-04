@@ -572,27 +572,29 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    filterButton.addEventListener('click', () => {
-        const gameId = gameIdInput.value.trim();
-        if (gameId) {
-            currentGameId = gameId;
-            roundEvents = []; // Réinitialiser les événements du round
-            playerListUpdated = false; // Réinitialiser l'indicateur de mise à jour de la liste des joueurs
-            deadPlayerListUpdated = false; // Réinitialiser l'indicateur de mise à jour de la liste des joueurs morts
-            initializeContract();
-            updatePlayerList(gameId);
-            updateDeadPlayerList(gameId);
-            displayRoundEvents();
-        }
-    });
-
-    // Ajout de l'événement pour le bouton "Home"
-    const navigateHomeButton = document.getElementById('navigateHome');
-    if (navigateHomeButton) {
-        navigateHomeButton.addEventListener('click', () => {
-            window.location.href = 'index.html';
+    if (filterButton) {
+        filterButton.addEventListener('click', () => {
+            currentGameId = gameIdInput.value;
+            if (!currentGameId) {
+                alert('Please enter a Game ID');
+                return;
+            }
+            roundEvents = []; // Clear previous events
+            displayRoundEvents(); // Clear display
+            if (!playerListUpdated) {
+                updatePlayerList(currentGameId); // Update player list
+                playerListUpdated = true; // Marquer comme mis à jour
+            }
+            if (!deadPlayerListUpdated) {
+                updateDeadPlayerList(currentGameId); // Update dead player list
+                deadPlayerListUpdated = true; // Marquer comme mis à jour
+            }
         });
+    } else {
+        console.error('filterButton not found in the DOM.');
     }
+
+    
     async function connectMetaMask() {
         if (typeof window.ethereum !== 'undefined') {
             try {

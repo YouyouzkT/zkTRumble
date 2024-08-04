@@ -1,0 +1,251 @@
+/* styles.css */
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Roboto', sans-serif;
+    background-image: url('images/Background.webp');
+    background-size: cover;
+    background-repeat: repeat;
+    background-attachment: fixed;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.content-wrapper {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1, h2, p {
+    margin: 0 0 10px 0;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2rem; /* Taille de police par défaut pour le titre */
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 10px 0;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+}
+
+.btn:hover {
+    background-color: #007bff;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.btn-metamask {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: 2px solid #000;
+    border-radius: 0;
+    background-color: #f0f0f0;
+    color: #000;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-metamask:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.button-logo {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.btn-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.square-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    height: 150px;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+.btn-text {
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.square-btn:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.btn-home {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    color: #000;
+}
+
+.btn-home .icon-home {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+/* Styles spécifiques à la page live */
+.live-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+    align-items: center; /* Centrer les éléments sous la bannière */
+}
+
+.live-events {
+    flex: 3;
+    background-color: black;
+    color: white;
+    padding: 20px;
+    height: 100vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.player-list, .dead-player-list {
+    flex: 1;
+    max-width: 300px;
+    padding: 20px;
+    margin-left: 10px;
+    border-radius: 5px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    text-align: center; /* Centrer le texte */
+}
+
+.player-list {
+    background-color: #e8f5e9; /* Fond vert clair */
+    border: 1px solid #4CAF50; /* Bordure verte */
+}
+
+.dead-player-list {
+    background-color: #ffebee; /* Fond rouge clair */
+    border: 1px solid #f44336; /* Bordure rouge */
+}
+
+.player-list h3, .dead-player-list h3 {
+    margin-top: 0;
+}
+
+.player-list ul, .dead-player-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.player-list li, .dead-player-list li {
+    padding: 5px 0;
+    font-size: 16px;
+}
+
+.dead-player-list li {
+    text-decoration: line-through; /* Texte barré pour les joueurs morts */
+    color: #b71c1c; /* Couleur du texte rouge foncé */
+}
+
+.game-id-filter {
+    margin-bottom: 20px; /* Ajouter de la marge inférieure */
+}
+
+/* Media queries pour améliorer l'affichage sur mobile */
+@media (max-width: 768px) {
+    .live-content {
+        flex-direction: column;
+        align-items: center; /* Centrer les éléments sous la bannière */
+    }
+
+    .live-events, .player-list, .dead-player-list {
+        width: 100%;
+        margin-left: 0; /* Supprimer la marge gauche */
+        text-align: center; /* Centrer le texte */
+    }
+
+    .player-list, .dead-player-list {
+        max-width: 100%; /* S'assurer que la largeur maximale est de 100% */
+    }
+
+    .btn-home {
+        width: 100%; /* Faire en sorte que le bouton prenne toute la largeur */
+        justify-content: center; /* Centrer le contenu */
+    }
+
+    .game-id-filter {
+        width: 100%;
+        text-align: center;
+    }
+
+    header h1 {
+        font-size: 1.5rem; /* Réduire la taille de la police pour les petits écrans */
+    }
+}

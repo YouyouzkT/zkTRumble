@@ -39,6 +39,10 @@ h1, h2, p {
     text-align: center;
 }
 
+h1 {
+    font-size: 2rem; /* Taille de police par défaut pour le titre */
+}
+
 .btn {
     padding: 10px 20px;
     font-size: 16px;
@@ -231,5 +235,14 @@ h1, h2, p {
     .btn-home {
         width: 100%; /* Faire en sorte que le bouton prenne toute la largeur */
         justify-content: center; /* Centrer le contenu */
+    }
+
+    .game-id-filter {
+        width: 100%;
+        text-align: center;
+    }
+
+    header h1 {
+        font-size: 1.5rem; /* Réduire la taille de la police pour les petits écrans */
     }
 }

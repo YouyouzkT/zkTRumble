@@ -32,6 +32,7 @@ header {
     text-align: center;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 h1, h2, p {
@@ -158,6 +159,7 @@ h1 {
     justify-content: space-between;
     width: 100%;
     flex-wrap: wrap;
+    align-items: center; /* Centrer les éléments sous la bannière */
 }
 
 .live-events {
@@ -180,6 +182,7 @@ h1 {
     overflow-y: auto;
     box-sizing: border-box;
     margin-bottom: 20px;
+    text-align: center; /* Centrer le texte */
 }
 
 .player-list {

@@ -215,11 +215,13 @@ h1, h2, p {
 @media (max-width: 768px) {
     .live-content {
         flex-direction: column;
+        align-items: center; /* Centrer les éléments sous la bannière */
     }
 
     .live-events, .player-list, .dead-player-list {
         width: 100%;
         margin-left: 0; /* Supprimer la marge gauche */
+        text-align: center; /* Centrer le texte */
     }
 
     .player-list, .dead-player-list {

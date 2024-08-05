@@ -844,14 +844,4 @@ document.getElementById('navigatelive')?.addEventListener('click', () => navigat
             alert('Error: ' + error.message);
         }
     });
- // Ajout de l'événement pour le bouton "Visit Faucet"
-    const faucetButton = document.getElementById('faucetButton');
-
-    if (faucetButton) {
-        faucetButton.addEventListener('click', () => {
-            window.location.href = 'https://faucet.zkevm.ternoa.network/';
-        });
-    } else {
-        console.error('faucetButton not found in the DOM.');
-    }
 });

@@ -508,17 +508,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
- function typewriterEffect(element, html, speed = 50) {
-        let i = 0;
-        function type() {
-            if (i < html.length) {
-                element.innerHTML += html.charAt(i);
-                i++;
-                setTimeout(type, speed);
-            }
+function typewriterEffect(element, html, speed = 50) {
+    let i = 0;
+    function type() {
+        if (i < html.length) {
+            // Ajoutez du contenu HTML progressivement
+            element.innerHTML = html.substring(0, i + 1);
+            i++;
+            setTimeout(type, speed);
         }
-        type();
     }
+    type();
+}
     function displayRoundEvents() {
     const liveEventsDiv = document.getElementById('liveEvents');
     if (!liveEventsDiv) {

@@ -508,11 +508,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
- function typewriterEffect(element, text, speed = 50) {
+ function typewriterEffect(element, html, speed = 50) {
         let i = 0;
         function type() {
-            if (i < text.length) {
-                element.innerHTML += text.charAt(i);
+            if (i < html.length) {
+                element.innerHTML += html.charAt(i);
                 i++;
                 setTimeout(type, speed);
             }

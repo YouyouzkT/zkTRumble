@@ -534,7 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const eventText = document.createElement('p');
             const phrases = eventPhrases[event.eventType];
             const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-            const formattedText = phrase.replace("{pseudo}", event.pseudo);
+            const formattedText = phrase.replace("{pseudo}", `<span class="event-eliminated">${event.pseudo}</span>`);
 
             // Appliquer une couleur verte pour le gagnant
             if (event.eventType === 'WinnerDeclared') {

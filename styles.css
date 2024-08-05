@@ -153,6 +153,11 @@ h1, h2, p {
     width: 100%;
 }
 
+.event-eliminated {
+    color: #b71c1c; /* Couleur rouge pour les joueurs éliminés */
+    font-weight: bold; /* Optionnel : mettre en gras pour plus de visibilité */
+}
+
 .live-events {
     flex: 3;
     background-color: black;

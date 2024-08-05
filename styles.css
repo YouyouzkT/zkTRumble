@@ -20,6 +20,23 @@ header {
     margin-bottom: 20px;
 }
 
+
+footer {
+    margin-top: 40px; /* Ajustez cette valeur pour définir la marge souhaitée */
+    text-align: center;
+    padding: 20px 0;
+    background-color: rgba(248, 248, 248, 0.7); /* Couleur de fond avec transparence */
+    border-top: 1px solid #e7e7e7;
+}
+
+footer p {
+    margin: 5px 0;
+}
+
+footer img {
+    vertical-align: middle;
+}
+
 .content-wrapper {
     width: 100%;
     max-width: 1000px;

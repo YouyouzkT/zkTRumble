@@ -520,7 +520,7 @@ function typewriterEffect(element, html, speed = 50) {
     }
     type();
 }
-    function displayRoundEvents() {
+   function displayRoundEvents() {
     const liveEventsDiv = document.getElementById('liveEvents');
     if (!liveEventsDiv) {
         console.error('liveEventsDiv not found');
@@ -535,7 +535,7 @@ function typewriterEffect(element, html, speed = 50) {
             const eventText = document.createElement('p');
             const phrases = eventPhrases[event.eventType];
             const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-            const formattedText = phrase.replace("{pseudo}", `<span class="event-eliminated">${event.pseudo}</span>`);
+            let formattedText = phrase.replace("{pseudo}", event.pseudo);
 
             // Appliquer une couleur verte pour le gagnant
             if (event.eventType === 'WinnerDeclared') {
@@ -543,8 +543,13 @@ function typewriterEffect(element, html, speed = 50) {
                 eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
             }
 
+            // Appliquer le formatage pour les joueurs éliminés
+            if (event.eventType === 'PlayerEliminated') {
+                formattedText = phrase.replace("{pseudo}", `<span class="event-eliminated">${event.pseudo}</span>`);
+            }
+
             liveEventsDiv.appendChild(eventText);
-            typewriterEffect(eventText, formattedText);
+            typewriterEffect(eventText, formattedText); // Appel de la fonction avec du HTML
             event.rendered = true; // Marquer comme affiché
             console.log('Event appended to liveEvents:', formattedText);
         }
@@ -562,6 +567,7 @@ function typewriterEffect(element, html, speed = 50) {
         deadPlayerListUpdated = true; // Marquer comme mis à jour
     }
 }
+
 
 
     function updatePlayerList(gameId) {

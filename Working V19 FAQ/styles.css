@@ -37,18 +37,6 @@ footer img {
     vertical-align: middle;
 }
 
-
-.faq-question {
-    cursor: pointer;
-    color: #007bff;
-    margin: 10px 0;
-}
-
-.faq-answer {
-    display: none;
-    margin: 0 0 20px 0;
-}
-
 .content-wrapper {
     width: 100%;
     max-width: 1000px;

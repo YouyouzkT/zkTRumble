@@ -11,46 +11,53 @@
 </head>
 <body>
     <header>
-<h1><img src="images/banner.png" alt="zkTRumble 3.0 OnChain" class="banner">
-        <p>Rumble Fight 3.0 OnChain For Full Transparency</p>
-</h1>
+        <h1><img src="images/banner.png" alt="zkTRumble 3.0 OnChain" class="banner">
+            <p>Rumble Fight 3.0 OnChain For Full Transparency</p>
+        </h1>
     </header>
     <div class="content-wrapper">
         <div class="content">
             <h2>Frequently Asked Questions</h2>
             <div class="faq-item">
-                <h3>What is zkTRumble?</h3>
-                <p>zkTRumble is a decentralized application (DApp) that allows you to participate in on-chain rumble fights with full transparency.</p>
+                <h3 class="faq-question">What is zkTRumble?</h3>
+                <p class="faq-answer">zkTRumble is a decentralized application (DApp) that allows you to participate in on-chain rumble fights with full transparency.</p>
             </div>
             <div class="faq-item">
-                <h3>How do I participate in a rumble?</h3>
-                <p>To participate in a rumble, you need to connect your EVM-compatible wallet (such as MetaMask) and register for a rumble GameID through the registration page. 
-</p>
+                <h3 class="faq-question">How do I participate in a rumble?</h3>
+                <p class="faq-answer">To participate in a rumble, you need to connect your EVM-compatible wallet (such as MetaMask) and register for a rumble GameID through the registration page.</p>
             </div>
-  <div class="faq-item">
-                <h3>How to add Ternoa L2 zkEVM+ network & Claim test $Caps on my Metamask?</h3>
-                <p>Simply follow this link <a href="https://faucet.zkevm.ternoa.network/" target="_blank">here</a>, click on add subnet to add ternoa network then claim test $Caps .</p>
-            </div>
-
             <div class="faq-item">
-                <h3>What is the cost of participation?</h3>
-                <p>There is no participation cost at the moment but a futur Smart Contract evolution may allow this parameter. For now you just need few $Caps dust to pay incredible low gas fees.</p>
+                <h3 class="faq-question">How to add Ternoa L2 zkEVM+ network & Claim test $Caps on my Metamask?</h3>
+                <p class="faq-answer">Simply follow this link <a href="https://faucet.zkevm.ternoa.network/" target="_blank">here</a>, click on add subnet to add ternoa network then claim test $Caps.</p>
+            </div>
+            <div class="faq-item">
+                <h3 class="faq-question">What is the cost of participation?</h3>
+                <p class="faq-answer">There is no participation cost at the moment but a future Smart Contract evolution may allow this parameter. For now, you just need a few $Caps dust to pay incredibly low gas fees.</p>
             </div>
             <!-- Ajoutez d'autres questions et réponses ici -->
         </div>
-<div class="button-container">
+        <div class="button-container">
             <button id="navigateHome" class="btn btn-home">
-    <img src="images/ring.webp" alt="Home Icon" class="icon-home"> Back to Home
-</button>
-</div>
-
- <footer>
-        <p>2024 zkTRumble Dapp. This project is Open Source.</p>
-        <p><img src="https://licensebuttons.net/p/zero/1.0/88x31.png" alt="CC0"></p>
-        <p><a href="https://www.ternoa.network/">Powered By Ternoa L2 zkEVM+</a></p>
-<p>Made by YouyouzkT with love 💞</p>
-    </footer>
-
+                <img src="images/ring.webp" alt="Home Icon" class="icon-home"> Back to Home
+            </button>
+        </div>
+        <footer>
+            <p>2024 zkTRumble Dapp. This project is Open Source.</p>
+            <p><img src="https://licensebuttons.net/p/zero/1.0/88x31.png" alt="CC0"></p>
+            <p><a href="https://www.ternoa.network/">Powered By Ternoa L2 zkEVM+</a></p>
+            <p>Made by YouyouzkT with love 💞</p>
+        </footer>
     </div>
-    </body>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const questions = document.querySelectorAll('.faq-question');
+            questions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const answer = question.nextElementSibling;
+                    answer.style.display = (answer.style.display === 'block') ? 'none' : 'block';
+                });
+            });
+        });
+    </script>
+</body>
 </html>

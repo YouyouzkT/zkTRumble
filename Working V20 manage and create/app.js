@@ -712,6 +712,12 @@ document.getElementById('navigatelive')?.addEventListener('click', () => navigat
             const accounts = await web3.eth.getAccounts();
             await contract.methods.createGame().send({ from: accounts[0] });
             alert('Game created');
+
+// Récupérer le dernier gameId et remplir le champ gameIdInput
+            const gameId = await contract.methods.gameCount().call();
+            document.getElementById('gameIdInput').value = gameId;
+            alert(`Game ID ${gameId} created. Don't forget to set elimination range and close registration, before starting a round`);
+
         } catch (error) {
             alert('Error: ' + error.message);
         }
@@ -730,16 +736,21 @@ document.getElementById('navigatelive')?.addEventListener('click', () => navigat
     });
 
     document.getElementById('registerMultiplePlayers')?.addEventListener('click', async () => {
-        try {
-            const accounts = await web3.eth.getAccounts();
-            const gameId = getGameId();
-            const pseudos = prompt("Enter player pseudos (comma separated):");
+    try {
+        const accounts = await web3.eth.getAccounts();
+        const gameId = getGameId();
+        const pseudos = prompt("Enter player pseudos (comma separated, e.g., pseudo1, pseudo2, pseudo3):");
+        if (pseudos) {
             await contract.methods.registerMultiplePlayers(gameId, pseudos).send({ from: accounts[0] });
             alert('Multiple players registered');
-        } catch (error) {
-            alert('Error: ' + error.message);
+        } else {
+            alert('No pseudos entered');
         }
-    });
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+});
+
 
     document.getElementById('registerBots')?.addEventListener('click', async () => {
         try {
@@ -767,6 +778,10 @@ document.getElementById('navigatelive')?.addEventListener('click', () => navigat
     });
 
     document.getElementById('startRound')?.addEventListener('click', async () => {
+        const confirmStart = confirm("Please make sure you have 🚷Set Elimination Per Round🚷 and 🔒Close registration🔒 before starting a round.");
+        if (!confirmStart) {
+            return;
+        }
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();

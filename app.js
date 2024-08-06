@@ -712,6 +712,12 @@ document.getElementById('navigatelive')?.addEventListener('click', () => navigat
             const accounts = await web3.eth.getAccounts();
             await contract.methods.createGame().send({ from: accounts[0] });
             alert('Game created');
+
+// Récupérer le dernier gameId et remplir le champ gameIdInput
+            const gameId = await contract.methods.gameCount().call();
+            document.getElementById('gameIdInput').value = gameId;
+            alert(`Game ID ${gameId} created. Please set elimination range and close registration.`);
+
         } catch (error) {
             alert('Error: ' + error.message);
         }

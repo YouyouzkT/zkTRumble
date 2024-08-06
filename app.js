@@ -778,7 +778,7 @@ document.getElementById('navigatelive')?.addEventListener('click', () => navigat
     });
 
     document.getElementById('startRound')?.addEventListener('click', async () => {
-        const confirmStart = confirm("Please make sure you have set the elimination range and closed registration before starting a round.");
+        const confirmStart = confirm("Please make sure you have 🚷Set Elimination Per Round🚷 and 🔒Close registration🔒 before starting a round.");
         if (!confirmStart) {
             return;
         }

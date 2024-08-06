@@ -201,18 +201,6 @@ h1, h2, p {
     margin-right: 10px;
 }
 
-.output-container {
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-.output-container h2 {
-    margin-top: 0;
-}
-
 /* Styles spécifiques à la page live */
 .live-content {
     display: flex;

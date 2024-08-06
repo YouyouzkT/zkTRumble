@@ -366,8 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
- 
-    let web3;
+ let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -509,66 +508,67 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function typewriterEffect(element, html, speed = 50) {
-        let i = 0;
-        function type() {
-            if (i < html.length) {
-                // Ajoutez du contenu HTML progressivement
-                element.innerHTML = html.substring(0, i + 1);
-                i++;
-                setTimeout(type, speed);
-            }
-        }
-        type();
-    }
-
-    function displayRoundEvents() {
-        const liveEventsDiv = document.getElementById('liveEvents');
-        if (!liveEventsDiv) {
-            console.error('liveEventsDiv not found');
-            return;
-        }
-
-        sortRoundEvents(); // Assurer le tri avant l'affichage
-
-        // Display sorted events
-        roundEvents.forEach((event, index) => {
-            if (!event.rendered) {
-                const eventText = document.createElement('p');
-                const phrases = eventPhrases[event.eventType];
-                const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-                let formattedText = phrase.replace("{pseudo}", event.pseudo);
-
-                // Appliquer une couleur verte pour le gagnant
-                if (event.eventType === 'WinnerDeclared') {
-                    eventText.style.color = 'green';
-                    eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
-                }
-
-                // Appliquer le formatage pour les joueurs éliminés
-                if (event.eventType === 'PlayerEliminated') {
-                    formattedText = phrase.replace("{pseudo}", `<span class="event-eliminated">${event.pseudo}</span>`);
-                }
-
-                liveEventsDiv.appendChild(eventText);
-                typewriterEffect(eventText, formattedText); // Appel de la fonction avec du HTML
-                event.rendered = true; // Marquer comme affiché
-                console.log('Event appended to liveEvents:', formattedText);
-            }
-        });
-
-        // Mettre à jour la liste des joueurs enregistrés à la fin de chaque round
-        if (currentGameId && !playerListUpdated) {
-            updatePlayerList(currentGameId);
-            playerListUpdated = true; // Marquer comme mis à jour
-        }
-
-        // Mettre à jour la liste des joueurs morts à la fin de chaque round
-        if (currentGameId && !deadPlayerListUpdated) {
-            updateDeadPlayerList(currentGameId);
-            deadPlayerListUpdated = true; // Marquer comme mis à jour
+function typewriterEffect(element, html, speed = 50) {
+    let i = 0;
+    function type() {
+        if (i < html.length) {
+            // Ajoutez du contenu HTML progressivement
+            element.innerHTML = html.substring(0, i + 1);
+            i++;
+            setTimeout(type, speed);
         }
     }
+    type();
+}
+   function displayRoundEvents() {
+    const liveEventsDiv = document.getElementById('liveEvents');
+    if (!liveEventsDiv) {
+        console.error('liveEventsDiv not found');
+        return;
+    }
+
+    sortRoundEvents(); // Assurer le tri avant l'affichage
+
+    // Display sorted events
+    roundEvents.forEach((event, index) => {
+        if (!event.rendered) {
+            const eventText = document.createElement('p');
+            const phrases = eventPhrases[event.eventType];
+            const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+            let formattedText = phrase.replace("{pseudo}", event.pseudo);
+
+            // Appliquer une couleur verte pour le gagnant
+            if (event.eventType === 'WinnerDeclared') {
+                eventText.style.color = 'green';
+                eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
+            }
+
+            // Appliquer le formatage pour les joueurs éliminés
+            if (event.eventType === 'PlayerEliminated') {
+                formattedText = phrase.replace("{pseudo}", `<span class="event-eliminated">${event.pseudo}</span>`);
+            }
+
+            liveEventsDiv.appendChild(eventText);
+            typewriterEffect(eventText, formattedText); // Appel de la fonction avec du HTML
+            event.rendered = true; // Marquer comme affiché
+            console.log('Event appended to liveEvents:', formattedText);
+        }
+    });
+
+    // Mettre à jour la liste des joueurs enregistrés à la fin de chaque round
+    if (currentGameId && !playerListUpdated) {
+        updatePlayerList(currentGameId);
+        playerListUpdated = true; // Marquer comme mis à jour
+    }
+
+    // Mettre à jour la liste des joueurs morts à la fin de chaque round
+    if (currentGameId && !deadPlayerListUpdated) {
+        updateDeadPlayerList(currentGameId);
+        deadPlayerListUpdated = true; // Marquer comme mis à jour
+    }
+}
+
+
 
     function updatePlayerList(gameId) {
         const playerList = document.getElementById('players');
@@ -642,7 +642,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error('filterButton not found in the DOM.');
     }
-
     async function connectMetaMask() {
         if (typeof window.ethereum !== 'undefined') {
             try {
@@ -690,80 +689,35 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = page;
     }
 
-    window.addEventListener('load', async () => {
+    window.addEventListener('load', () => {
         connectedAccount = localStorage.getItem('connectedAccount');
         if (connectedAccount) {
             web3 = new Web3(window.ethereum || provider);
             statusDiv.innerHTML = `<p style="color: green;">Connected: ${connectedAccount}</p>`;
             initializeContract();
-
-            const gameId = gameIdInput ? gameIdInput.value : null;
-            if (gameId) {
-                await showStartRoundButtonIfOwner(gameId);
-            }
         }
     });
 
-    document.getElementById('connectMetaMask')?.addEventListener('click', async () => {
-        try {
-            await window.ethereum.request({ method: 'eth_requestAccounts' });
-            connectedAccount = window.ethereum.selectedAddress;
-            localStorage.setItem('connectedAccount', connectedAccount);
-            statusDiv.innerHTML = `<p style="color: green;">Connected to MetaMask: ${connectedAccount}</p>`;
-            initializeContract();
+    document.getElementById('connectMetaMask')?.addEventListener('click', connectMetaMask);
+    document.getElementById('connectWalletConnect')?.addEventListener('click', connectWalletConnect);
+    document.getElementById('navigateRegister')?.addEventListener('click', () => navigate('register.html'));
+    document.getElementById('navigateCreate')?.addEventListener('click', () => navigate('create.html'));
+document.getElementById('navigatelive')?.addEventListener('click', () => navigate('live.html'));
 
-            const gameId = gameIdInput ? gameIdInput.value : null;
-            if (gameId) {
-                await showStartRoundButtonIfOwner(gameId);
-            }
-        } catch (error) {
-            statusDiv.innerHTML = `<p style="color: red;">Error connecting to MetaMask: ${error.message}</p>`;
-        }
-    });
-
-    async function checkGameOwner(gameId) {
-        try {
-            const gameInfo = await contract.methods.games(gameId).call();
-            const owner = gameInfo.owner;
-            return owner.toLowerCase() === connectedAccount.toLowerCase();
-        } catch (error) {
-            console.error('Error checking game owner:', error);
-            return false;
-        }
-    }
-
-    async function showStartRoundButtonIfOwner(gameId) {
-        const isOwner = await checkGameOwner(gameId);
-        if (isOwner) {
-            startRoundContainer.style.display = 'block';
-        }
-    }
-
-    document.getElementById('startRound')?.addEventListener('click', async () => {
-        const confirmStart = confirm("Please make sure you have set the elimination range and closed registration before starting a round.");
-        if (!confirmStart) {
-            return;
-        }
-        try {
-            const accounts = await web3.eth.getAccounts();
-            const gameId = getGameId();
-            await contract.methods.startRound(gameId).send({ from: accounts[0] });
-            alert('Round started');
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
-    });
+    document.getElementById('navigateManage')?.addEventListener('click', () => navigate('manage.html'));
+    document.getElementById('navigateHome')?.addEventListener('click', () => navigate('index.html'));
 
     document.getElementById('createGame')?.addEventListener('click', async () => {
         try {
             const accounts = await web3.eth.getAccounts();
             await contract.methods.createGame().send({ from: accounts[0] });
             alert('Game created');
-            
-            // Récupérer le dernier gameId et remplir le champ gameIdInput
+
+// Récupérer le dernier gameId et remplir le champ gameIdInput
             const gameId = await contract.methods.gameCount().call();
             document.getElementById('gameIdInput').value = gameId;
-            alert(`Game ID ${gameId} created. Please set elimination range and close registration.`);
+            alert(`Game ID ${gameId} created. Don't forget to set elimination range and close registration, before starting a round`);
+
         } catch (error) {
             alert('Error: ' + error.message);
         }
@@ -782,20 +736,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('registerMultiplePlayers')?.addEventListener('click', async () => {
-        try {
-            const accounts = await web3.eth.getAccounts();
-            const gameId = getGameId();
-            const pseudos = prompt("Enter player pseudos (comma separated, e.g., pseudo1, pseudo2, pseudo3):");
-            if (pseudos) {
-                await contract.methods.registerMultiplePlayers(gameId, pseudos).send({ from: accounts[0] });
-                alert('Multiple players registered');
-            } else {
-                alert('No pseudos entered');
-            }
-        } catch (error) {
-            alert('Error: ' + error.message);
+    try {
+        const accounts = await web3.eth.getAccounts();
+        const gameId = getGameId();
+        const pseudos = prompt("Enter player pseudos (comma separated, e.g., pseudo1, pseudo2, pseudo3):");
+        if (pseudos) {
+            await contract.methods.registerMultiplePlayers(gameId, pseudos).send({ from: accounts[0] });
+            alert('Multiple players registered');
+        } else {
+            alert('No pseudos entered');
         }
-    });
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+});
+
 
     document.getElementById('registerBots')?.addEventListener('click', async () => {
         try {
@@ -817,6 +772,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const maxEliminationCount = prompt("Enter maximum elimination count:");
             await contract.methods.setEliminationRange(gameId, minEliminationCount, maxEliminationCount).send({ from: accounts[0] });
             alert('Elimination range set');
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+
+    document.getElementById('startRound')?.addEventListener('click', async () => {
+        const confirmStart = confirm("Please make sure you have 🚷Set Elimination Per Round🚷 and 🔒Close registration🔒 before starting a round.");
+        if (!confirmStart) {
+            return;
+        }
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const gameId = getGameId();
+            await contract.methods.startRound(gameId).send({ from: accounts[0] });
+            alert('Round started');
         } catch (error) {
             alert('Error: ' + error.message);
         }
@@ -889,8 +859,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Error: ' + error.message);
         }
     });
-
-    // Ajout de l'événement pour le bouton "Visit Faucet"
+ // Ajout de l'événement pour le bouton "Visit Faucet"
     const faucetButton = document.getElementById('faucetButton');
 
     if (faucetButton) {

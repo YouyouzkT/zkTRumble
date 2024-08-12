@@ -728,9 +728,11 @@ document.getElementById('navigatelive')?.addEventListener('click', () => navigat
         const accounts = await web3.eth.getAccounts();
         const gameId = getGameId();
 
-        // Vérifier si la GameID existe
+        // Vérifier les informations de la GameID
         const gameInfo = await contract.methods.games(gameId).call();
-        if (!gameInfo) {
+
+        // Vérifier si la GameID existe en utilisant l'adresse du propriétaire
+        if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
             alert("Erreur : This GameID doesn't exist.");
             return;
         }

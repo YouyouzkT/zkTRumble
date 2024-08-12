@@ -761,7 +761,7 @@ const gameInfo = await contract.methods.games(gameId).call();
 
 // Vérifier si la GameID existe
         if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
-            alert("Erreur : La GameID que vous avez entrée n'existe pas. Veuillez vérifier l'ID et réessayer.");
+            alert("Erreur : This GameID doesn't exist.");
             return;
         }
 // Vérifier si l'utilisateur est le propriétaire de la GameID
@@ -789,7 +789,7 @@ const gameInfo = await contract.methods.games(gameId).call();
 const gameInfo = await contract.methods.games(gameId).call();
 // Vérifier si la GameID existe
         if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
-            alert("Erreur : La GameID que vous avez entrée n'existe pas. Veuillez vérifier l'ID et réessayer.");
+            alert("Erreur : This GameID doesn't exist.");
             return;
         }
 // Vérifier si l'utilisateur est le propriétaire de la GameID
@@ -812,7 +812,7 @@ const gameInfo = await contract.methods.games(gameId).call();
 const gameInfo = await contract.methods.games(gameId).call();
 // Vérifier si la GameID existe
         if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
-            alert("Erreur : La GameID que vous avez entrée n'existe pas. Veuillez vérifier l'ID et réessayer.");
+            alert("Erreur : This GameID doesn't exist.");
             return;
         }
 // Vérifier si l'utilisateur est le propriétaire de la GameID
@@ -840,7 +840,7 @@ const gameInfo = await contract.methods.games(gameId).call();
 const gameInfo = await contract.methods.games(gameId).call();
 // Vérifier si la GameID existe
         if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
-            alert("Erreur : La GameID que vous avez entrée n'existe pas. Veuillez vérifier l'ID et réessayer.");
+            alert("Erreur : This GameID doesn't exist.");
             return;
         }
 // Vérifier si l'utilisateur est le propriétaire de la GameID
@@ -863,7 +863,7 @@ const gameInfo = await contract.methods.games(gameId).call();
 const gameInfo = await contract.methods.games(gameId).call();
 // Vérifier si la GameID existe
         if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
-            alert("Erreur : La GameID que vous avez entrée n'existe pas. Veuillez vérifier l'ID et réessayer.");
+            alert("Erreur : This GameID doesn't exist.");
             return;
         }
 // Vérifier si l'utilisateur est le propriétaire de la GameID

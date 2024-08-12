@@ -723,33 +723,17 @@ document.getElementById('navigatelive')?.addEventListener('click', () => navigat
         }
     });
 
-  document.getElementById('registerPlayer')?.addEventListener('click', async () => {
-    try {
-        const accounts = await web3.eth.getAccounts();
-        const gameId = getGameId();
-
-        // Vérifier si la GameID existe
-        const gameInfo = await contract.methods.games(gameId).call();
-        if (!gameInfo) {
-            alert("Erreur : This GameID doesn't exist.");
-            return;
+    document.getElementById('registerPlayer')?.addEventListener('click', async () => {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const gameId = getGameId();
+            const pseudo = prompt("Enter player pseudo:");
+            await contract.methods.registerPlayer(gameId, pseudo).send({ from: accounts[0] });
+            alert('Player registered');
+        } catch (error) {
+            alert('Error: ' + error.message);
         }
-
-        // Vérifier si les inscriptions sont ouvertes
-        if (!gameInfo.isRegistrationOpen) {
-            alert("Erreur : Registration is closed for this GameID.");
-            return;
-        }
-
-        // Procéder à l'enregistrement
-        const pseudo = prompt("Entrez votre pseudo:");
-        await contract.methods.registerPlayer(gameId, pseudo).send({ from: accounts[0] });
-        alert('Welcome fighter you are registered');
-    } catch (error) {
-        alert('Erreur : ' + error.message);
-    }
-});
-
+    });
 
     document.getElementById('registerMultiplePlayers')?.addEventListener('click', async () => {
     try {

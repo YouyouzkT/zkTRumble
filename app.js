@@ -757,7 +757,19 @@ document.getElementById('navigatelive')?.addEventListener('click', () => navigat
     try {
         const accounts = await web3.eth.getAccounts();
         const gameId = getGameId();
-        const pseudos = prompt("Enter player pseudos (comma separated, e.g., pseudo1, pseudo2, pseudo3):");
+const gameInfo = await contract.methods.games(gameId).call();
+
+// Vérifier si la GameID existe
+        if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
+            alert("Erreur : La GameID que vous avez entrée n'existe pas. Veuillez vérifier l'ID et réessayer.");
+            return;
+        }
+// Vérifier si l'utilisateur est le propriétaire de la GameID
+        if (gameInfo.owner !== accounts[0]) {
+            alert("You are not the owner of the GameID");
+            return;
+        }       
+ const pseudos = prompt("Enter player pseudos (comma separated, e.g., pseudo1, pseudo2, pseudo3):");
         if (pseudos) {
             await contract.methods.registerMultiplePlayers(gameId, pseudos).send({ from: accounts[0] });
             alert('Multiple players registered');
@@ -774,6 +786,17 @@ document.getElementById('navigatelive')?.addEventListener('click', () => navigat
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
+const gameInfo = await contract.methods.games(gameId).call();
+// Vérifier si la GameID existe
+        if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
+            alert("Erreur : La GameID que vous avez entrée n'existe pas. Veuillez vérifier l'ID et réessayer.");
+            return;
+        }
+// Vérifier si l'utilisateur est le propriétaire de la GameID
+        if (gameInfo.owner !== accounts[0]) {
+            alert("You are not the owner of the GameID");
+            return;
+        }
             const numBots = prompt("Enter number of bots:");
             await contract.methods.registerBots(gameId, numBots).send({ from: accounts[0] });
             alert('Bots registered');
@@ -786,8 +809,19 @@ document.getElementById('navigatelive')?.addEventListener('click', () => navigat
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
-            const minEliminationCount = prompt("Enter minimum elimination count:");
-            const maxEliminationCount = prompt("Enter maximum elimination count:");
+const gameInfo = await contract.methods.games(gameId).call();
+// Vérifier si la GameID existe
+        if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
+            alert("Erreur : La GameID que vous avez entrée n'existe pas. Veuillez vérifier l'ID et réessayer.");
+            return;
+        }
+// Vérifier si l'utilisateur est le propriétaire de la GameID
+        if (gameInfo.owner !== accounts[0]) {
+            alert("You are not the owner of the GameID");
+            return;
+        }
+            const minEliminationCount = prompt("Enter minimum elimination per round:");
+            const maxEliminationCount = prompt("Enter maximum elimination per round:");
             await contract.methods.setEliminationRange(gameId, minEliminationCount, maxEliminationCount).send({ from: accounts[0] });
             alert('Elimination range set');
         } catch (error) {
@@ -803,6 +837,18 @@ document.getElementById('navigatelive')?.addEventListener('click', () => navigat
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
+const gameInfo = await contract.methods.games(gameId).call();
+// Vérifier si la GameID existe
+        if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
+            alert("Erreur : La GameID que vous avez entrée n'existe pas. Veuillez vérifier l'ID et réessayer.");
+            return;
+        }
+// Vérifier si l'utilisateur est le propriétaire de la GameID
+        if (gameInfo.owner !== accounts[0]) {
+            alert("You are not the owner of the GameID");
+            return;
+        }
+
             await contract.methods.startRound(gameId).send({ from: accounts[0] });
             alert('Round started');
         } catch (error) {
@@ -814,6 +860,17 @@ document.getElementById('navigatelive')?.addEventListener('click', () => navigat
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
+const gameInfo = await contract.methods.games(gameId).call();
+// Vérifier si la GameID existe
+        if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
+            alert("Erreur : La GameID que vous avez entrée n'existe pas. Veuillez vérifier l'ID et réessayer.");
+            return;
+        }
+// Vérifier si l'utilisateur est le propriétaire de la GameID
+        if (gameInfo.owner !== accounts[0]) {
+            alert("You are not the owner of the GameID");
+            return;
+        }
             await contract.methods.closeRegistration(gameId).send({ from: accounts[0] });
             alert('Registration closed');
         } catch (error) {

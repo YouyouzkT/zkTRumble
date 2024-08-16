@@ -632,6 +632,8 @@ function typewriterEffect(element, html, speed = 50) {
             const gameInfo = await contract.methods.games(currentGameId).call();
             const accounts = await web3.eth.getAccounts();
 
+ const startRoundButton = document.getElementById('startRoundButton');
+
             if (gameInfo.owner !== accounts[0]) {
             startRoundButton.classList.add('disabled'); // Ajoute la classe 'disabled' pour griser le bouton
             startRoundButton.setAttribute('title', 'You are not the owner of this GameID'); // Ajoute le message au survol

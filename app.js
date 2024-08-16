@@ -856,7 +856,36 @@ const gameInfo = await contract.methods.games(gameId).call();
         }
     });
 
-    document.getElementById('closeRegistration')?.addEventListener('click', async () => {
+document.getElementById('startRoundButton')?.addEventListener('click', async () => {
+    const confirmStart = confirm("Please make sure you have 🚷Set Elimination Per Round🚷 and 🔒Close registration🔒 before starting a round.");
+    if (!confirmStart) {
+        return;
+    }
+    try {
+        const accounts = await web3.eth.getAccounts();
+        const gameId = getGameId();
+        const gameInfo = await contract.methods.games(gameId).call();
+
+        // Vérifier si la GameID existe
+        if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
+            alert("Erreur : This GameID doesn't exist.");
+            return;
+        }
+        // Vérifier si l'utilisateur est le propriétaire de la GameID
+        if (gameInfo.owner !== accounts[0]) {
+            alert("You are not the owner of the GameID");
+            return;
+        }
+
+        await contract.methods.startRound(gameId).send({ from: accounts[0] });
+        alert('Round started');
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+});
+
+    
+document.getElementById('closeRegistration')?.addEventListener('click', async () => {
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();

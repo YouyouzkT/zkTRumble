@@ -273,7 +273,22 @@ h1, h2, p {
 }
 
 .game-id-filter {
+display: flex;
+    align-items: center;
     margin-bottom: 20px; /* Ajouter de la marge inférieure */
+justify-content: center; /* Centre les éléments dans le conteneur */
+}
+
+.game-id-filter {
+    margin-right: 20px; /* Augmentez cette valeur pour plus d'espace */
+}
+
+.btn-round {
+    margin-right: 60px; /* Ajustez cette valeur pour changer l'espacement */
+}
+
+input#gameIdInput {
+    margin-left: 20px; /* Ajustez cette valeur pour changer l'espacement */
 }
 
 @media (max-width: 600px) {

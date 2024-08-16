@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const outputContent = document.getElementById('outputContent');
     const gameIdInput = document.getElementById('gameIdInput');
     const filterButton = document.getElementById('filterButton');
-
+ const startRoundButton = document.getElementById('startRoundButton');
     const contractAddress = "0x436511Fca4662d3c5DdD2208905b2C2ad55d7b13";
     const contractABI = [
         {
@@ -622,14 +622,25 @@ function typewriterEffect(element, html, speed = 50) {
     }
 
     if (filterButton) {
-        filterButton.addEventListener('click', () => {
+        filterButton.addEventListener('click', async () => {
             currentGameId = gameIdInput.value;
             if (!currentGameId) {
                 alert('Please enter a Game ID');
                 return;
             }
+
+            const gameInfo = await contract.methods.games(currentGameId).call();
+            const accounts = await web3.eth.getAccounts();
+
+            if (gameInfo.owner !== accounts[0]) {
+                startRoundButton.classList.add('disabled'); // Ajoute la classe 'disabled' pour griser le bouton
+            } else {
+                startRoundButton.classList.remove('disabled'); // Retire la classe 'disabled' si le wallet est correct
+            }
+
             roundEvents = []; // Clear previous events
             displayRoundEvents(); // Clear display
+
             if (!playerListUpdated) {
                 updatePlayerList(currentGameId); // Update player list
                 playerListUpdated = true; // Marquer comme mis à jour
@@ -639,7 +650,9 @@ function typewriterEffect(element, html, speed = 50) {
                 deadPlayerListUpdated = true; // Marquer comme mis à jour
             }
         });
-    } else {
+    }
+
+else {
         console.error('filterButton not found in the DOM.');
     }
     async function connectMetaMask() {

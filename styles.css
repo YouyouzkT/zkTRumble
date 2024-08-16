@@ -291,6 +291,13 @@ input#gameIdInput {
     margin-left: 20px; /* Ajustez cette valeur pour changer l'espacement */
 }
 
+.btn-round.disabled {
+    background-color: #ccc; /* Couleur grise pour indiquer que le bouton est désactivé */
+    cursor: not-allowed; /* Change le curseur pour indiquer que le bouton n'est pas cliquable */
+    pointer-events: none; /* Désactive les interactions avec le bouton */
+}
+
+
 @media (max-width: 600px) {
     .live-content {
         flex-direction: column;

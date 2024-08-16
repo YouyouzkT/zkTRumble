@@ -797,7 +797,13 @@ const gameInfo = await contract.methods.games(gameId).call();
         if (gameInfo.owner !== accounts[0]) {
             alert("You are not the owner of the GameID");
             return;
-        }       
+        }   
+// Vérifier si la game est déjà fermée
+        if (!gameInfo.isRegistrationOpen) {
+            alert("Erreur : Game is already active.");
+            return;
+        }
+    
  const pseudos = prompt("Enter player pseudos (comma separated, e.g., pseudo1, pseudo2, pseudo3):");
         if (pseudos) {
             await contract.methods.registerMultiplePlayers(gameId, pseudos).send({ from: accounts[0] });
@@ -821,9 +827,16 @@ const gameInfo = await contract.methods.games(gameId).call();
             alert("Erreur : This GameID doesn't exist.");
             return;
         }
+
 // Vérifier si l'utilisateur est le propriétaire de la GameID
         if (gameInfo.owner !== accounts[0]) {
             alert("You are not the owner of the GameID");
+            return;
+        }
+
+// Vérifier si la game est déjà fermée
+        if (!gameInfo.isRegistrationOpen) {
+            alert("Erreur : Game is already active.");
             return;
         }
             const numBots = prompt("Enter number of bots:");
@@ -847,6 +860,11 @@ const gameInfo = await contract.methods.games(gameId).call();
 // Vérifier si l'utilisateur est le propriétaire de la GameID
         if (gameInfo.owner !== accounts[0]) {
             alert("You are not the owner of the GameID");
+            return;
+        }
+// Vérifier si la game est déjà fermée
+        if (!gameInfo.isRegistrationOpen) {
+            alert("Erreur : Game already closed.");
             return;
         }
             const minEliminationCount = prompt("Enter minimum elimination per round:");
@@ -929,6 +947,12 @@ const gameInfo = await contract.methods.games(gameId).call();
             alert("You are not the owner of the GameID");
             return;
         }
+// Vérifier si la game est déjà fermée
+        if (!gameInfo.isRegistrationOpen) {
+            alert("Erreur : Game is already active.");
+            return;
+        }
+
             await contract.methods.closeRegistration(gameId).send({ from: accounts[0] });
             alert('Registration closed');
         } catch (error) {

@@ -636,22 +636,10 @@ function typewriterEffect(element, html, speed = 50) {
 
             if (gameInfo.owner !== accounts[0]) {
             startRoundButton.classList.add('disabled'); // Ajoute la classe 'disabled' pour griser le bouton
-              // Ajoute une infobulle personnalisée
-            let tooltip = startRoundButton.querySelector('.tooltip');
-            if (!tooltip) {
-                tooltip = document.createElement('div');
-                tooltip.className = 'tooltip';
-                tooltip.textContent = 'You are not the owner of this GameID';
-                startRoundButton.appendChild(tooltip);
-            }
+            startRoundButton.setAttribute('title', 'You are not the owner of this GameID'); // Ajoute le message au survol
         } else {
             startRoundButton.classList.remove('disabled'); // Retire la classe 'disabled' si le wallet est correct
-            
-            // Supprime l'infobulle si le bouton est actif
-            const tooltip = startRoundButton.querySelector('.tooltip');
-            if (tooltip) {
-                tooltip.remove();
-            }
+            startRoundButton.removeAttribute('title'); // Supprime le message au survol
         }
 
             roundEvents = []; // Clear previous events

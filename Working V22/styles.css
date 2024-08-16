@@ -292,32 +292,10 @@ input#gameIdInput {
 }
 
 .btn-round.disabled {
-    background-color: transparent;
-    opacity: 0.5;
-    cursor: not-allowed;
-    position: relative;
-}
-
-.btn-round.disabled .tooltip {
-    visibility: hidden;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 5px;
-    padding: 5px;
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.btn-round.disabled:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
+    background-color: transparent; /* Rendre le fond transparent */
+    opacity: 0.5; /* Réduire l'opacité pour indiquer qu'il est désactivé */
+    cursor: not-allowed; /* Changer le curseur pour indiquer que le bouton n'est pas cliquable */
+    pointer-events: none; /* Désactive les interactions avec le bouton */
 }
 
 

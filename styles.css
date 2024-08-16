@@ -292,8 +292,9 @@ input#gameIdInput {
 }
 
 .btn-round.disabled {
-    background-color: #ccc; /* Couleur grise pour indiquer que le bouton est désactivé */
-    cursor: not-allowed; /* Change le curseur pour indiquer que le bouton n'est pas cliquable */
+    background-color: transparent; /* Rendre le fond transparent */
+    opacity: 0.5; /* Réduire l'opacité pour indiquer qu'il est désactivé */
+    cursor: not-allowed; /* Changer le curseur pour indiquer que le bouton n'est pas cliquable */
     pointer-events: none; /* Désactive les interactions avec le bouton */
 }
 

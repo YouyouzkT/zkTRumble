@@ -633,10 +633,12 @@ function typewriterEffect(element, html, speed = 50) {
             const accounts = await web3.eth.getAccounts();
 
             if (gameInfo.owner !== accounts[0]) {
-                startRoundButton.classList.add('disabled'); // Ajoute la classe 'disabled' pour griser le bouton
-            } else {
-                startRoundButton.classList.remove('disabled'); // Retire la classe 'disabled' si le wallet est correct
-            }
+            startRoundButton.classList.add('disabled'); // Ajoute la classe 'disabled' pour griser le bouton
+            startRoundButton.setAttribute('title', 'You are not the owner of this GameID'); // Ajoute le message au survol
+        } else {
+            startRoundButton.classList.remove('disabled'); // Retire la classe 'disabled' si le wallet est correct
+            startRoundButton.removeAttribute('title'); // Supprime le message au survol
+        }
 
             roundEvents = []; // Clear previous events
             displayRoundEvents(); // Clear display

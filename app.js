@@ -919,7 +919,7 @@ const gameInfo = await contract.methods.games(gameId).call();
     });
 
 document.getElementById('startRoundButton')?.addEventListener('click', async () => {
-        }
+        
     try {
         const accounts = await web3.eth.getAccounts();
         const gameId = getGameId();

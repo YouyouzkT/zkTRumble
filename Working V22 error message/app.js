@@ -877,10 +877,7 @@ const gameInfo = await contract.methods.games(gameId).call();
     });
 
     document.getElementById('startRound')?.addEventListener('click', async () => {
-        const confirmStart = confirm("Please make sure you have 🚷Set Elimination Per Round🚷 and 🔒Close registration🔒 before starting a round.");
-        if (!confirmStart) {
-            return;
-        }
+        
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
@@ -890,9 +887,27 @@ const gameInfo = await contract.methods.games(gameId).call();
             alert("Erreur : This GameID doesn't exist.");
             return;
         }
+   // Vérifier si la partie est déjà terminée
+        if (gameInfo.winner && gameInfo.winner !== '') {
+            alert(`Game already finished, winner is ${gameInfo.winner}`);
+            return;
+        }
+
 // Vérifier si l'utilisateur est le propriétaire de la GameID
         if (gameInfo.owner !== accounts[0]) {
             alert("You are not the owner of the GameID");
+            return;
+        }
+
+// Vérifier si les éliminations par round ont été définies
+        if (gameInfo.minEliminationCount === '0' || gameInfo.maxEliminationCount === '0') {
+            alert("You must set up elimination per round first");
+            return;
+        }
+
+// Vérifier si l'inscription est fermée
+        if (gameInfo.isRegistrationOpen) {
+            alert("You must close registration first");
             return;
         }
 
@@ -904,10 +919,7 @@ const gameInfo = await contract.methods.games(gameId).call();
     });
 
 document.getElementById('startRoundButton')?.addEventListener('click', async () => {
-    const confirmStart = confirm("Please make sure you have 🚷Set Elimination Per Round🚷 and 🔒Close registration🔒 before starting a round.");
-    if (!confirmStart) {
-        return;
-    }
+        
     try {
         const accounts = await web3.eth.getAccounts();
         const gameId = getGameId();
@@ -918,12 +930,30 @@ document.getElementById('startRoundButton')?.addEventListener('click', async () 
             alert("Erreur : This GameID doesn't exist.");
             return;
         }
+
+   // Vérifier si la partie est déjà terminée
+        if (gameInfo.winner && gameInfo.winner !== '') {
+            alert(`Game already finished, winner is ${gameInfo.winner}`);
+            return;
+        }
         // Vérifier si l'utilisateur est le propriétaire de la GameID
         if (gameInfo.owner !== accounts[0]) {
             alert("You are not the owner of the GameID");
             return;
         }
 
+
+// Vérifier si les éliminations par round ont été définies
+        if (gameInfo.minEliminationCount === '0' || gameInfo.maxEliminationCount === '0') {
+            alert("You must set up elimination per round first");
+            return;
+        }
+
+// Vérifier si l'inscription est fermée
+        if (gameInfo.isRegistrationOpen) {
+            alert("You must close registration first");
+            return;
+        }
         await contract.methods.startRound(gameId).send({ from: accounts[0] });
         alert('Round started');
     } catch (error) {

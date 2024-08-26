@@ -1051,7 +1051,7 @@ const gameInfo = await contract.methods.games(gameId).call();
 
     if (faucetButton) {
         faucetButton.addEventListener('click', () => {
-            window.location.href = 'https://faucet.zkevm.ternoa.network/';
+            window.open('https://faucet.zkevm.ternoa.network/', '_faucet');
         });
     } else {
         console.error('faucetButton not found in the DOM.');

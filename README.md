@@ -1,2 +1,2 @@
-# zkTRumble
-Test Onchain rumble ZkTernoa chain
+# zkTRumble-Beta
+Test version of zkTRumble

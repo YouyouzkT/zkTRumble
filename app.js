@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const outputContent = document.getElementById('outputContent');
     const gameIdInput = document.getElementById('gameIdInput');
     const filterButton = document.getElementById('filterButton');
- const startRoundButton = document.getElementById('startRoundButton');
+    const startRoundButton = document.getElementById('startRoundButton');
     const contractAddress = "0x2F1e441B7f063a38B780158165f2BeD3eeFE94F8";
     const contractABI = [
 	{
@@ -572,6 +572,8 @@ function typewriterEffect(element, html, speed = 50) {
 
     function updatePlayerList(gameId) {
         const playerList = document.getElementById('players');
+        const playerNumber = document.getElementById('playersNumber');
+        
         if (!playerList) {
             console.error('playerList element not found');
             return;
@@ -582,6 +584,7 @@ function typewriterEffect(element, html, speed = 50) {
         contract.methods.getRegisteredPlayers(gameId).call()
             .then(players => {
                 const sortedPlayers = [...players].sort((a, b) => a.localeCompare(b)); // Créer une copie et trier les joueurs par ordre alphabétique
+                playerNumber.innerText = 'Alive Fighters (' + sortedPlayers.length + ')';
                 sortedPlayers.forEach(player => {
                     const li = document.createElement('li');
                     li.textContent = player;
@@ -597,6 +600,8 @@ function typewriterEffect(element, html, speed = 50) {
 
     function updateDeadPlayerList(gameId) {
         const deadPlayerList = document.getElementById('deadPlayers');
+        const deadPlayerNumber = document.getElementById('deadPlayersNumber');
+        
         if (!deadPlayerList) {
             console.error('deadPlayerList element not found');
             return;
@@ -607,6 +612,7 @@ function typewriterEffect(element, html, speed = 50) {
         contract.methods.getEliminatedPlayers(gameId).call()
             .then(players => {
                 const sortedPlayers = [...players].sort((a, b) => a.localeCompare(b)); // Créer une copie et trier les joueurs par ordre alphabétique
+                deadPlayerNumber.innerText = 'Dead Fighters (' + sortedPlayers.length + ')';
                 sortedPlayers.forEach(player => {
                     const li = document.createElement('li');
                     li.textContent = player;
@@ -1046,7 +1052,12 @@ const gameInfo = await contract.methods.games(gameId).call();
             alert('Error: ' + error.message);
         }
     });
- // Ajout de l'événement pour le bouton "Visit Faucet"
+
+    document.getElementById('main-header')?.addEventListener('click', async () => {
+        navigate('index.html');
+    });
+
+    // Ajout de l'événement pour le bouton "Visit Faucet"
     const faucetButton = document.getElementById('faucetButton');
 
     if (faucetButton) {

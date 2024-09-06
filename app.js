@@ -11,362 +11,473 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameIdInput = document.getElementById('gameIdInput');
     const filterButton = document.getElementById('filterButton');
     const startRoundButton = document.getElementById('startRoundButton');
-    const contractAddress = "0x2F1e441B7f063a38B780158165f2BeD3eeFE94F8";
+    const contractAddress = "0xc93C30bB2863F0257f789A950BBd4ce9655C6367";
     const contractABI = [
-	{
-		"inputs": [],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "pseudo",
-				"type": "string"
-			}
-		],
-		"name": "BotRegistered",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			}
-		],
-		"name": "closeRegistration",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "createGame",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "minEliminationCount",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "maxEliminationCount",
-				"type": "uint256"
-			}
-		],
-		"name": "EliminationRangeSet",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			}
-		],
-		"name": "GameCreated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "pseudo",
-				"type": "string"
-			}
-		],
-		"name": "PlayerEliminated",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "pseudo",
-				"type": "string"
-			}
-		],
-		"name": "PlayerRegistered",
-		"type": "event"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_numBots",
-				"type": "uint256"
-			}
-		],
-		"name": "registerBots",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "pseudos",
-				"type": "string"
-			}
-		],
-		"name": "registerMultiplePlayers",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_pseudo",
-				"type": "string"
-			}
-		],
-		"name": "registerPlayer",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_minEliminationCount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_maxEliminationCount",
-				"type": "uint256"
-			}
-		],
-		"name": "setEliminationRange",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			}
-		],
-		"name": "startRound",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "pseudo",
-				"type": "string"
-			}
-		],
-		"name": "WinnerDeclared",
-		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "gameCount",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "games",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "owner",
-				"type": "address"
-			},
-			{
-				"internalType": "bool",
-				"name": "isRegistrationOpen",
-				"type": "bool"
-			},
-			{
-				"internalType": "bool",
-				"name": "isGameActive",
-				"type": "bool"
-			},
-			{
-				"internalType": "string",
-				"name": "winner",
-				"type": "string"
-			},
-			{
-				"internalType": "uint256",
-				"name": "minEliminationCount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "maxEliminationCount",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			}
-		],
-		"name": "getEliminatedPlayers",
-		"outputs": [
-			{
-				"internalType": "string[]",
-				"name": "",
-				"type": "string[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			}
-		],
-		"name": "getRegisteredPlayers",
-		"outputs": [
-			{
-				"internalType": "string[]",
-				"name": "",
-				"type": "string[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "gameId",
-				"type": "uint256"
-			}
-		],
-		"name": "getWinner",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	}
-];
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "address[]",
+                    "name": "_addresses",
+                    "type": "address[]"
+                }
+            ],
+            "name": "addToWhitelist",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "string",
+                    "name": "pseudo",
+                    "type": "string"
+                }
+            ],
+            "name": "BotRegistered",
+            "type": "event"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "closeRegistration",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "bool",
+                    "name": "_isPrivate",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "string",
+                    "name": "_password",
+                    "type": "string"
+                },
+                {
+                    "internalType": "address[]",
+                    "name": "_whitelist",
+                    "type": "address[]"
+                }
+            ],
+            "name": "createGame",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "minEliminationCount",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "maxEliminationCount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "EliminationRangeSet",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "address",
+                    "name": "owner",
+                    "type": "address"
+                }
+            ],
+            "name": "GameCreated",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "string",
+                    "name": "pseudo",
+                    "type": "string"
+                }
+            ],
+            "name": "PlayerEliminated",
+            "type": "event"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "string",
+                    "name": "pseudo",
+                    "type": "string"
+                }
+            ],
+            "name": "PlayerRegistered",
+            "type": "event"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "pseudos",
+                    "type": "string"
+                }
+            ],
+            "name": "registerMultiplePlayers",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "_pseudo",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "_password",
+                    "type": "string"
+                }
+            ],
+            "name": "registerPlayer",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_minEliminationCount",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "_maxEliminationCount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "setEliminationRange",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "startRound",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "string",
+                    "name": "pseudo",
+                    "type": "string"
+                }
+            ],
+            "name": "WinnerDeclared",
+            "type": "event"
+        },
+        {
+            "inputs": [],
+            "name": "gameCount",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "games",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "owner",
+                    "type": "address"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isRegistrationOpen",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isGameActive",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isPrivate",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "string",
+                    "name": "password",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "winner",
+                    "type": "string"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "minEliminationCount",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "maxEliminationCount",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "getEliminatedPlayers",
+            "outputs": [
+                {
+                    "internalType": "string[]",
+                    "name": "",
+                    "type": "string[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "getGameInfo",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "owner",
+                    "type": "address"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isRegistrationOpen",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isGameActive",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "bool",
+                    "name": "isPrivate",
+                    "type": "bool"
+                },
+                {
+                    "internalType": "string",
+                    "name": "hasPassword",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "hasWhitelist",
+                    "type": "string"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "getRegisteredAddresses",
+            "outputs": [
+                {
+                    "internalType": "address[]",
+                    "name": "",
+                    "type": "address[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "getRegisteredPlayers",
+            "outputs": [
+                {
+                    "internalType": "string[]",
+                    "name": "",
+                    "type": "string[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "getWhitelist",
+            "outputs": [
+                {
+                    "internalType": "address[]",
+                    "name": "",
+                    "type": "address[]"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "gameId",
+                    "type": "uint256"
+                }
+            ],
+            "name": "getWinner",
+            "outputs": [
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ];
 
-
-
- let web3;
+    let web3;
     let contract;
     let connectedAccount;
     let listenersInitialized = false;
@@ -374,8 +485,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const eventCache = new Set();
     let roundEvents = [];
     let currentGameId = null;
-    let playerListUpdated = false; // Indicateur de mise à jour de la liste
-    let deadPlayerListUpdated = false; // Indicateur de mise à jour de la liste des joueurs morts
+    let playerListUpdated = false;
+    let deadPlayerListUpdated = false;
 
     const eventPhrases = {
         'PlayerEliminated': [
@@ -461,7 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contract.events.PlayerEliminated({
                 filter: {},
                 fromBlock: 'latest'
-            }, function(error, event) {
+            }, function (error, event) {
                 if (error) {
                     console.error('Error fetching PlayerEliminated events:', error);
                 } else {
@@ -480,7 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contract.events.WinnerDeclared({
                 filter: {},
                 fromBlock: 'latest'
-            }, function(error, event) {
+            }, function (error, event) {
                 if (error) {
                     console.error('Error fetching WinnerDeclared events:', error);
                 } else {
@@ -508,72 +619,71 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-function typewriterEffect(element, html, speed = 50) {
-    let i = 0;
-    function type() {
-        if (i < html.length) {
-            // Ajoutez du contenu HTML progressivement
-            element.innerHTML = html.substring(0, i + 1);
-            i++;
-            setTimeout(type, speed);
+    function typewriterEffect(element, html, speed = 50) {
+        let i = 0;
+        function type() {
+            if (i < html.length) {
+                // Ajoutez du contenu HTML progressivement
+                element.innerHTML = html.substring(0, i + 1);
+                i++;
+                setTimeout(type, speed);
+            }
+        }
+        type();
+    }
+
+    function displayRoundEvents() {
+        const liveEventsDiv = document.getElementById('liveEvents');
+        if (!liveEventsDiv) {
+            console.error('liveEventsDiv not found');
+            return;
+        }
+
+        sortRoundEvents(); // Assurer le tri avant l'affichage
+
+        // Display sorted events
+        roundEvents.forEach((event, index) => {
+            if (!event.rendered) {
+                const eventText = document.createElement('p');
+                const phrases = eventPhrases[event.eventType];
+                const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+                let formattedText = phrase.replace("{pseudo}", event.pseudo);
+
+                // Appliquer une couleur verte pour le gagnant
+                if (event.eventType === 'WinnerDeclared') {
+                    eventText.style.color = 'green';
+                    eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
+                }
+
+                // Appliquer le formatage pour les joueurs éliminés
+                if (event.eventType === 'PlayerEliminated') {
+                    formattedText = phrase.replace("{pseudo}", `<span class="event-eliminated">${event.pseudo}</span>`);
+                }
+
+                liveEventsDiv.appendChild(eventText);
+                typewriterEffect(eventText, formattedText); // Appel de la fonction avec du HTML
+                event.rendered = true; // Marquer comme affiché
+                console.log('Event appended to liveEvents:', formattedText);
+            }
+        });
+
+        // Mettre à jour la liste des joueurs enregistrés à la fin de chaque round
+        if (currentGameId && !playerListUpdated) {
+            updatePlayerList(currentGameId);
+            playerListUpdated = true; // Marquer comme mis à jour
+        }
+
+        // Mettre à jour la liste des joueurs morts à la fin de chaque round
+        if (currentGameId && !deadPlayerListUpdated) {
+            updateDeadPlayerList(currentGameId);
+            deadPlayerListUpdated = true; // Marquer comme mis à jour
         }
     }
-    type();
-}
-   function displayRoundEvents() {
-    const liveEventsDiv = document.getElementById('liveEvents');
-    if (!liveEventsDiv) {
-        console.error('liveEventsDiv not found');
-        return;
-    }
-
-    sortRoundEvents(); // Assurer le tri avant l'affichage
-
-    // Display sorted events
-    roundEvents.forEach((event, index) => {
-        if (!event.rendered) {
-            const eventText = document.createElement('p');
-            const phrases = eventPhrases[event.eventType];
-            const phrase = phrases[Math.floor(Math.random() * phrases.length)];
-            let formattedText = phrase.replace("{pseudo}", event.pseudo);
-
-            // Appliquer une couleur verte pour le gagnant
-            if (event.eventType === 'WinnerDeclared') {
-                eventText.style.color = 'green';
-                eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
-            }
-
-            // Appliquer le formatage pour les joueurs éliminés
-            if (event.eventType === 'PlayerEliminated') {
-                formattedText = phrase.replace("{pseudo}", `<span class="event-eliminated">${event.pseudo}</span>`);
-            }
-
-            liveEventsDiv.appendChild(eventText);
-            typewriterEffect(eventText, formattedText); // Appel de la fonction avec du HTML
-            event.rendered = true; // Marquer comme affiché
-            console.log('Event appended to liveEvents:', formattedText);
-        }
-    });
-
-    // Mettre à jour la liste des joueurs enregistrés à la fin de chaque round
-    if (currentGameId && !playerListUpdated) {
-        updatePlayerList(currentGameId);
-        playerListUpdated = true; // Marquer comme mis à jour
-    }
-
-    // Mettre à jour la liste des joueurs morts à la fin de chaque round
-    if (currentGameId && !deadPlayerListUpdated) {
-        updateDeadPlayerList(currentGameId);
-        deadPlayerListUpdated = true; // Marquer comme mis à jour
-    }
-}
-
-
 
     function updatePlayerList(gameId) {
         const playerList = document.getElementById('players');
         const playerNumber = document.getElementById('playersNumber');
-        
+
         if (!playerList) {
             console.error('playerList element not found');
             return;
@@ -601,7 +711,7 @@ function typewriterEffect(element, html, speed = 50) {
     function updateDeadPlayerList(gameId) {
         const deadPlayerList = document.getElementById('deadPlayers');
         const deadPlayerNumber = document.getElementById('deadPlayersNumber');
-        
+
         if (!deadPlayerList) {
             console.error('deadPlayerList element not found');
             return;
@@ -638,27 +748,25 @@ function typewriterEffect(element, html, speed = 50) {
             const gameInfo = await contract.methods.games(currentGameId).call();
             const accounts = await web3.eth.getAccounts();
 
- const startRoundButton = document.getElementById('startRoundButton');
-
             if (gameInfo.owner !== accounts[0]) {
-            startRoundButton.classList.add('disabled'); // Ajoute la classe 'disabled' pour griser le bouton
-              // Ajoute une infobulle personnalisée
-            let tooltip = startRoundButton.querySelector('.tooltip');
-            if (!tooltip) {
-                tooltip = document.createElement('div');
-                tooltip.className = 'tooltip';
-                tooltip.textContent = 'You are not the owner of this GameID';
-                startRoundButton.appendChild(tooltip);
+                startRoundButton.classList.add('disabled'); // Ajoute la classe 'disabled' pour griser le bouton
+                // Ajoute une infobulle personnalisée
+                let tooltip = startRoundButton.querySelector('.tooltip');
+                if (!tooltip) {
+                    tooltip = document.createElement('div');
+                    tooltip.className = 'tooltip';
+                    tooltip.textContent = 'You are not the owner of this GameID';
+                    startRoundButton.appendChild(tooltip);
+                }
+            } else {
+                startRoundButton.classList.remove('disabled'); // Retire la classe 'disabled' si le wallet est correct
+
+                // Supprime l'infobulle si le bouton est actif
+                const tooltip = startRoundButton.querySelector('.tooltip');
+                if (tooltip) {
+                    tooltip.remove();
+                }
             }
-        } else {
-            startRoundButton.classList.remove('disabled'); // Retire la classe 'disabled' si le wallet est correct
-            
-            // Supprime l'infobulle si le bouton est actif
-            const tooltip = startRoundButton.querySelector('.tooltip');
-            if (tooltip) {
-                tooltip.remove();
-            }
-        }
 
             roundEvents = []; // Clear previous events
             displayRoundEvents(); // Clear display
@@ -674,9 +782,10 @@ function typewriterEffect(element, html, speed = 50) {
         });
     }
 
-else {
+    else {
         console.error('filterButton not found in the DOM.');
     }
+
     async function connectMetaMask() {
         if (typeof window.ethereum !== 'undefined') {
             try {
@@ -737,7 +846,7 @@ else {
     document.getElementById('connectWalletConnect')?.addEventListener('click', connectWalletConnect);
     document.getElementById('navigateRegister')?.addEventListener('click', () => navigate('register.html'));
     document.getElementById('navigateCreate')?.addEventListener('click', () => navigate('create.html'));
-document.getElementById('navigatelive')?.addEventListener('click', () => navigate('live.html'));
+    document.getElementById('navigatelive')?.addEventListener('click', () => navigate('live.html'));
 
     document.getElementById('navigateManage')?.addEventListener('click', () => navigate('manage.html'));
     document.getElementById('navigateHome')?.addEventListener('click', () => navigate('index.html'));
@@ -745,134 +854,206 @@ document.getElementById('navigatelive')?.addEventListener('click', () => navigat
     document.getElementById('createGame')?.addEventListener('click', async () => {
         try {
             const accounts = await web3.eth.getAccounts();
-            await contract.methods.createGame().send({ from: accounts[0] });
-            alert('Game created');
-
-// Récupérer le dernier gameId et remplir le champ gameIdInput
+            const isPrivate = document.getElementById('isPrivate').checked;
+            const password = document.getElementById('password').value || "";
+            const whitelist = document.getElementById('whitelist').value.split(',').map(addr => addr.trim()).filter(addr => addr !== "");
+    
+            // Vérification que l'utilisateur n'essaie pas de créer un jeu privé avec à la fois un mot de passe et une whitelist
+            if (isPrivate && password.length > 0 && whitelist.length > 0) {
+                alert("Error: You cannot use both a password and a whitelist for a private game. Please choose one.");
+                return;
+            }
+    
+            // Appel de la fonction createGame du contrat avec les paramètres appropriés
+            await contract.methods.createGame(isPrivate, password, whitelist).send({ from: accounts[0] });
+    
+            // Récupérer le dernier gameId et remplir le champ gameIdInput
             const gameId = await contract.methods.gameCount().call();
             document.getElementById('gameIdInput').value = gameId;
-            alert(`Game ID ${gameId} created. Don't forget to set elimination range and close registration, before starting a round`);
-
+    
+            alert(`Game ID ${gameId} created. Don't forget to set elimination range and close registration before starting a round`);
+    
         } catch (error) {
             alert('Error: ' + error.message);
         }
     });
-
-  document.getElementById('registerPlayer')?.addEventListener('click', async () => {
-    try {
-        const accounts = await web3.eth.getAccounts();
-        const gameId = getGameId();
-
-        // Vérifier les informations de la GameID
-        const gameInfo = await contract.methods.games(gameId).call();
-
-        // Vérifier si la GameID existe en utilisant l'adresse du propriétaire
-        if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
-            alert("Erreur : This GameID doesn't exist.");
-            return;
-        }
-
-        // Vérifier si les inscriptions sont ouvertes
-        if (!gameInfo.isRegistrationOpen) {
-            alert("Erreur : Registration is closed for this GameID.");
-            return;
-        }
-
-        // Procéder à l'enregistrement
-        const pseudo = prompt("Entrez votre pseudo:");
-        await contract.methods.registerPlayer(gameId, pseudo).send({ from: accounts[0] });
-        alert('Welcome fighter you are registered');
-    } catch (error) {
-        alert('Erreur : ' + error.message);
-    }
-});
-
-
-    document.getElementById('registerMultiplePlayers')?.addEventListener('click', async () => {
-    try {
-        const accounts = await web3.eth.getAccounts();
-        const gameId = getGameId();
-const gameInfo = await contract.methods.games(gameId).call();
-
-// Vérifier si la GameID existe
-        if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
-            alert("Erreur : This GameID doesn't exist.");
-            return;
-        }
-// Vérifier si l'utilisateur est le propriétaire de la GameID
-        if (gameInfo.owner !== accounts[0]) {
-            alert("You are not the owner of the GameID");
-            return;
-        }   
-// Vérifier si la game est déjà fermée
-        if (!gameInfo.isRegistrationOpen) {
-            alert("Erreur : Game is already active.");
-            return;
-        }
     
- const pseudos = prompt("Enter player pseudos (comma separated, e.g., pseudo1, pseudo2, pseudo3):");
-        if (pseudos) {
-            await contract.methods.registerMultiplePlayers(gameId, pseudos).send({ from: accounts[0] });
-            alert('Multiple players registered');
-        } else {
-            alert('No pseudos entered');
-        }
-    } catch (error) {
-        alert('Error: ' + error.message);
-    }
-});
 
-
-    document.getElementById('registerBots')?.addEventListener('click', async () => {
+    document.getElementById('registerPlayer')?.addEventListener('click', async () => {
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
-const gameInfo = await contract.methods.games(gameId).call();
-// Vérifier si la GameID existe
-        if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
-            alert("Erreur : This GameID doesn't exist.");
-            return;
+            const accountAddress = accounts[0];
+    
+            // Call the contract to get game info
+            const gameInfo = await contract.methods.getGameInfo(gameId).call();
+    
+            // Check if registration is open
+            if (!gameInfo.isRegistrationOpen) {
+                alert("Registration is already closed for this game.");
+                return; // Stop if registration is closed
+            }
+    
+            let password = '';
+    
+            // Check if the game is private
+            if (gameInfo.isPrivate) {
+                if (gameInfo.hasPassword === "NO") {
+                    const whitelist = await contract.methods.getWhitelist(gameId).call();
+                    if (!whitelist.includes(accountAddress)) {
+                        alert("You are not whitelisted for this game.");
+                        return; // Stop if the user is not on the whitelist
+                    }
+                } else if (gameInfo.hasPassword === "YES") {
+                    password = prompt("Enter the game password:");
+                }
+            }
+    
+            // Check if the address is already registered
+            const registeredAddresses = await contract.methods.getRegisteredAddresses(gameId).call();
+            if (registeredAddresses.includes(accountAddress)) {
+                alert("A fighter is already registered with this address.");
+                return; // Stop if the address is already registered
+            }
+    
+            // Ask for the pseudo only if the above steps pass
+            const pseudo = prompt("Enter your pseudo:");
+    
+            // Check if the pseudo is already taken
+            const registeredPlayers = await contract.methods.getRegisteredPlayers(gameId).call();
+            if (registeredPlayers.includes(pseudo)) {
+                alert(`The pseudo "${pseudo}" is already taken. Please choose another.`);
+                return; // Stop if the pseudo is already taken
+            }
+    
+            // Send the transaction to register the player
+            await contract.methods.registerPlayer(gameId, pseudo, password).send({ from: accounts[0] });
+            alert('Welcome fighter, you are registered');
+        } catch (error) {
+            // Handle specific errors
+            if (error.message.includes("Incorrect password")) {
+                alert("Wrong password, try again!");
+            } else if (error.message.includes("Address already registered")) {
+                alert("A fighter is already registered with this address.");
+            } else if (error.message.includes("Pseudo already taken")) {
+                alert("Pseudo already taken");
+            } else {
+                alert('An error occurred during registration. Please try again.');
+            }
+            console.error("Error during registration:", error);
         }
+    });
+    
+    
+    
+    
+    
 
-// Vérifier si l'utilisateur est le propriétaire de la GameID
-        if (gameInfo.owner !== accounts[0]) {
-            alert("You are not the owner of the GameID");
-            return;
+    document.getElementById('registerMultiplePlayers')?.addEventListener('click', async () => {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const gameId = getGameId();
+            const gameInfo = await contract.methods.games(gameId).call();
+    
+            // Vérifier si la GameID existe
+            if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
+                alert("Erreur : This GameID doesn't exist.");
+                return;
+            }
+    
+            // Vérifier si l'utilisateur est le propriétaire de la GameID
+            if (gameInfo.owner !== accounts[0]) {
+                alert("You are not the owner of the GameID");
+                return;
+            }
+    
+            // Vérifier si la game est déjà fermée
+            if (!gameInfo.isRegistrationOpen) {
+                alert("Erreur : Game is already active.");
+                return;
+            }
+    
+            const pseudos = prompt("Enter player pseudos (comma separated, e.g., pseudo1, pseudo2, pseudo3):");
+            if (pseudos) {
+                const pseudosArray = pseudos.split(',').map(pseudo => pseudo.trim());
+    
+                // Appeler la fonction pour obtenir les pseudos déjà enregistrés
+                const registeredPlayers = await contract.methods.getRegisteredPlayers(gameId).call();
+    
+                // Vérifier l'unicité des pseudos en frontend
+                for (let pseudo of pseudosArray) {
+                    if (registeredPlayers.includes(pseudo)) {
+                        alert(`Le pseudo "${pseudo}" est déjà pris. Veuillez choisir un autre pseudo.`);
+                        return; // Arrêter si un pseudo est déjà pris
+                    }
+                }
+    
+                // Si tous les pseudos sont uniques, envoyer la transaction
+                await contract.methods.registerMultiplePlayers(gameId, pseudos).send({ from: accounts[0] });
+                alert('Multiple players registered');
+            } else {
+                alert('No pseudos entered');
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+            console.error("Error during registration:", error);
         }
+    });
+    
+    
 
-// Vérifier si la game est déjà fermée
-        if (!gameInfo.isRegistrationOpen) {
-            alert("Erreur : Game is already active.");
-            return;
-        }
-            const numBots = prompt("Enter number of bots:");
-            await contract.methods.registerBots(gameId, numBots).send({ from: accounts[0] });
-            alert('Bots registered');
+    document.getElementById('addToWhitelist')?.addEventListener('click', async () => {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const gameId = getGameId();
+    
+            // Récupération des informations de la partie
+            const gameInfo = await contract.methods.games(gameId).call();
+    
+            // Vérification si la partie est publique
+            if (!gameInfo.isPrivate) {
+                alert('Error: This GameID is Public. You cannot add addresses to the whitelist.');
+                return;
+            }
+    
+            // Vérification si la partie est protégée par mot de passe
+            if (gameInfo.password && gameInfo.password !== "") {
+                alert('Error: This private GameID is using a password. You cannot add addresses to the whitelist.');
+                return;
+            }
+    
+            // Si la validation est passée, on continue avec l'ajout à la whitelist
+            const addresses = prompt("Enter addresses to whitelist (comma separated):").split(',').map(addr => addr.trim()).filter(addr => addr !== "");
+    
+            await contract.methods.addToWhitelist(gameId, addresses).send({ from: accounts[0] });
+            alert('Addresses added to whitelist');
         } catch (error) {
             alert('Error: ' + error.message);
         }
     });
+    
 
     document.getElementById('setEliminationRange')?.addEventListener('click', async () => {
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
-const gameInfo = await contract.methods.games(gameId).call();
-// Vérifier si la GameID existe
-        if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
-            alert("Erreur : This GameID doesn't exist.");
-            return;
-        }
-// Vérifier si l'utilisateur est le propriétaire de la GameID
-        if (gameInfo.owner !== accounts[0]) {
-            alert("You are not the owner of the GameID");
-            return;
-        }
-// Vérifier si la game est déjà fermée
-        if (!gameInfo.isRegistrationOpen) {
-            alert("Erreur : Game already closed.");
-            return;
-        }
+            const gameInfo = await contract.methods.games(gameId).call();
+
+            // Vérifier si la GameID existe
+            if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
+                alert("Erreur : This GameID doesn't exist.");
+                return;
+            }
+            // Vérifier si l'utilisateur est le propriétaire de la GameID
+            if (gameInfo.owner !== accounts[0]) {
+                alert("You are not the owner of the GameID");
+                return;
+            }
+            // Vérifier si la game est déjà fermée
+            if (!gameInfo.isRegistrationOpen) {
+                alert("Erreur : Game already closed.");
+                return;
+            }
             const minEliminationCount = prompt("Enter minimum elimination per round:");
             const maxEliminationCount = prompt("Enter maximum elimination per round:");
             await contract.methods.setEliminationRange(gameId, minEliminationCount, maxEliminationCount).send({ from: accounts[0] });
@@ -883,39 +1064,39 @@ const gameInfo = await contract.methods.games(gameId).call();
     });
 
     document.getElementById('startRound')?.addEventListener('click', async () => {
-        
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
-const gameInfo = await contract.methods.games(gameId).call();
-// Vérifier si la GameID existe
-        if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
-            alert("Erreur : This GameID doesn't exist.");
-            return;
-        }
-   // Vérifier si la partie est déjà terminée
-        if (gameInfo.winner && gameInfo.winner !== '') {
-            alert(`Game already finished, winner is ${gameInfo.winner}`);
-            return;
-        }
+            const gameInfo = await contract.methods.games(gameId).call();
 
-// Vérifier si l'utilisateur est le propriétaire de la GameID
-        if (gameInfo.owner !== accounts[0]) {
-            alert("You are not the owner of the GameID");
-            return;
-        }
+            // Vérifier si la GameID existe
+            if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
+                alert("Erreur : This GameID doesn't exist.");
+                return;
+            }
+            // Vérifier si la partie est déjà terminée
+            if (gameInfo.winner && gameInfo.winner !== '') {
+                alert(`Game already finished, winner is ${gameInfo.winner}`);
+                return;
+            }
 
-// Vérifier si les éliminations par round ont été définies
-        if (gameInfo.minEliminationCount === '0' || gameInfo.maxEliminationCount === '0') {
-            alert("You must set up elimination per round first");
-            return;
-        }
+            // Vérifier si l'utilisateur est le propriétaire de la GameID
+            if (gameInfo.owner !== accounts[0]) {
+                alert("You are not the owner of the GameID");
+                return;
+            }
 
-// Vérifier si l'inscription est fermée
-        if (gameInfo.isRegistrationOpen) {
-            alert("You must close registration first");
-            return;
-        }
+            // Vérifier si les éliminations par round ont été définies
+            if (gameInfo.minEliminationCount === '0' || gameInfo.maxEliminationCount === '0') {
+                alert("You must set up elimination per round first");
+                return;
+            }
+
+            // Vérifier si l'inscription est fermée
+            if (gameInfo.isRegistrationOpen) {
+                alert("You must close registration first");
+                return;
+            }
 
             await contract.methods.startRound(gameId).send({ from: accounts[0] });
             alert('Round started');
@@ -924,70 +1105,68 @@ const gameInfo = await contract.methods.games(gameId).call();
         }
     });
 
-document.getElementById('startRoundButton')?.addEventListener('click', async () => {
-        
-    try {
-        const accounts = await web3.eth.getAccounts();
-        const gameId = getGameId();
-        const gameInfo = await contract.methods.games(gameId).call();
-
-        // Vérifier si la GameID existe
-        if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
-            alert("Erreur : This GameID doesn't exist.");
-            return;
-        }
-
-   // Vérifier si la partie est déjà terminée
-        if (gameInfo.winner && gameInfo.winner !== '') {
-            alert(`Game already finished, winner is ${gameInfo.winner}`);
-            return;
-        }
-        // Vérifier si l'utilisateur est le propriétaire de la GameID
-        if (gameInfo.owner !== accounts[0]) {
-            alert("You are not the owner of the GameID");
-            return;
-        }
-
-
-// Vérifier si les éliminations par round ont été définies
-        if (gameInfo.minEliminationCount === '0' || gameInfo.maxEliminationCount === '0') {
-            alert("You must set up elimination per round first");
-            return;
-        }
-
-// Vérifier si l'inscription est fermée
-        if (gameInfo.isRegistrationOpen) {
-            alert("You must close registration first");
-            return;
-        }
-        await contract.methods.startRound(gameId).send({ from: accounts[0] });
-        alert('Round started');
-    } catch (error) {
-        alert('Error: ' + error.message);
-    }
-});
-
-    
-document.getElementById('closeRegistration')?.addEventListener('click', async () => {
+    document.getElementById('startRoundButton')?.addEventListener('click', async () => {
         try {
             const accounts = await web3.eth.getAccounts();
             const gameId = getGameId();
-const gameInfo = await contract.methods.games(gameId).call();
-// Vérifier si la GameID existe
-        if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
-            alert("Erreur : This GameID doesn't exist.");
-            return;
+            const gameInfo = await contract.methods.games(gameId).call();
+
+            // Vérifier si la GameID existe
+            if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
+                alert("Erreur : This GameID doesn't exist.");
+                return;
+            }
+
+            // Vérifier si la partie est déjà terminée
+            if (gameInfo.winner && gameInfo.winner !== '') {
+                alert(`Game already finished, winner is ${gameInfo.winner}`);
+                return;
+            }
+            // Vérifier si l'utilisateur est le propriétaire de la GameID
+            if (gameInfo.owner !== accounts[0]) {
+                alert("You are not the owner of the GameID");
+                return;
+            }
+
+            // Vérifier si les éliminations par round ont été définies
+            if (gameInfo.minEliminationCount === '0' || gameInfo.maxEliminationCount === '0') {
+                alert("You must set up elimination per round first");
+                return;
+            }
+
+            // Vérifier si l'inscription est fermée
+            if (gameInfo.isRegistrationOpen) {
+                alert("You must close registration first");
+                return;
+            }
+            await contract.methods.startRound(gameId).send({ from: accounts[0] });
+            alert('Round started');
+        } catch (error) {
+            alert('Error: ' + error.message);
         }
-// Vérifier si l'utilisateur est le propriétaire de la GameID
-        if (gameInfo.owner !== accounts[0]) {
-            alert("You are not the owner of the GameID");
-            return;
-        }
-// Vérifier si la game est déjà fermée
-        if (!gameInfo.isRegistrationOpen) {
-            alert("Erreur : Game is already active.");
-            return;
-        }
+    });
+
+    document.getElementById('closeRegistration')?.addEventListener('click', async () => {
+        try {
+            const accounts = await web3.eth.getAccounts();
+            const gameId = getGameId();
+            const gameInfo = await contract.methods.games(gameId).call();
+
+            // Vérifier si la GameID existe
+            if (gameInfo.owner === '0x0000000000000000000000000000000000000000') {
+                alert("Erreur : This GameID doesn't exist.");
+                return;
+            }
+            // Vérifier si l'utilisateur est le propriétaire de la GameID
+            if (gameInfo.owner !== accounts[0]) {
+                alert("You are not the owner of the GameID");
+                return;
+            }
+            // Vérifier si la game est déjà fermée
+            if (!gameInfo.isRegistrationOpen) {
+                alert("Erreur : Game is already active.");
+                return;
+            }
 
             await contract.methods.closeRegistration(gameId).send({ from: accounts[0] });
             alert('Registration closed');
@@ -1035,10 +1214,53 @@ const gameInfo = await contract.methods.games(gameId).call();
         }
     });
 
+    document.getElementById('getWhitelist')?.addEventListener('click', async () => {
+        try {
+            const gameId = getGameId();
+    
+            // Appel de la fonction getWhitelist du smart contract
+            const whitelist = await contract.methods.getWhitelist(gameId).call();
+    
+            if (whitelist.length === 0) {
+                outputContent.innerHTML = `<p>No addresses are in the whitelist for this GameID.</p>`;
+            } else {
+                outputContent.innerHTML = `<p>Whitelist Addresses:</p><ul>${whitelist.map(addr => `<li>${addr}</li>`).join('')}</ul>`;
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+    document.getElementById('getRegisteredAddresses')?.addEventListener('click', async () => {
+        try {
+            const gameId = getGameId();  // Assure-toi que getGameId() est bien défini et retourne l'ID du jeu
+            const registeredAddresses = await contract.methods.getRegisteredAddresses(gameId).call();
+    
+            const outputContainer = document.getElementById('outputContent');
+    
+            // Effacer le contenu précédent
+            outputContainer.innerHTML = '';
+    
+            if (registeredAddresses.length === 0) {
+                outputContainer.innerHTML = "<p>No registered addresses found.</p>";
+            } else {
+                let addressesList = "<h4>Registered Addresses:</h4><ul>";
+                registeredAddresses.forEach(address => {
+                    addressesList += `<li>${address}</li>`;
+                });
+                addressesList += "</ul>";
+                outputContainer.innerHTML = addressesList;
+            }
+        } catch (error) {
+            console.error("Error retrieving registered addresses:", error);
+            document.getElementById('outputContent').innerHTML = '<p>Failed to retrieve registered addresses.</p>';
+        }
+    });
+    
+    
     document.getElementById('games')?.addEventListener('click', async () => {
         try {
             const gameId = getGameId();
-            const gameInfo = await contract.methods.games(gameId).call();
+            const gameInfo = await contract.methods.getGameInfo(gameId).call();
 
             const filteredGameInfo = {};
             for (let key in gameInfo) {

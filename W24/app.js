@@ -611,26 +611,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function getPseudoRandomPhrase(pseudo, eventType) {
-        const phrases = eventPhrases[eventType];
-        
-        // Utilise un hash du pseudo pour générer un index pseudo-aléatoire
-        const hashValue = hashString(pseudo);
-        const randomIndex = hashValue % phrases.length; // Calcule l'index en fonction du hash
-    
-        return phrases[randomIndex];
-    }
-    
-    function hashString(str) {
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            const char = str.charCodeAt(i);
-            hash = (hash << 5) - hash + char;
-            hash = hash & hash; // Convertir en entier 32-bit
-        }
-        return Math.abs(hash); // Renvoie une valeur positive
-    }
-    
     function sortRoundEvents() {
         roundEvents.sort((a, b) => {
             if (a.eventType === 'WinnerDeclared') return 1;
@@ -653,38 +633,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayRoundEvents() {
-    const liveEventsDiv = document.getElementById('liveEvents');
-    if (!liveEventsDiv) {
-        console.error('liveEventsDiv not found');
-        return;
-    }
-
-    sortRoundEvents(); // Assurer le tri avant l'affichage
-
-    // Display sorted events
-    roundEvents.forEach((event, index) => {
-        if (!event.rendered) {
-            const eventText = document.createElement('p');
-            const phrase = getPseudoRandomPhrase(event.pseudo, event.eventType);
-            let formattedText = phrase.replace("{pseudo}", event.pseudo);
-
-            // Appliquer une couleur verte pour le gagnant
-            if (event.eventType === 'WinnerDeclared') {
-                eventText.style.color = 'green';
-                eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
-            }
-
-            // Appliquer le formatage pour les joueurs éliminés
-            if (event.eventType === 'PlayerEliminated') {
-                formattedText = phrase.replace("{pseudo}", `<span class="event-eliminated">${event.pseudo}</span>`);
-            }
-
-            liveEventsDiv.appendChild(eventText);
-            typewriterEffect(eventText, formattedText); // Appel de la fonction avec du HTML
-            event.rendered = true; // Marquer comme affiché
-            console.log('Event appended to liveEvents:', formattedText);
+        const liveEventsDiv = document.getElementById('liveEvents');
+        if (!liveEventsDiv) {
+            console.error('liveEventsDiv not found');
+            return;
         }
-    });
+
+        sortRoundEvents(); // Assurer le tri avant l'affichage
+
+        // Display sorted events
+        roundEvents.forEach((event, index) => {
+            if (!event.rendered) {
+                const eventText = document.createElement('p');
+                const phrases = eventPhrases[event.eventType];
+                const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+                let formattedText = phrase.replace("{pseudo}", event.pseudo);
+
+                // Appliquer une couleur verte pour le gagnant
+                if (event.eventType === 'WinnerDeclared') {
+                    eventText.style.color = 'green';
+                    eventText.style.fontWeight = 'bold'; // Optionnel : mettre en gras pour plus de visibilité
+                }
+
+                // Appliquer le formatage pour les joueurs éliminés
+                if (event.eventType === 'PlayerEliminated') {
+                    formattedText = phrase.replace("{pseudo}", `<span class="event-eliminated">${event.pseudo}</span>`);
+                }
+
+                liveEventsDiv.appendChild(eventText);
+                typewriterEffect(eventText, formattedText); // Appel de la fonction avec du HTML
+                event.rendered = true; // Marquer comme affiché
+                console.log('Event appended to liveEvents:', formattedText);
+            }
+        });
 
         // Mettre à jour la liste des joueurs enregistrés à la fin de chaque round
         if (currentGameId && !playerListUpdated) {

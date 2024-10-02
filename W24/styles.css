@@ -37,25 +37,6 @@ footer img {
     vertical-align: middle;
 }
 
-.wallet-address-box {
-    position: absolute; /* Permet de positionner le div n'importe où */
-    top: 10px; /* Positionné à 10px du haut du container */
-    right: 10px; /* Positionné à 10px de la droite du container */
-    padding: 5px 10px; /* Ajuste le padding pour une boîte plus petite */
-    font-size: 0.9em; /* Diminue la taille du texte */
-    background-color: #f9f9f9;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ajoute une ombre subtile */
-    z-index: 100; /* S'assure que le div est au-dessus d'autres éléments */
-    display: flex; /* Utilise Flexbox pour le centrage */
-    justify-content: center; /* Centre le texte horizontalement */
-    align-items: center; /* Centre le texte verticalement */
-    height: 20px; /* Définit une hauteur pour la boîte */
-    width: 200px; /* Définit une largeur pour la boîte */
-    text-align: center; /* Centre le texte */
-}
-
 
 .faq-question {
     cursor: pointer;
@@ -109,7 +90,7 @@ h1, h2, p {
     font-size: 16px;
     cursor: pointer;
     border: 2px solid #000;
-    border-radius: 5px;
+    border-radius: 0;
     background-color: #f0f0f0;
     color: #000;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -128,7 +109,7 @@ h1, h2, p {
     font-size: 16px;
     cursor: pointer;
     border: 2px solid #000;
-    border-radius: 5px;
+    border-radius: 0;
     background-color: #f0f0f0;
     color: #000;
     transition: background-color 0.3s ease, color 0.3s ease;

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Manage your Rumble</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="images/favicon.png" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <script src="https://unpkg.com/@walletconnect/web3-provider@1.6.6/dist/umd/index.min.js"></script>
+    <script defer src="app.js"></script>
+</head>
+<body>
+    <header id="main-header">
+        <h1><img src="images/banner.png" alt="zkTRumble 3.0 OnChain" class="banner">
+            <p>Rumble Fight 3.0 OnChain For Full Transparency</p>
+        </h1>
+    </header>
+    <div class="content-wrapper">
+        <div class="content">
+            <h1>Manage your Rumble</h1>
+            <form id="gameForm">
+                <label class="input-label" for="gameIdInput">Game ID:</label>
+                <input type="number" id="gameIdInput" class="input-field" placeholder="Enter Game ID" required>
+            </form>
+
+            <h3>Create Rumble</h3>
+<div class="function-buttons">
+    <!-- Boutons Create GameID et Last GameID -->
+    <button id="createGame" class="btn">📝Create GameID📝</button>
+    <button id="gameCount" class="btn">🔎Last GameID🔎</button>
+
+    <!-- Choix Private Game avec case à cocher -->
+    <label for="isPrivate">Private Game:</label>
+    <input type="checkbox" id="isPrivate" onclick="togglePrivateFields()">
+    
+    <!-- Champs Password et Whitelist, avec "OR" justifié verticalement -->
+    <div id="privateFields" style="display: none; margin-top: 10px;">
+        <div style="display: flex; align-items: center;">
+            <label for="password" style="flex: 1;">Password :</label>
+            <input type="text" id="password" placeholder="Enter password" oninput="validatePrivateOptions()" style="flex: 2;">
+        </div>
+        
+        <div style="text-align: center; margin: 10px 0;">OR</div>
+        
+        <div style="display: flex; align-items: center;">
+            <label for="whitelist" style="flex: 1;">Whitelist Addresses :</label>
+            <input type="text" id="whitelist" placeholder="0x123..., 0x456..." oninput="validatePrivateOptions()" style="flex: 2;">
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePrivateFields() {
+        const privateFields = document.getElementById('privateFields');
+        const isPrivate = document.getElementById('isPrivate').checked;
+        privateFields.style.display = isPrivate ? 'block' : 'none';
+        validatePrivateOptions(); // Validation initiale lors du changement de l'état du checkbox
+    }
+
+    function validatePrivateOptions() {
+        const password = document.getElementById('password').value;
+        const whitelist = document.getElementById('whitelist').value;
+        const createButton = document.getElementById('createGame');
+
+        // Activer le bouton si au moins l'un des deux champs est rempli, ou si le jeu n'est pas privé
+        if (password || whitelist || !document.getElementById('isPrivate').checked) {
+            createButton.disabled = false;
+        } else {
+            createButton.disabled = true;
+        }
+    }
+</script>
+
+            
+
+            
+
+
+            <h3>Rumble Setup</h3>
+            <div class="function-buttons">
+                <button id="registerMultiplePlayers" class="btn">🤺📋Add Players List📋🤺</button>
+                <button id="setEliminationRange" class="btn">🚷Set Elimination Per Round🚷</button>
+                <button id="addToWhitelist" class="btn" >➕Add to WL➕</button>
+            </div>
+
+            <h3>Game ON</h3>
+            <div class="function-buttons">
+                <button id="closeRegistration" class="btn">🔒Close Registration🔒</button>
+                <button id="startRound" class="btn">⚔️Start Round⚔️</button>
+            </div>
+
+            <h3>Game Data</h3>
+            <div class="function-buttons">
+                <button id="getWinner" class="btn">🏅Winner🏅</button>
+                <button id="getRegisteredPlayers" class="btn">🕺ALIVE Fighters🕺</button>
+                <button id="getEliminatedPlayers" class="btn">💀DEAD Fighters💀</button>
+                <button id="getWhitelist" class="btn">✅📝Whitelist Addresses📝✅</button>
+                <button id="games" class="btn">❓📰GameID info📰❓</button>
+                <button id="getRegisteredAddresses" class="btn">🔎📜Registered Addresses📜🔍</button>
+            </div>
+            
+
+            <div class="output-container">
+                <h2>The answer is:</h2>
+                <div id="outputContent"></div>
+            </div>
+
+            <div class="button-container">
+                <button id="navigateHome" class="btn btn-home">
+                    <img src="images/ring.webp" alt="Home Icon" class="icon-home"> Back to Home
+                </button>
+            </div>
+            <div id="status"></div>
+        </div>
+        <footer>
+            <p>2024 zkTRumble dApp. This project is Open Source.</p>
+            <p><img src="https://licensebuttons.net/p/zero/1.0/88x31.png" alt="CC0"></p>
+            <p><a href="https://www.ternoa.network/">Powered By Ternoa L2 zkEVM+</a> | <a href="faq.html">FAQ</a></p>
+            <p>Made by YouyouzkT with love 💞</p>
+        </footer>
+    </div>
+</body>
+</html>
